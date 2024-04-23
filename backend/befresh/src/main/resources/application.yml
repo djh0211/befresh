@@ -1,0 +1,14 @@
+server:
+  port: 4000
+
+spring:
+  application:
+    name: befresh
+
+  threads:
+    virtual:
+      enabled: true
+
+  config:
+    import:
+      - application-datasource.yml
