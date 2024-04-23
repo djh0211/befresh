@@ -1,5 +1,6 @@
 package com.a307.befresh.module.domain.refrigerator;
 
+import com.a307.befresh.module.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,10 +12,10 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Refrigerator {
+@SequenceGenerator(name = "refrigerator_seq", sequenceName = "refrigerator_seq", allocationSize = 50, initialValue = 1)
+public class Refrigerator extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "refrigerator_seq")
-    @SequenceGenerator(name = "refrigerator_seq", sequenceName = "refrigerator_seq", allocationSize = 1)
-    private Long refrigeratorId;
-
+    @Column(name = "refrigerator_id", nullable = false)
+    private Long id;
 }
