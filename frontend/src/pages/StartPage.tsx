@@ -1,38 +1,43 @@
-import styled from 'styled-components';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import Button from '../atoms/MemberButton';
+import styled from 'styled-components';
+import MemberButton from '../atoms/MemberButton';
 
+// StartPageContainer 스타일드 컴포넌트 정의
 const StartPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
 `;
 
+// LogoImage 스타일드 컴포넌트 정의
 const LogoImage = styled.img`
-  margin-bottom: 20px; /* 로고 아래 간격 조절 */
+  margin-bottom: 20px;
+  min-height:50vh;
 `;
 
+// ButtonContainer 스타일드 컴포넌트 정의
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px; /* 버튼 사이 간격 조절 */
+  gap: 70px;
+  min-height: 30vh;
+  min-width: 400px;
 `;
 
-const ResponsiveButton = styled(Button)`
-  width: 200px; /* 버튼의 너비를 고정 */
-`;
 
+// StartPage 컴포넌트 정의
 const StartPage: React.FC = () => {
   return (
     <StartPageContainer>
       <LogoImage src="beFresh.png" alt="BeFresh 로고" />
-
       <ButtonContainer>
         <Link to="/login">
-          <ResponsiveButton>로그인</ResponsiveButton>
+          <MemberButton>로그인</MemberButton>
         </Link>
         <Link to="/signup">
-          <ResponsiveButton>회원가입</ResponsiveButton>
+          <MemberButton>회원가입</MemberButton>
         </Link>
       </ButtonContainer>
     </StartPageContainer>
