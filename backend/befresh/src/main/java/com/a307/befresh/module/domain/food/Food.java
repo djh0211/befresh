@@ -8,9 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import lombok.Setter;
 
 @Getter
 @Entity
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SequenceGenerator(name = "food_seq", sequenceName = "food_seq", allocationSize = 50, initialValue = 1)
 public class Food extends BaseEntity {
@@ -30,4 +32,17 @@ public class Food extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "refrigerator_id", nullable = false)
     private Refrigerator refrigerator;
+
+    public static Food createFood(String name, LocalDateTime expirationDate, boolean isOcr, Refrigerator refrigerator) {
+        Food food = new Food();
+
+        food.setName(name);
+        food.setExpirationDate(expirationDate);
+        food.setOcr(isOcr);
+        food.setRefrigerator(refrigerator);
+        food.setRegUserSeq(1L);
+        food.setModUserSeq(1L);
+
+        return food;
+    }
 }

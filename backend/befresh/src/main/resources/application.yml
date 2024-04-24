@@ -4,10 +4,9 @@ server:
 spring:
   application:
     name: befresh
-
   threads:
     virtual:
-      enabled: true
+      enabled: false
 
   config:
     import:
