@@ -6,6 +6,8 @@ import java.util.Date;
 public record FoodRegisterReq(
     String name,
     LocalDateTime expirationDate,
-    boolean isOcr,
-    long refrigerator_id
-) {}
+    long ftypeId,
+    long refrigeratorId
+) {
+
+}
