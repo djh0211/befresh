@@ -8,8 +8,8 @@ const MemberButton = styled.button`
   border: none;
   border-radius: 1rem;
   cursor: pointer;
-  min-width: 100%; /* 추가 스타일 */
-  min-height: 10vh; /* 추가 스타일 */
+  min-width: 100%;
+  min-height: 10vh;
 
   &:hover {
     background-color: #0f9240;

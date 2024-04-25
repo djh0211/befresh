@@ -2,20 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import MemberButton from '../atoms/MemberButton';
+import LogoComponent from '../atoms/LogoComponent';
 
 // StartPageContainer 스타일드 컴포넌트 정의
 const StartPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
+  min-height: 90vh;
 `;
 
-// LogoImage 스타일드 컴포넌트 정의
-const LogoImage = styled.img`
-  margin-bottom: 20px;
-  min-height:50vh;
-`;
+
 
 // ButtonContainer 스타일드 컴포넌트 정의
 const ButtonContainer = styled.div`
@@ -31,7 +28,7 @@ const ButtonContainer = styled.div`
 const StartPage: React.FC = () => {
   return (
     <StartPageContainer>
-      <LogoImage src="beFresh.png" alt="BeFresh 로고" />
+      <LogoComponent />
       <ButtonContainer>
         <Link to="/login">
           <MemberButton>로그인</MemberButton>
