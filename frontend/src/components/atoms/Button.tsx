@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const MemberButton = styled.button`
+const MyButton = styled.button`
   background-color: #097539;
   color: white;
   font-size: 20px;
@@ -10,6 +10,7 @@ const MemberButton = styled.button`
   cursor: pointer;
   min-width: 100%;
   min-height: 10vh;
+  font-family: 'TheJamsil5Bold', sans-serif;
 
   &:hover {
     background-color: #0f9240;
@@ -20,4 +21,4 @@ const MemberButton = styled.button`
   }
 `;
 
-export default MemberButton;
+export default MyButton;

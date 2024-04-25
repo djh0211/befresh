@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles'; // styled 함수 import
+import PropTypes from 'prop-types'; // prop-types import
 
-// TextField 컴포넌트를 상속하여 새로운 스타일을 적용하는 컴포넌트 생성
 const CustomTextField = styled(TextField)({
   '& .MuiInputLabel-root': {
     '&.Mui-focused': { // TextField가 focus되었을 때 라벨 색상
@@ -16,7 +16,11 @@ const CustomTextField = styled(TextField)({
   },
 });
 
-function PasswordInputTextFields() {
+interface PasswordInputTextFieldsProps {
+  label: string; // label props의 타입을 명시적으로 string으로 지정
+}
+
+function PasswordInputTextFields({ label }: Readonly<PasswordInputTextFieldsProps>) { // label props를 받음
   return (
     <Box
       component="form"
@@ -29,7 +33,7 @@ function PasswordInputTextFields() {
       <div>
         <CustomTextField
           id="standard-password-input"
-          label="Password"
+          label={label} // props로 받은 label을 사용
           type="password"
           autoComplete="current-password"
           variant="standard"
@@ -39,4 +43,8 @@ function PasswordInputTextFields() {
   );
 }
 
-export default PasswordInputTextFields
+PasswordInputTextFields.propTypes = {
+  label: PropTypes.string.isRequired, // label은 문자열이어야 함을 정의
+};
+
+export default PasswordInputTextFields;

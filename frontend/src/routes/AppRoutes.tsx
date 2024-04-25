@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import StartPage from '../components/pages/StartPage';
-import LoginPage from '../components/pages/LoginPage';
-import SignupPage from '../components/pages/SignupPage';
-import MainPage from '../components/pages/MainPage';
-import RegisterPage from '../components/pages/RegisterPage';
-import UnRegisterPage from '../components/pages/UnRegisterPage';
-import AlarmPage from '../components/pages/AlarmPage';
+import StartPage from '../pages/StartPage';
+import LoginPage from '../pages/LoginPage';
+import SignupPage from '../pages/SignupPage';
+import MainPage from '../pages/MainPage';
+import RegisterPage from '../pages/RegisterPage';
+import UnRegisterPage from '../pages/UnRegisterPage';
+import AlarmPage from '../pages/AlarmPage';
 
 const AppRoutes = () => {
   return (

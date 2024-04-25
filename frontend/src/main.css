@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'TheJamsil5Bold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "JamsilThin";
+  src: url("./fonts/JamsilThin.otf") format("truetype"); 
+}
+
+@font-face {
+  font-family: "JamsilRegular";
+  src: url("./fonts/JamsilRegular.otf") format("truetype"); 
+}
+
+body {
+  font-family: 'TheJamsil5Bold', sans-serif, "JamsilThin", "JamsilRegular" ;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 0.3rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d8d8d880;
+  border-radius: 1.5rem;
+  min-width: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #d4d4d89a;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+}
+
