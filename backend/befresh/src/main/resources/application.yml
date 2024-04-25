@@ -1,6 +1,3 @@
-server:
-  port: 4000
-
 spring:
   application:
     name: befresh
@@ -11,3 +8,4 @@ spring:
   config:
     import:
       - application-datasource.yml
+      - application-server.yml
