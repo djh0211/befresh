@@ -6,7 +6,7 @@ spring:
     name: befresh
   threads:
     virtual:
-      enabled: false
+      enabled: true
 
   config:
     import:
