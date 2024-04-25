@@ -30,6 +30,9 @@ public class Food extends BaseEntity {
     @Column
     private LocalDateTime expirationDate;
 
+    @Column(name="miss_registered")
+    private boolean missRegistered;
+
     @ManyToOne
     @JoinColumn(name = "refresh_id")
     private Refresh refresh;
@@ -43,7 +46,7 @@ public class Food extends BaseEntity {
     private Refrigerator refrigerator;
 
     public static Food createFood(String name, LocalDateTime expirationDate, Refresh refresh,
-        Ftype ftype, Refrigerator refrigerator) {
+        Ftype ftype, Refrigerator refrigerator, boolean missRegistered) {
         Food food = new Food();
 
         food.setName(name);
@@ -51,8 +54,9 @@ public class Food extends BaseEntity {
         food.setRefresh(refresh);
         food.setFtype(ftype);
         food.setRefrigerator(refrigerator);
-        food.setRegUserSeq(1L);
-        food.setModUserSeq(1L);
+        food.setRegUserSeq(refrigerator.getId());
+        food.setModUserSeq(refrigerator.getId());
+        food.setMissRegistered(missRegistered);
 
         return food;
     }

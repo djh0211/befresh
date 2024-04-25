@@ -3,9 +3,12 @@ package com.a307.befresh.module.domain.food.controller;
 import com.a307.befresh.global.api.response.BaseResponse;
 import com.a307.befresh.global.exception.code.SuccessCode;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReq;
+import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
 import com.a307.befresh.module.domain.food.service.FoodService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -39,12 +42,12 @@ public class FoodController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponse<String>> registerFood(
-        @RequestBody FoodRegisterReq foodRegisterReq) {
+    public ResponseEntity<BaseResponse<Integer>> registerFood(
+        @RequestBody FoodRegisterReqList foodRegisterReqList) {
 
-        String food = foodService.registerFood(foodRegisterReq, 1L);
+        int cnt = foodService.registerFood(foodRegisterReqList);
 
-        return BaseResponse.success(SuccessCode.INSERT_SUCCESS, food);
+        return BaseResponse.success(SuccessCode.INSERT_SUCCESS, cnt);
     }
 
 }
