@@ -15,7 +15,6 @@ import javax.annotation.PostConstruct;
 public class NotificationServiceImpl implements NotificationService {
 
     @Override
-    @PostConstruct
     public void sendFreshWarnMessage() {
         NotificationRegisterRes test = NotificationRegisterRes.builder()
                 .token("fLW0wNSODS-Sw4B0_Ufj3f:APA91bENH5knCjgl_aXqljQpaq6glOI_a5YxwdFKdm4v5AygUwe9tvHaEgiZdUYTPa3jf9XidVcL0MupNie9AUYYI2aExTYiN6iyzD05DTvvrrnn3qSdZ-3dQhLZqwYTNbL3eqcnsLKU")
