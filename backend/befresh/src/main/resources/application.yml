@@ -9,3 +9,4 @@ spring:
     import:
       - application-datasource.yml
       - application-server.yml
+      - application-fcm.yml
