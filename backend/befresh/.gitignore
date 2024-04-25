@@ -1,7 +1,6 @@
 src/main/resources/application-datasource.yml
-src/main/resources/application-jwt.yml
-src/main/resources/application-oauth.yml
-src/main/resources/application-file.yml
+src/main/resources/application-server.yml
+src/main/resources/application-fcm.yml
 
 # Created by https://www.toptal.com/developers/gitignore/api/redis,java,intellij,intellij+all,intellij+iml,react,macos,windows,pycharm+all,pycharm+iml,jetbrains+all,jetbrains+iml,jetbrains
 # Edit at https://www.toptal.com/developers/gitignore?templates=redis,java,intellij,intellij+all,intellij+iml,react,macos,windows,pycharm+all,pycharm+iml,jetbrains+all,jetbrains+iml,jetbrains
