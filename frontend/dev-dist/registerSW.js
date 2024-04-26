@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js', { scope: '/', type: 'classic' })
+=======
 // if('serviceWorker' in navigator) navigator.serviceWorker.register('/dev-sw.js?dev-sw', { scope: '/', type: 'classic' })
 
 if ('serviceWorker' in navigator) {
@@ -15,3 +18,4 @@ if ('serviceWorker' in navigator) {
         console.log('Service Worker registration skipped for /jenkins');
     }
 }
+>>>>>>> develop
