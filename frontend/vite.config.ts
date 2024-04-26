@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { readFileSync } from 'fs'
 
 // registerSW.js 파일의 내용을 읽어와서 injectRegister 옵션으로 설정
-const registerSWContent = readFileSync('registerSW.js', 'utf-8')
+const registerSWContent = readFileSync('./dev-dist/registerSW.js', 'utf-8')
 
 // https://vitejs.dev/config/
 export default defineConfig({
