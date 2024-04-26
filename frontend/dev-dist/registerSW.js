@@ -6,7 +6,9 @@ if ('serviceWorker' in navigator) {
     // "/jenkins" 경로에 대해서는 Service Worker를 등록하지 않습니다.
     if (!window.location.pathname.startsWith('/jenkins')) {
         registrationOptions = { scope: '/', type: 'classic' };
-    }
+        navigator.serviceWorker.register('/dev-sw.js?dev-sw', registrationOptions);
+    } else {
 
-    navigator.serviceWorker.register('/dev-sw.js?dev-sw', registrationOptions);
+        console.log('jenkins');
+    }
 }
