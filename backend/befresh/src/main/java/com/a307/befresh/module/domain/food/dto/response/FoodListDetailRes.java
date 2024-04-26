@@ -9,13 +9,19 @@ public record FoodListDetailRes(
     Long id,
     String name,
 
-    LocalDateTime reg_dttm,
+    String image,
 
-    int elapsed_time,
+    LocalDateTime expirationDate,
+
+    LocalDateTime regDttm,
+
+    int elapsedTime,
 
     String refresh,
 
-    Double fresh_state
+    String ftype,
+
+    Double freshState
 ) {
 
 }

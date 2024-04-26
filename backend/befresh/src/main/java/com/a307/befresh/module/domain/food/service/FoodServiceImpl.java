@@ -13,10 +13,11 @@ import com.a307.befresh.module.domain.refresh.Refresh;
 import com.a307.befresh.module.domain.refresh.repository.RefreshRepository;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
 import com.a307.befresh.module.domain.refrigerator.repository.RefrigeratorRepository;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Async;
@@ -37,10 +38,11 @@ public class FoodServiceImpl implements FoodService {
     public void blocking() throws InterruptedException {
         Thread.sleep(5000);
     }
+
     private void asyncRegisterFood(Refrigerator refrigerator, FoodRegisterReq foodRegisterReq) {
 
-
-        System.out.println(Thread.currentThread().toString() + " " + Thread.currentThread().isVirtual());
+        System.out.println(
+            Thread.currentThread().toString() + " " + Thread.currentThread().isVirtual());
         System.out.println(foodRegisterReq.name());
         Optional<Ftype> ftype = ftypeRepository.findById(foodRegisterReq.ftypeId());
 
@@ -82,7 +84,8 @@ public class FoodServiceImpl implements FoodService {
         log.debug("registerFood method start : {} ", Thread.currentThread().toString());
 
         if (refrigerator.isEmpty()) {
-            log.error("registerFood method refirgerator: {}이 없습니다.", foodRegisterReqList.refrigeratorId());
+            log.error("registerFood method refirgerator: {}이 없습니다.",
+                foodRegisterReqList.refrigeratorId());
             return;
         }
 
@@ -94,25 +97,46 @@ public class FoodServiceImpl implements FoodService {
         log.debug("registerFood method success : {} ", Thread.currentThread().toString());
     }
 
-    public List<FoodListDetailRes> getFoodList() {
+    public List<FoodListDetailRes> getFoodList(Long refrigeratorId) {
 
-        List<Food> foodList = foodRepository.findAll();
+        List<Food> foodList = foodRepository.findByRefrigerator_Id(refrigeratorId);
 
+        log.debug("getFoodList method read : {} ", foodList.size());
         List<FoodListDetailRes> foodListDetailResList = new ArrayList<>();
 
         for (Food food : foodList) {
 
-//            Optional<Refresh> refresh = refreshRepository.findById(food.getFoodId().);
-//            Optional<Ftype> ftype = ftypeRepository.findById(food.getFtype());
+            int elapsedTime = Period.between(food.getRegDttm().toLocalDate(),
+                LocalDateTime.now().toLocalDate()).getDays();
+
+            // TODO: 신선도는 나중에 다르게 설정
+            int totalDays = Period.between(food.getRegDttm().toLocalDate(),
+                food.getExpirationDate().toLocalDate()).getDays();
+            int remindDays = Period.between(LocalDateTime.now().toLocalDate(),
+                food.getExpirationDate().toLocalDate()).getDays();
+
+            Double freshState = 0.0;
+
+            if (remindDays > 0) {
+                freshState = (double) remindDays / totalDays * 100;
+            }
 
             foodListDetailResList.add(
                 FoodListDetailRes.builder()
                     .id(food.getFoodId())
-//                    .elapsed_time()
+                    .name(food.getName())
+                    .image(food.getImage())
+                    .expirationDate(food.getExpirationDate())
+                    .regDttm(food.getRegDttm())
+                    .elapsedTime(elapsedTime)
+                    .freshState(freshState)
                     .refresh(food.getRefresh().getName())
+                    .ftype(food.getFtype().getName())
                     .build()
             );
         }
+
+        log.debug("getFoodList method success");
 
         return foodListDetailResList;
     }
