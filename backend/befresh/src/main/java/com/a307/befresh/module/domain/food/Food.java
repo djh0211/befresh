@@ -28,28 +28,32 @@ public class Food extends BaseEntity {
     private String name;
 
     @Column
+    private String image;
+
+    @Column
     private LocalDateTime expirationDate;
 
-    @Column(name="miss_registered")
+    @Column(name = "miss_registered")
     private boolean missRegistered;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "refresh_id")
     private Refresh refresh;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ftype_id", nullable = false)
     private Ftype ftype;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "refrigerator_id", nullable = false)
     private Refrigerator refrigerator;
 
-    public static Food createFood(String name, LocalDateTime expirationDate, Refresh refresh,
+    public static Food createFood(String name, String image, LocalDateTime expirationDate, Refresh refresh,
         Ftype ftype, Refrigerator refrigerator, boolean missRegistered) {
         Food food = new Food();
 
         food.setName(name);
+        food.setImage(image);
         food.setExpirationDate(expirationDate);
         food.setRefresh(refresh);
         food.setFtype(ftype);

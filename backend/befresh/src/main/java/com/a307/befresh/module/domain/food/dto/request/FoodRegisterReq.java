@@ -8,6 +8,7 @@ import lombok.Builder;
 public record FoodRegisterReq(
     String name,
 
+    String image,
     LocalDateTime expirationDate,
     long ftypeId,
 

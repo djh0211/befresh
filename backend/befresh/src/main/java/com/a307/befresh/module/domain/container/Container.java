@@ -30,7 +30,7 @@ public class Container extends Food {
     @Column(name = "qr_id")
     private Long qrId;
 
-    public static Container createContainer(String name, LocalDateTime expirationDate,
+    public static Container createContainer(String name, String image, LocalDateTime expirationDate,
         Refresh refresh, Ftype ftype, Refrigerator refrigerator, boolean missRegistered,
         Double temperature,
         Double humidity, Double zCoordinate, Long qrId) {
@@ -38,6 +38,7 @@ public class Container extends Food {
         Container container = new Container();
 
         container.setName(name);
+        container.setImage(image);
         container.setExpirationDate(expirationDate);
         container.setRefresh(refresh);
         container.setFtype(ftype);

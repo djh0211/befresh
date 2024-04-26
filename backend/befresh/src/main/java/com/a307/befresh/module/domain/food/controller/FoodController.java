@@ -45,9 +45,9 @@ public class FoodController {
     public ResponseEntity<BaseResponse<Integer>> registerFood(
         @RequestBody FoodRegisterReqList foodRegisterReqList) {
 
-        int cnt = foodService.registerFood(foodRegisterReqList);
+        foodService.registerFood(foodRegisterReqList);
 
-        return BaseResponse.success(SuccessCode.INSERT_SUCCESS, cnt);
+        return BaseResponse.success(SuccessCode.INSERT_SUCCESS, null);
     }
 
 }
