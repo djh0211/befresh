@@ -40,6 +40,10 @@ dependencies {
 	// gson
 	implementation 'com.google.code.gson:gson:2.9.0'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// firebase
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
+
 }
 
 tasks.named('test') {

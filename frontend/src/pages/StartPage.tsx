@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import MemberButton from '../atoms/MemberButton';
-import LogoComponent from '../atoms/LogoComponent';
+import MemberButton from '../components/atoms/Button';
+import LogoComponent from '../components/atoms/LogoComponent';
 
 // StartPageContainer 스타일드 컴포넌트 정의
 const StartPageContainer = styled.div`
