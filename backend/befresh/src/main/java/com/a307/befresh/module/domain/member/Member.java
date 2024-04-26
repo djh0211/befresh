@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SequenceGenerator(name = "member_seq", sequenceName = "member_seq", allocationSize = 50, initialValue = 1)
@@ -19,6 +20,9 @@ public class Member extends BaseEntity {
     @Column(name = "member_id", nullable = false, length = 30)
     private Long id;
 
+    @Column(name = "id")
+    private String member_id;
+
     @Column(length = 30)
     @Setter
     private String password;
@@ -27,5 +31,16 @@ public class Member extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "refrigerator_id")
     private Refrigerator refrigerator;
+
+    public static Member createMember(String member_id, String password, Refrigerator refrigerator) {
+
+        Member member = new Member();
+
+        member.setMember_id(member_id);
+        member.setPassword(password);
+        member.setRefrigerator(refrigerator);
+
+        return member;
+    }
 }
 
