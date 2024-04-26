@@ -7,14 +7,20 @@ import com.a307.befresh.module.domain.container.repository.ContainerRepository;
 import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReq;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
+import com.a307.befresh.module.domain.food.dto.response.FoodListDetailRes;
 import com.a307.befresh.module.domain.food.repository.FoodRepository;
 import com.a307.befresh.module.domain.refresh.Refresh;
 import com.a307.befresh.module.domain.refresh.repository.RefreshRepository;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
 import com.a307.befresh.module.domain.refrigerator.repository.RefrigeratorRepository;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Log4j2
@@ -33,46 +39,105 @@ public class FoodServiceImpl implements FoodService {
         Thread.sleep(5000);
     }
 
+    private void asyncRegisterFood(Refrigerator refrigerator, FoodRegisterReq foodRegisterReq) {
+
+        System.out.println(
+            Thread.currentThread().toString() + " " + Thread.currentThread().isVirtual());
+        System.out.println(foodRegisterReq.name());
+        Optional<Ftype> ftype = ftypeRepository.findById(foodRegisterReq.ftypeId());
+
+        // TODO: 신선도 로직 구현 후 변경
+        Optional<Refresh> refresh = refreshRepository.findById(1L);
+
+        // TODO: 음식 검색 기능을 통해서 유통기한 설정 -> 검색이 안될 경우 missRegistered true 처리
+
+        if (ftype.get().getId() == 1) {
+
+            Container container = Container.createContainer(foodRegisterReq.name(),
+                foodRegisterReq.image(),
+                foodRegisterReq.expirationDate(),
+                refresh.get(), ftype.get(), refrigerator, false,
+                foodRegisterReq.temperature(),
+                foodRegisterReq.humidity(), foodRegisterReq.zCoordinate(),
+                foodRegisterReq.qrId());
+
+            containerRepository.save(container);
+
+            log.debug("asyncRegisterFood method : container {} success", container.getFoodId());
+        } else {
+            Food food = Food.createFood(foodRegisterReq.name(),
+                foodRegisterReq.image(),
+                foodRegisterReq.expirationDate(),
+                refresh.get(), ftype.get(), refrigerator, false);
+
+            foodRepository.save(food);
+
+            log.debug("asyncRegisterFood method : food {} success", food.getFoodId());
+        }
+    }
+
     @Override
-    public int registerFood(FoodRegisterReqList foodRegisterReqList) {
+    @Async("virtualExecutor")
+    public void registerFood(FoodRegisterReqList foodRegisterReqList) {
         Optional<Refrigerator> refrigerator = refrigeratorRepository.findById(
             foodRegisterReqList.refrigeratorId());
+        log.debug("registerFood method start : {} ", Thread.currentThread().toString());
 
         if (refrigerator.isEmpty()) {
-            return 0;
+            log.error("registerFood method refirgerator: {}이 없습니다.",
+                foodRegisterReqList.refrigeratorId());
+            return;
         }
 
-        int cnt = 0;
         for (FoodRegisterReq foodRegisterReq : foodRegisterReqList.foodList()) {
-            Optional<Ftype> ftype = ftypeRepository.findById(foodRegisterReq.ftypeId());
+            asyncRegisterFood(refrigerator.get(), foodRegisterReq);
+        }
 
-            // TODO: 신선도 로직 구현 후 변경
-            Optional<Refresh> refresh = refreshRepository.findById(1L);
+        // TODO: 완료되면 알림처리
+        log.debug("registerFood method success : {} ", Thread.currentThread().toString());
+    }
 
-            // TODO: 음식 검색 기능을 통해서 유통기한 설정 -> 검색이 안될 경우 missRegistered true 처리
+    public List<FoodListDetailRes> getFoodList(Long refrigeratorId) {
 
-            if (ftype.get().getId() == 1) {
+        List<Food> foodList = foodRepository.findByRefrigerator_Id(refrigeratorId);
 
-                Container container = Container.createContainer(foodRegisterReq.name(),
-                    foodRegisterReq.expirationDate(),
-                    refresh.get(), ftype.get(), refrigerator.get(), false,
-                    foodRegisterReq.temperature(),
-                    foodRegisterReq.humidity(), foodRegisterReq.zCoordinate(),
-                    foodRegisterReq.qrId());
+        log.debug("getFoodList method read : {} ", foodList.size());
+        List<FoodListDetailRes> foodListDetailResList = new ArrayList<>();
 
-                containerRepository.save(container);
-            } else {
-                Food food = Food.createFood(foodRegisterReq.name(),
-                    foodRegisterReq.expirationDate(),
-                    refresh.get(), ftype.get(), refrigerator.get(), false);
+        for (Food food : foodList) {
 
-                foodRepository.save(food);
+            int elapsedTime = Period.between(food.getRegDttm().toLocalDate(),
+                LocalDateTime.now().toLocalDate()).getDays();
+
+            // TODO: 신선도는 나중에 다르게 설정
+            int totalDays = Period.between(food.getRegDttm().toLocalDate(),
+                food.getExpirationDate().toLocalDate()).getDays();
+            int remindDays = Period.between(LocalDateTime.now().toLocalDate(),
+                food.getExpirationDate().toLocalDate()).getDays();
+
+            Double freshState = 0.0;
+
+            if (remindDays > 0) {
+                freshState = (double) remindDays / totalDays * 100;
             }
 
-            cnt++;
-
+            foodListDetailResList.add(
+                FoodListDetailRes.builder()
+                    .id(food.getFoodId())
+                    .name(food.getName())
+                    .image(food.getImage())
+                    .expirationDate(food.getExpirationDate())
+                    .regDttm(food.getRegDttm())
+                    .elapsedTime(elapsedTime)
+                    .freshState(freshState)
+                    .refresh(food.getRefresh().getName())
+                    .ftype(food.getFtype().getName())
+                    .build()
+            );
         }
-        // TODO: 완료되면 알림처리
-        return cnt;
+
+        log.debug("getFoodList method success");
+
+        return foodListDetailResList;
     }
 }
