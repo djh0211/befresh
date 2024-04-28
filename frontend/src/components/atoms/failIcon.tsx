@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 
 
-export default function ColorBadge() {
+export default function FailIcon() {
   return (
     <Stack spacing={2} direction="row">
       <Badge badgeContent={4} color="success">
