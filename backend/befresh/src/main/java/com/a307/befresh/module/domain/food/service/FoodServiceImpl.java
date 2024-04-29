@@ -166,6 +166,7 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    @Transactional
     public void removeFood(Long foodId) {
         Food food = foodRepository.findById(foodId).orElseThrow();
         foodRepository.delete(food);
