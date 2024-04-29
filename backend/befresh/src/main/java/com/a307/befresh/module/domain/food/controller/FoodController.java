@@ -4,6 +4,7 @@ import com.a307.befresh.global.api.response.BaseResponse;
 import com.a307.befresh.global.exception.code.SuccessCode;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
 import com.a307.befresh.module.domain.food.dto.response.FoodDetailRes;
+import com.a307.befresh.module.domain.food.dto.response.FoodFailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodListDetailRes;
 import com.a307.befresh.module.domain.food.service.FoodService;
 import lombok.RequiredArgsConstructor;
@@ -62,5 +63,11 @@ public class FoodController {
         return BaseResponse.success(SuccessCode.SELECT_SUCCESS, foodDetail);
     }
 
+    @GetMapping("/fail")
+    public ResponseEntity<BaseResponse<List<FoodFailRes>>> getFoodFailList(@RequestParam Long refrigeratorId) {
 
+        List<FoodFailRes> foodFailList = foodService.getFoodFailList(refrigeratorId);
+
+        return BaseResponse.success(SuccessCode.SELECT_SUCCESS, foodFailList);
+    }
 }
