@@ -3,6 +3,7 @@ package com.a307.befresh.module.domain.food.controller;
 import com.a307.befresh.global.api.response.BaseResponse;
 import com.a307.befresh.global.exception.code.SuccessCode;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
+import com.a307.befresh.module.domain.food.dto.request.FoodUpdateReq;
 import com.a307.befresh.module.domain.food.dto.response.FoodDetailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodFailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodListDetailRes;
@@ -53,6 +54,22 @@ public class FoodController {
         List<FoodListDetailRes> foodListDetailResList = foodService.getFoodList(refrigeratorId);
 
         return BaseResponse.success(SuccessCode.SELECT_SUCCESS, foodListDetailResList);
+    }
+
+    @PutMapping()
+    public ResponseEntity<BaseResponse<Long>> updateFood(@RequestBody FoodUpdateReq foodUpdateReq) {
+
+        foodService.updateFood(foodUpdateReq);
+
+        return BaseResponse.success(SuccessCode.UPDATE_SUCCESS, foodUpdateReq.foodId());
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<BaseResponse<Long>> deleteFood(@RequestParam Long foodId) {
+
+        foodService.removeFood(foodId);
+
+        return BaseResponse.success(SuccessCode.DELETE_SUCCESS, foodId);
     }
 
     @GetMapping("/detail")
