@@ -27,7 +27,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ value }:{value:number}) =
 }));
 
 // 프로그레스 바 컴포넌트
-function ProgressBar({ value }: {value:number}) {
+function ProgressBar({ value }: Readonly<{value:number}>) {
   return (
     <Stack spacing={2} sx={{ flexGrow: 1 }}>
       <br />
