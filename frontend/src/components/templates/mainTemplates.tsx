@@ -1,6 +1,6 @@
 import CardForm from '../organisms/cardForm';
 import NavBlock from '../molecules/navBlock';
-import { ApiDataItem } from '../../types/types'; // 타입 가져오기
+import { ApiDataItem } from '../../types/types';
 
 interface MainPageTemplateProps {
   cardApiData: ApiDataItem[];

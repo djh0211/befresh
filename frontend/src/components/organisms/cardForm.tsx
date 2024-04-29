@@ -6,7 +6,7 @@ interface CardFormProps {
   cardApiData: ApiDataItem[];
 }
 
-export default function CardForm({ cardApiData }: CardFormProps) {
+export default function CardForm({ cardApiData }: Readonly<CardFormProps>) {
   return (
     <Stack spacing={2}>
       {cardApiData.map((item, index) => (

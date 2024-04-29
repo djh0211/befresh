@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ProgressBar from '../atoms/progerssBar'; // ProgressBar 컴포넌트 경로 확인 필요
 
-export default function ImgMediaCard({ progressValue }:{ progressValue:number}) { // progressValue props를 받아옴
+export default function ImgMediaCard({ progressValue }:Readonly<{ progressValue:number}>) { // progressValue props를 받아옴
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
