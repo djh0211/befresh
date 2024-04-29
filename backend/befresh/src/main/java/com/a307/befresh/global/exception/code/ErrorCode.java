@@ -30,6 +30,8 @@ public enum ErrorCode {
     // 입력/출력 값이 유효하지 않음
     IO_ERROR(400, "G005", "I/O Exception"),
 
+    UNAUTHORIZED(401, "G013", "UnAuthorized Error"),
+
     // com.google.gson JSON 파싱 실패
     JSON_PARSE_ERROR(400, "G006", "JsonParseException"),
 

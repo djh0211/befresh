@@ -3,6 +3,7 @@ package com.a307.befresh.module.domain.member.controller;
 import com.a307.befresh.global.api.response.BaseResponse;
 import com.a307.befresh.global.exception.code.SuccessCode;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
+import com.a307.befresh.module.domain.member.dto.request.MemberSignupReq;
 import com.a307.befresh.module.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,11 @@ public class MemberController {
 
     private final MemberService memberService;
     @PostMapping("/signup")
-    public ResponseEntity<BaseResponse<Integer>> registerFood(
-        @RequestBody FoodRegisterReqList foodRegisterReqList) {
+    public ResponseEntity<BaseResponse<String>> registerFood(
+        @RequestBody MemberSignupReq memberSignupReq) {
 
-        memberService.regist(foodRegisterReqList);
+        String id = memberService.registerMember(memberSignupReq);
 
-        return BaseResponse.success(SuccessCode.INSERT_SUCCESS, null);
+        return BaseResponse.success(SuccessCode.INSERT_SUCCESS, id);
     }
 }

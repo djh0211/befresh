@@ -2,6 +2,7 @@ package com.a307.befresh.module.domain.notification;
 
 import com.a307.befresh.module.domain.BaseEntity;
 import com.a307.befresh.module.domain.member.Member;
+import com.a307.befresh.module.domain.refrigerator.Refrigerator;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,6 +24,6 @@ public class Notification extends BaseEntity {
     private String message;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @JoinColumn(name = "refrigerator_id", nullable = false)
+    private Refrigerator refrigerator;
 }

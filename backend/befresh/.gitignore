@@ -1,6 +1,7 @@
 src/main/resources/application-datasource.yml
 src/main/resources/application-server.yml
 src/main/resources/application-fcm.yml
+src/main/resources/application-jwt.yml
 src/main/resources/*.json
 
 # Created by https://www.toptal.com/developers/gitignore/api/redis,java,intellij,intellij+all,intellij+iml,react,macos,windows,pycharm+all,pycharm+iml,jetbrains+all,jetbrains+iml,jetbrains

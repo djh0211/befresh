@@ -1,4 +1,4 @@
-package com.a307.befresh.global.util;
+package com.a307.befresh.global.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
