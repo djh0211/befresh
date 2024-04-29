@@ -7,21 +7,24 @@ import com.a307.befresh.module.domain.container.repository.ContainerRepository;
 import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReq;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
+import com.a307.befresh.module.domain.food.dto.response.FoodDetailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodListDetailRes;
 import com.a307.befresh.module.domain.food.repository.FoodRepository;
 import com.a307.befresh.module.domain.refresh.Refresh;
 import com.a307.befresh.module.domain.refresh.repository.RefreshRepository;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
 import com.a307.befresh.module.domain.refrigerator.repository.RefrigeratorRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
@@ -42,7 +45,7 @@ public class FoodServiceImpl implements FoodService {
     private void asyncRegisterFood(Refrigerator refrigerator, FoodRegisterReq foodRegisterReq) {
 
         System.out.println(
-            Thread.currentThread().toString() + " " + Thread.currentThread().isVirtual());
+                Thread.currentThread().toString() + " " + Thread.currentThread().isVirtual());
         System.out.println(foodRegisterReq.name());
         Optional<Ftype> ftype = ftypeRepository.findById(foodRegisterReq.ftypeId());
 
@@ -54,21 +57,21 @@ public class FoodServiceImpl implements FoodService {
         if (ftype.get().getId() == 1) {
 
             Container container = Container.createContainer(foodRegisterReq.name(),
-                foodRegisterReq.image(),
-                foodRegisterReq.expirationDate(),
-                refresh.get(), ftype.get(), refrigerator, false,
-                foodRegisterReq.temperature(),
-                foodRegisterReq.humidity(), foodRegisterReq.zCoordinate(),
-                foodRegisterReq.qrId());
+                    foodRegisterReq.image(),
+                    foodRegisterReq.expirationDate(),
+                    refresh.get(), ftype.get(), refrigerator, false,
+                    foodRegisterReq.temperature(),
+                    foodRegisterReq.humidity(), foodRegisterReq.zCoordinate(),
+                    foodRegisterReq.qrId());
 
             containerRepository.save(container);
 
             log.debug("asyncRegisterFood method : container {} success", container.getFoodId());
         } else {
             Food food = Food.createFood(foodRegisterReq.name(),
-                foodRegisterReq.image(),
-                foodRegisterReq.expirationDate(),
-                refresh.get(), ftype.get(), refrigerator, false);
+                    foodRegisterReq.image(),
+                    foodRegisterReq.expirationDate(),
+                    refresh.get(), ftype.get(), refrigerator, false);
 
             foodRepository.save(food);
 
@@ -80,12 +83,12 @@ public class FoodServiceImpl implements FoodService {
     @Async("virtualExecutor")
     public void registerFood(FoodRegisterReqList foodRegisterReqList) {
         Optional<Refrigerator> refrigerator = refrigeratorRepository.findById(
-            foodRegisterReqList.refrigeratorId());
+                foodRegisterReqList.refrigeratorId());
         log.debug("registerFood method start : {} ", Thread.currentThread().toString());
 
         if (refrigerator.isEmpty()) {
             log.error("registerFood method refirgerator: {}이 없습니다.",
-                foodRegisterReqList.refrigeratorId());
+                    foodRegisterReqList.refrigeratorId());
             return;
         }
 
@@ -107,13 +110,13 @@ public class FoodServiceImpl implements FoodService {
         for (Food food : foodList) {
 
             int elapsedTime = Period.between(food.getRegDttm().toLocalDate(),
-                LocalDateTime.now().toLocalDate()).getDays();
+                    LocalDateTime.now().toLocalDate()).getDays();
 
             // TODO: 신선도는 나중에 다르게 설정
             int totalDays = Period.between(food.getRegDttm().toLocalDate(),
-                food.getExpirationDate().toLocalDate()).getDays();
+                    food.getExpirationDate().toLocalDate()).getDays();
             int remindDays = Period.between(LocalDateTime.now().toLocalDate(),
-                food.getExpirationDate().toLocalDate()).getDays();
+                    food.getExpirationDate().toLocalDate()).getDays();
 
             Double freshState = 0.0;
 
@@ -122,22 +125,74 @@ public class FoodServiceImpl implements FoodService {
             }
 
             foodListDetailResList.add(
-                FoodListDetailRes.builder()
-                    .id(food.getFoodId())
-                    .name(food.getName())
-                    .image(food.getImage())
-                    .expirationDate(food.getExpirationDate())
-                    .regDttm(food.getRegDttm())
-                    .elapsedTime(elapsedTime)
-                    .freshState(freshState)
-                    .refresh(food.getRefresh().getName())
-                    .ftype(food.getFtype().getName())
-                    .build()
+                    FoodListDetailRes.builder()
+                            .id(food.getFoodId())
+                            .name(food.getName())
+                            .image(food.getImage())
+                            .expirationDate(food.getExpirationDate())
+                            .regDttm(food.getRegDttm())
+                            .elapsedTime(elapsedTime)
+                            .freshState(freshState)
+                            .refresh(food.getRefresh().getName())
+                            .ftype(food.getFtype().getName())
+                            .build()
             );
         }
 
         log.debug("getFoodList method success");
 
         return foodListDetailResList;
+    }
+
+    @Override
+    public FoodDetailRes getFoodDetail(long foodId) {
+        return containerRepository.findById(foodId)
+                .map(this::createFoodDetailFromContainer)
+                .orElseGet(() -> createFoodDetailFromFood(foodId));
+    }
+
+    private FoodDetailRes createFoodDetailFromContainer(Container container) {
+        int elapsedTime = calculateElapsedTime(container.getRegDttm());
+        double freshState = calculateFreshState(); // 추후 계산 로직 추가
+
+        return FoodDetailRes.builder()
+                .id(container.getFoodId())
+                .name(container.getName())
+                .image(container.getImage())
+                .expirationDate(container.getExpirationDate())
+                .regDttm(container.getRegDttm())
+                .elapsedTime(elapsedTime)
+                .freshState(freshState)
+                .refresh(container.getRefresh().getName())
+                .ftype(container.getFtype().getName())
+                .temperature(container.getTemperature())
+                .humidity(container.getHumidity())
+                .build();
+    }
+
+    private FoodDetailRes createFoodDetailFromFood(long foodId) {
+        Food food = foodRepository.findById(foodId).orElseThrow();
+        int elapsedTime = calculateElapsedTime(food.getRegDttm());
+        double freshState = calculateFreshState(); // TODO : 추후 계산 로직 추가
+
+        return FoodDetailRes.builder()
+                .id(food.getFoodId())
+                .name(food.getName())
+                .image(food.getImage())
+                .expirationDate(food.getExpirationDate())
+                .regDttm(food.getRegDttm())
+                .elapsedTime(elapsedTime)
+                .freshState(freshState)
+                .refresh(food.getRefresh().getName())
+                .ftype(food.getFtype().getName())
+                .build();
+    }
+
+    private int calculateElapsedTime(LocalDateTime registrationDateTime) {
+        return Period.between(registrationDateTime.toLocalDate(), LocalDate.now()).getDays();
+    }
+
+    private double calculateFreshState() {
+        return 0.0; // 여기에 신선도 계산 로직을 구현
     }
 }
