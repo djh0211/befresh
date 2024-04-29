@@ -14,6 +14,10 @@ import com.a307.befresh.module.domain.refresh.Refresh;
 import com.a307.befresh.module.domain.refresh.repository.RefreshRepository;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
 import com.a307.befresh.module.domain.refrigerator.repository.RefrigeratorRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,11 +25,6 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
@@ -145,6 +144,7 @@ public class FoodServiceImpl implements FoodService {
         return foodListDetailResList;
     }
 
+    @Override
     public FoodDetailRes getFoodDetail(long foodId) {
         return containerRepository.findById(foodId)
                 .map(this::createFoodDetailFromContainer)
@@ -173,7 +173,7 @@ public class FoodServiceImpl implements FoodService {
     private FoodDetailRes createFoodDetailFromFood(long foodId) {
         Food food = foodRepository.findById(foodId).orElseThrow();
         int elapsedTime = calculateElapsedTime(food.getRegDttm());
-        double freshState = calculateFreshState(); // 추후 계산 로직 추가
+        double freshState = calculateFreshState(); // TODO : 추후 계산 로직 추가
 
         return FoodDetailRes.builder()
                 .id(food.getFoodId())
