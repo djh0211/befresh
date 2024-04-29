@@ -30,7 +30,7 @@ public class Food extends BaseEntity {
     @Column
     private String image;
 
-    @Column
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDate expirationDate;
 
     @Column(name = "miss_registered")
