@@ -8,6 +8,7 @@ import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReq;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
 import com.a307.befresh.module.domain.food.dto.response.FoodDetailRes;
+import com.a307.befresh.module.domain.food.dto.response.FoodFailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodListDetailRes;
 import com.a307.befresh.module.domain.food.repository.FoodRepository;
 import com.a307.befresh.module.domain.refresh.Refresh;
@@ -129,7 +130,6 @@ public class FoodServiceImpl implements FoodService {
                             .id(food.getFoodId())
                             .name(food.getName())
                             .image(food.getImage())
-                            .expirationDate(food.getExpirationDate())
                             .regDttm(food.getRegDttm())
                             .elapsedTime(elapsedTime)
                             .freshState(freshState)
@@ -149,6 +149,18 @@ public class FoodServiceImpl implements FoodService {
         return containerRepository.findById(foodId)
                 .map(this::createFoodDetailFromContainer)
                 .orElseGet(() -> createFoodDetailFromFood(foodId));
+    }
+
+    @Override
+    public List<FoodFailRes> getFoodFailList(long refrigeratorId) {
+        return foodRepository.findFailFood(refrigeratorId).stream()
+                .map(food -> FoodFailRes.builder()
+                        .id(food.getFoodId())
+                        .name(food.getName())
+                        .image(food.getImage())
+                        .regDttm(food.getRegDttm())
+                        .build())
+                .toList();
     }
 
     private FoodDetailRes createFoodDetailFromContainer(Container container) {
