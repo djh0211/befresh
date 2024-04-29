@@ -4,13 +4,14 @@ import com.a307.befresh.module.domain.Ftype.Ftype;
 import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.refresh.Refresh;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -30,7 +31,7 @@ public class Container extends Food {
     @Column(name = "qr_id")
     private Long qrId;
 
-    public static Container createContainer(String name, String image, LocalDateTime expirationDate,
+    public static Container createContainer(String name, String image, LocalDate expirationDate,
         Refresh refresh, Ftype ftype, Refrigerator refrigerator, boolean missRegistered,
         Double temperature,
         Double humidity, Double zCoordinate, Long qrId) {
