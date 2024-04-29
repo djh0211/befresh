@@ -7,6 +7,7 @@ import com.a307.befresh.module.domain.container.repository.ContainerRepository;
 import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReq;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
+import com.a307.befresh.module.domain.food.dto.request.FoodUpdateReq;
 import com.a307.befresh.module.domain.food.dto.response.FoodDetailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodFailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodListDetailRes;
@@ -15,6 +16,7 @@ import com.a307.befresh.module.domain.refresh.Refresh;
 import com.a307.befresh.module.domain.refresh.repository.RefreshRepository;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
 import com.a307.befresh.module.domain.refrigerator.repository.RefrigeratorRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Async;
@@ -161,6 +163,21 @@ public class FoodServiceImpl implements FoodService {
                         .regDttm(food.getRegDttm())
                         .build())
                 .toList();
+    }
+
+    @Override
+    public void removeFood(Long foodId) {
+        Food food = foodRepository.findById(foodId).orElseThrow();
+        foodRepository.delete(food);
+    }
+
+    @Override
+    @Transactional
+    public void updateFood(FoodUpdateReq foodUpdateReq) {
+        Food food = foodRepository.findById(foodUpdateReq.foodId()).orElseThrow();
+        food.setName(foodUpdateReq.name());
+        food.setExpirationDate(foodUpdateReq.expirationDate());
+        foodRepository.save(food);
     }
 
     private FoodDetailRes createFoodDetailFromContainer(Container container) {

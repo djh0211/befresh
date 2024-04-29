@@ -1,6 +1,7 @@
 package com.a307.befresh.module.domain.food.service;
 
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
+import com.a307.befresh.module.domain.food.dto.request.FoodUpdateReq;
 import com.a307.befresh.module.domain.food.dto.response.FoodDetailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodFailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodListDetailRes;
@@ -17,4 +18,8 @@ public interface FoodService {
     FoodDetailRes getFoodDetail(long foodId);
 
     List<FoodFailRes> getFoodFailList(long refrigeratorId);
+
+    void removeFood(Long foodId);
+
+    void updateFood(FoodUpdateReq foodUpdateReq);
 }
