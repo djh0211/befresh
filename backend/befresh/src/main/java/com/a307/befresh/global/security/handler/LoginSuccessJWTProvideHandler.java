@@ -60,10 +60,7 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
             .build();
 
         response.getWriter().write("{\n"
-            + "    \"result\": " + "{\n"
-            + "\"accessToken\": \"" + loginDto.accessToken() + "\",\n"
-            + "\"refreshToken\": \"" + loginDto.refreshToken() + "\",\n"
-            + "} ,"
+            + "    \"result\": " + "\"token 생성 성공\", \n"
             + "    \"status\": " + SuccessCode.INSERT_SUCCESS.getStatus() + ",\n"
             + "    \"message\": \"" + SuccessCode.INSERT_SUCCESS.getMessage() + "\"\n"
             + "}");

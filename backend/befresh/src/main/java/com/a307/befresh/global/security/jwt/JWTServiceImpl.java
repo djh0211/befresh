@@ -124,7 +124,6 @@ public class JWTServiceImpl implements JwtService{
         setAccessTokenHeader(response, accessToken);
 
         Map<String, String> tokenMap = new HashMap<>();
-
         tokenMap.put(ACCESS_TOKEN_SUBJECT, accessToken);
     }
 

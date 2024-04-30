@@ -1,9 +1,13 @@
 package com.a307.befresh.global.security.filter;
 
+import com.a307.befresh.global.api.response.ErrorResponse;
+import com.a307.befresh.global.exception.BaseExceptionHandler;
+import com.a307.befresh.global.exception.code.ErrorCode;
 import com.a307.befresh.global.security.domain.UserDetailsImpl;
 import com.a307.befresh.global.security.jwt.JwtService;
 import com.a307.befresh.module.domain.member.Member;
 import com.a307.befresh.module.domain.member.repository.MemberRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,8 +15,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -91,11 +97,19 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     private void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response,
-        String refreshToken) {
+        String refreshToken) throws IOException {
 
-        memberRepository.findByRefreshToken(refreshToken).ifPresent(
-            member -> jwtService.sendAccessToken(response,
-                jwtService.createAccessToken(member.getId(),
-                    member.getRefrigerator().getId())));
+        Optional<Member> member = memberRepository.findByRefreshToken(refreshToken);
+
+        if(!member.isPresent()) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN); //401 인증 실패
+            return;
+        }
+
+        jwtService.setAccessTokenHeader(response, jwtService.createAccessToken(member.get().getId(), member.get().getRefrigerator().getId()));
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+
     }
 }
