@@ -2,6 +2,8 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.1.4'
+	// sonarcube
+	id "org.sonarqube" version "5.0.0.4638"
 }
 
 group = 'com.a307'
@@ -46,7 +48,6 @@ dependencies {
 
 	// firebase
 	implementation 'com.google.firebase:firebase-admin:9.2.0'
-
 }
 
 tasks.named('test') {
@@ -62,4 +63,13 @@ def generatedDir = 'build/generated'
 
 clean {
 	delete file (generatedDir)
+}
+
+// sonarcube
+sonar {
+	properties {
+		property "sonar.projectKey", "befresh"
+		property "sonar.projectName", "befresh"
+		property "sonar.host.url", "http://k10a307.p.ssafy.io:9000"
+	}
 }

@@ -5,23 +5,13 @@ import lombok.Builder;
 
 @Builder
 public record FoodListDetailRes(
-
     Long id,
     String name,
-
     String image,
-
-    LocalDateTime expirationDate,
-
     LocalDateTime regDttm,
-
     int elapsedTime,
-
     String refresh,
-
     String ftype,
-
     Double freshState
 ) {
-
 }

@@ -4,20 +4,18 @@ import com.a307.befresh.global.api.response.BaseResponse;
 import com.a307.befresh.global.exception.code.SuccessCode;
 import com.a307.befresh.global.security.domain.UserDetailsImpl;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
+import com.a307.befresh.module.domain.food.dto.request.FoodUpdateReq;
+import com.a307.befresh.module.domain.food.dto.response.FoodDetailRes;
+import com.a307.befresh.module.domain.food.dto.response.FoodFailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodListDetailRes;
 import com.a307.befresh.module.domain.food.service.FoodService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/foods")
@@ -32,9 +30,9 @@ public class FoodController {
     public ResponseEntity<ThreadInfo> getThreadInfo() throws InterruptedException {
         foodService.blocking();
         return ResponseEntity.ok(
-            new ThreadInfo(
-                Thread.currentThread().isVirtual(),
-                Thread.currentThread().toString())
+                new ThreadInfo(
+                        Thread.currentThread().isVirtual(),
+                        Thread.currentThread().toString())
         );
     }
 
@@ -44,7 +42,7 @@ public class FoodController {
 
     @PostMapping
     public ResponseEntity<BaseResponse<Integer>> registerFood(
-        @RequestBody FoodRegisterReqList foodRegisterReqList) {
+            @RequestBody FoodRegisterReqList foodRegisterReqList) {
 
         foodService.registerFood(foodRegisterReqList);
 
@@ -52,13 +50,43 @@ public class FoodController {
     }
 
     @GetMapping
-    public ResponseEntity<BaseResponse<List<FoodListDetailRes>>> getFood(
-        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<BaseResponse<List<FoodListDetailRes>>> getFoodList(
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         List<FoodListDetailRes> foodListDetailResList = foodService.getFoodList(userDetails.getRefrigeratorId());
 
         return BaseResponse.success(SuccessCode.SELECT_SUCCESS, foodListDetailResList);
     }
 
+    @PutMapping()
+    public ResponseEntity<BaseResponse<Long>> updateFood(@RequestBody FoodUpdateReq foodUpdateReq) {
 
+        foodService.updateFood(foodUpdateReq);
+
+        return BaseResponse.success(SuccessCode.UPDATE_SUCCESS, foodUpdateReq.foodId());
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<BaseResponse<Long>> deleteFood(@RequestParam Long foodId) {
+
+        foodService.removeFood(foodId);
+
+        return BaseResponse.success(SuccessCode.DELETE_SUCCESS, foodId);
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<BaseResponse<FoodDetailRes>> getFoodDetail(@RequestParam Long foodId) {
+
+        FoodDetailRes foodDetail = foodService.getFoodDetail(foodId);
+
+        return BaseResponse.success(SuccessCode.SELECT_SUCCESS, foodDetail);
+    }
+
+    @GetMapping("/fail")
+    public ResponseEntity<BaseResponse<List<FoodFailRes>>> getFoodFailList(@RequestParam Long refrigeratorId) {
+
+        List<FoodFailRes> foodFailList = foodService.getFoodFailList(refrigeratorId);
+
+        return BaseResponse.success(SuccessCode.SELECT_SUCCESS, foodFailList);
+    }
 }

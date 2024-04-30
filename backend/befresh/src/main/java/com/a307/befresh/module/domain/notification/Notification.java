@@ -1,7 +1,6 @@
 package com.a307.befresh.module.domain.notification;
 
 import com.a307.befresh.module.domain.BaseEntity;
-import com.a307.befresh.module.domain.member.Member;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
