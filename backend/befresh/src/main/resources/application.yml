@@ -10,3 +10,4 @@ spring:
       - application-datasource.yml
       - application-server.yml
       - application-fcm.yml
+      - application-jwt.yml

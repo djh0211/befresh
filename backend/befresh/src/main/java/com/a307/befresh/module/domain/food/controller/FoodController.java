@@ -2,6 +2,7 @@ package com.a307.befresh.module.domain.food.controller;
 
 import com.a307.befresh.global.api.response.BaseResponse;
 import com.a307.befresh.global.exception.code.SuccessCode;
+import com.a307.befresh.global.security.domain.UserDetailsImpl;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
 import com.a307.befresh.module.domain.food.dto.request.FoodUpdateReq;
 import com.a307.befresh.module.domain.food.dto.response.FoodDetailRes;
@@ -11,6 +12,7 @@ import com.a307.befresh.module.domain.food.service.FoodService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,9 +51,9 @@ public class FoodController {
 
     @GetMapping
     public ResponseEntity<BaseResponse<List<FoodListDetailRes>>> getFoodList(
-            @RequestParam Long refrigeratorId) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        List<FoodListDetailRes> foodListDetailResList = foodService.getFoodList(refrigeratorId);
+        List<FoodListDetailRes> foodListDetailResList = foodService.getFoodList(userDetails.getRefrigeratorId());
 
         return BaseResponse.success(SuccessCode.SELECT_SUCCESS, foodListDetailResList);
     }

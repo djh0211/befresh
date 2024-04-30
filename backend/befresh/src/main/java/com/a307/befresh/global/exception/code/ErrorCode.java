@@ -30,6 +30,8 @@ public enum ErrorCode {
     // 입력/출력 값이 유효하지 않음
     IO_ERROR(400, "G005", "I/O Exception"),
 
+    UNAUTHORIZED(401, "G013", "UnAuthorized Error"),
+
     // com.google.gson JSON 파싱 실패
     JSON_PARSE_ERROR(400, "G006", "JsonParseException"),
 
@@ -50,6 +52,8 @@ public enum ErrorCode {
 
     // @RequestBody 및 @RequestParam, @PathVariable 값이 유효하지 않음
     NOT_VALID_HEADER_ERROR(404, "G012", "Header에 데이터가 존재하지 않는 경우 "),
+
+    DUPLICATED_USER(409, "G014", "중복된 아이디입니다."),
 
     // 서버가 처리 할 방법을 모르는 경우 발생
     INTERNAL_SERVER_ERROR(500, "G999", "Internal Server Error Exception"),

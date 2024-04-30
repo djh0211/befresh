@@ -24,7 +24,7 @@ public class BaseEntity {
     private LocalDateTime regDttm;
 
     @CreatedBy
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private Long regUserSeq;    // TODO : 자동 주입 추후 구현
 
     @LastModifiedDate
