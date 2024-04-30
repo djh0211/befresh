@@ -1,15 +1,16 @@
 package com.a307.befresh.global.security.jwt;
 
+import com.a307.befresh.module.domain.member.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 public interface JwtService {
 
-    String createAccessToken(String id, Long refrigeratorId);
+    String createAccessToken(Long id, Long refrigeratorId);
     String createRefreshToken();
 
-    void updateRefreshToken(String id, String refreshToken);
+    void updateRefreshToken(Long id, String refreshToken);
 
     void destroyRefreshToken(String id);
 
@@ -20,7 +21,8 @@ public interface JwtService {
 
     Optional<String> extractRefreshToken(HttpServletRequest request);
 
-    Optional<String> extractEmail(String accessToken);
+    Optional<Long> extractId(String accessToken);
+    Optional<String> extractRefrigeratorId(String accessToken);
 
     void setAccessTokenHeader(HttpServletResponse response, String accessToken);
 

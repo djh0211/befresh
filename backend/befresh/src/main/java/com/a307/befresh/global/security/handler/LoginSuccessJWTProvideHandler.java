@@ -4,12 +4,14 @@ import com.a307.befresh.global.api.response.BaseResponse;
 import com.a307.befresh.global.exception.code.SuccessCode;
 import com.a307.befresh.global.security.domain.dto.LoginDto;
 import com.a307.befresh.global.security.jwt.JwtService;
+import com.a307.befresh.module.domain.member.Member;
 import com.a307.befresh.module.domain.member.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +34,12 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        String id = userDetails.getUsername();
-        Long refrigerator_id = memberRepository.findByMemberId(id).get().getRefrigerator().getId();
+        String memberId = userDetails.getUsername();
+        Optional<Member> member = memberRepository.findByMemberId(memberId);
+
+        Long id = member.get().getId();
+        Long refrigerator_id = member.get().getRefrigerator().getId();
+
         String accessToken = jwtService.createAccessToken(id, refrigerator_id);
         String refreshToken = jwtService.createRefreshToken();
 
@@ -54,7 +60,10 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
             .build();
 
         response.getWriter().write("{\n"
-            + "    \"result\": \"" + loginDto.id() + "\",\n" // loginDto의 id를 문자열로 감싸주기 위해 "" 사용
+            + "    \"result\": " + "{\n"
+            + "\"accessToken\": \"" + loginDto.accessToken() + "\",\n"
+            + "\"refreshToken\": \"" + loginDto.refreshToken() + "\",\n"
+            + "} ,"
             + "    \"status\": " + SuccessCode.INSERT_SUCCESS.getStatus() + ",\n"
             + "    \"message\": \"" + SuccessCode.INSERT_SUCCESS.getMessage() + "\"\n"
             + "}");

@@ -2,9 +2,11 @@ package com.a307.befresh.global.security.domain;
 
 import com.a307.befresh.module.domain.member.Member;
 import java.util.Collection;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@Getter
 public class UserDetailsImpl implements UserDetails {
 
     private final Member member;

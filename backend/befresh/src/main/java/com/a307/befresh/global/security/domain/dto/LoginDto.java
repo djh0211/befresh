@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record LoginDto (
-    String id,
+    Long id,
     String accessToken,
     String refreshToken
 ){

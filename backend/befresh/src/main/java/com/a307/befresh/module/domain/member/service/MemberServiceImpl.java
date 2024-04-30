@@ -1,5 +1,8 @@
 package com.a307.befresh.module.domain.member.service;
 
+import static com.a307.befresh.global.exception.code.ErrorCode.DUPLICATED_USER;
+
+import com.a307.befresh.global.exception.BaseExceptionHandler;
 import com.a307.befresh.module.domain.member.Member;
 import com.a307.befresh.module.domain.member.dto.request.MemberSignupReq;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
@@ -28,6 +31,10 @@ public class MemberServiceImpl implements MemberService {
 
         if (refrigerator.isEmpty()) {
             return null;
+        }
+
+        if(memberRepository.existsByMemberId(memberSignupReq.id())) {
+            throw new BaseExceptionHandler(DUPLICATED_USER);
         }
 
         Member member = Member.createMember(memberSignupReq.id(), memberSignupReq.password(),

@@ -21,8 +21,8 @@ public class JsonMemberAuthenticationFilter extends AbstractAuthenticationProces
     private static final String HTTP_METHOD = "POST";
     private static final String CONTENT_TYPE = "application/json";//json 타입의 데이터로만 로그인을 진행한다.
     private final ObjectMapper objectMapper;
-    private static final String USERNAME_KEY="id";
-    private static final String PASSWORD_KEY="password";
+    private static final String USERNAME_KEY = "id";
+    private static final String PASSWORD_KEY = "password";
 
 
     private static final AntPathRequestMatcher DEFAULT_LOGIN_PATH_REQUEST_MATCHER =
@@ -34,19 +34,25 @@ public class JsonMemberAuthenticationFilter extends AbstractAuthenticationProces
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        if(request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)  ) {
-            throw new AuthenticationServiceException("Authentication Content-Type not supported: " + request.getContentType());
+    public Authentication attemptAuthentication(HttpServletRequest request,
+        HttpServletResponse response)
+        throws AuthenticationException, IOException, ServletException {
+
+        if (request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)) {
+            throw new AuthenticationServiceException(
+                "Authentication Content-Type not supported: " + request.getContentType());
         }
 
-        String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+        String messageBody = StreamUtils.copyToString(request.getInputStream(),
+            StandardCharsets.UTF_8);
 
         Map<String, String> usernamePasswordMap = objectMapper.readValue(messageBody, Map.class);
 
         String username = usernamePasswordMap.get(USERNAME_KEY);
         String password = usernamePasswordMap.get(PASSWORD_KEY);
 
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);//principal 과 credentials 전달
+        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
+            username, password);//principal 과 credentials 전달
 
         return this.getAuthenticationManager().authenticate(authRequest);
     }

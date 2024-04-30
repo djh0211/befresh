@@ -7,6 +7,8 @@ import com.a307.befresh.module.domain.member.Member;
 import com.a307.befresh.module.domain.member.repository.MemberRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,7 +47,7 @@ public class JWTServiceImpl implements JwtService{
     //== 1 ==//
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
-    private static final String USERNAME_CLAIM = "id";
+    private static final String USERID_CLAIM="id";
     private static final String REFRIGERATOR_CLAIM = "refrigerator_id";
     private static final String BEARER = "Bearer ";
 
@@ -57,14 +59,14 @@ public class JWTServiceImpl implements JwtService{
      * 토큰 생성 메서드
      **/
     @Override
-    public String createAccessToken(String id, Long refrigeratorId) {
+    public String createAccessToken(Long id, Long refrigeratorId) {
         return JWT.create()
             // JWT의 subject 설정
             .withSubject(ACCESS_TOKEN_SUBJECT)
             // 만료 시간 설정
             .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenValidityInSeconds * 1000))
             // id와 냉장고 id를 token에 삽입
-            .withClaim(USERNAME_CLAIM, id)
+            .withClaim(USERID_CLAIM, id)
             .withClaim(REFRIGERATOR_CLAIM, refrigeratorId)
             // HMAC512 알고리즘을 사용하여 암호화
             .sign(Algorithm.HMAC512(secret));
@@ -79,8 +81,8 @@ public class JWTServiceImpl implements JwtService{
     }
 
     @Override
-    public void updateRefreshToken(String id, String refreshToken) {
-        Optional<Member> member = memberRepository.findByMemberId(id);
+    public void updateRefreshToken(Long id, String refreshToken) {
+        Optional<Member> member = memberRepository.findById(id);
 
         if(member.isEmpty()) new BaseExceptionHandler(NOT_FOUND_USER_EXCEPTION);
 
@@ -141,10 +143,21 @@ public class JWTServiceImpl implements JwtService{
     }
 
     @Override
-    public Optional<String> extractEmail(String accessToken) {
+    public Optional<Long> extractId(String accessToken) {
         try {
             return Optional.ofNullable(
-                JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken).getClaim(USERNAME_CLAIM)
+                JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken).getClaim(USERID_CLAIM)
+                    .asLong());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    public Optional<String> extractRefrigeratorId(String accessToken) {
+        try {
+            return Optional.ofNullable(
+                JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken).getClaim(REFRIGERATOR_CLAIM)
                     .asString());
         } catch (Exception e) {
             log.error(e.getMessage());
