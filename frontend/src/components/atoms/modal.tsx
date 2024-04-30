@@ -4,6 +4,16 @@ import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
+import styled from 'styled-components';
+
+const FoodModalDetail = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+const DetailList = styled.p`
+  width: 120px; /* 원하는 길이로 조절하세요 */
+  text-align: center;
+`;
 
 export default function BasicModal() {
   const [open, setOpen] = React.useState<boolean>(false);
@@ -30,6 +40,7 @@ export default function BasicModal() {
           }}
         >
           <ModalClose variant="plain" sx={{ m: 1 }} />
+          <img src="../../../public/sampleimg.png" alt="img" />
           <Typography
             component="h2"
             id="modal-title"
@@ -38,11 +49,13 @@ export default function BasicModal() {
             fontWeight="lg"
             mb={1}
           >
-            This is the modal title
+            음식이름
           </Typography>
           <Typography id="modal-desc" textColor="text.tertiary">
-            Make sure to use <code>aria-labelledby</code> on the modal dialog with an
-            optional <code>aria-describedby</code> attribute.
+            <FoodModalDetail><DetailList>들어온시간  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
+            <FoodModalDetail><DetailList>경과시간  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
+            <FoodModalDetail><DetailList>유통기한  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
+            <FoodModalDetail><DetailList>상태  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
           </Typography>
         </Sheet>
       </Modal>

@@ -1,7 +1,6 @@
 import CardForm from '../organisms/cardForm';
 import NavBlock from '../molecules/navBlock';
 import { ApiDataItem } from '../../types/types';
-import BasicModal from '../atoms/modal';
 
 interface MainPageTemplateProps {
   cardApiData: ApiDataItem[];
