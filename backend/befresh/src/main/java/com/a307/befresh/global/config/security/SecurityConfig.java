@@ -62,7 +62,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(
-            List.of("http://localhost:8000", "https://be-fresh.site"));
+            List.of("http://localhost:5173", "https://be-fresh.site"));
         configuration.setAllowedMethods(
             Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "OPTION"));     // 허용할 HTTP 메소드
         configuration.setAllowedHeaders(Arrays.asList(      // 요청 헤더 중 허용할 헤더 설정
