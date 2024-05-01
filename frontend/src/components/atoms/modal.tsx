@@ -5,6 +5,7 @@ import ModalClose from '@mui/joy/ModalClose';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const FoodModalDetail = styled.div`
   display: flex;
@@ -17,6 +18,7 @@ const DetailList = styled.p`
 
 export default function BasicModal() {
   const [open, setOpen] = React.useState<boolean>(false);
+  const navigate = useNavigate()
   return (
     <React.Fragment>
       <Button variant="outlined" color="neutral" onClick={() => setOpen(true)}>
@@ -56,6 +58,9 @@ export default function BasicModal() {
             <FoodModalDetail><DetailList>경과시간  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
             <FoodModalDetail><DetailList>유통기한  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
             <FoodModalDetail><DetailList>상태  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
+            
+            <Button onClick={() => { navigate('/alarm') }}>gg</Button>
+            
           </Typography>
         </Sheet>
       </Modal>

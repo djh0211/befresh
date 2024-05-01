@@ -8,12 +8,17 @@ const SignUpTempContainer = styled.div`
   min-height: 90vh;
 `;
 
+interface SignUpFormData {
+  id: string;
+  password: string;
+  refrigeratorId: number;
+}
 
-function SignUpTemp() {
+function SignUpTemp({ onSignUp }: Readonly<{ onSignUp: (formData: SignUpFormData) => void }>) {
   return (
     <div>
       <SignUpTempContainer>
-        <SignUpForm />
+        <SignUpForm onSignUp={onSignUp} />
       </SignUpTempContainer>
     </div>
   );

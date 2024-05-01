@@ -1,3 +1,4 @@
+import React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles'; // styled 함수 import
@@ -18,9 +19,11 @@ const CustomTextField = styled(TextField)({
 
 interface PasswordInputTextFieldsProps {
   label: string; // label props의 타입을 명시적으로 string으로 지정
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void; // onChange 핸들러를 optional로 지정
+  helperText?: string; // helperText props의 타입을 명시적으로 string으로 지정
 }
 
-function PasswordInputTextFields({ label }: Readonly<PasswordInputTextFieldsProps>) { // label props를 받음
+function PasswordInputTextFields({ label, onChange, helperText }: Readonly<PasswordInputTextFieldsProps>) { // label props를 받음
   return (
     <Box
       component="form"
@@ -37,6 +40,9 @@ function PasswordInputTextFields({ label }: Readonly<PasswordInputTextFieldsProp
           type="password"
           autoComplete="current-password"
           variant="standard"
+          onChange={onChange} // onChange 핸들러를 전달
+          error={!!helperText} // helperText가 있는 경우에만 에러 상태로 처리
+          helperText={helperText} // helperText를 표시
         />
       </div>
     </Box>
@@ -45,6 +51,7 @@ function PasswordInputTextFields({ label }: Readonly<PasswordInputTextFieldsProp
 
 PasswordInputTextFields.propTypes = {
   label: PropTypes.string.isRequired, // label은 문자열이어야 함을 정의
+  helperText: PropTypes.string, // helperText는 문자열이거나 없을 수 있음을 정의
 };
 
 export default PasswordInputTextFields;
