@@ -5,7 +5,6 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import ProgressBar from '../atoms/progerssBar';
 import BasicModal from '../atoms/modal';
-import sampleimg from '../../../public/sampleimg.png'
 
 export default function ImgMediaCard({ progressValue }:Readonly<{ progressValue:number}>) { // progressValue props를 받아옴
   return (

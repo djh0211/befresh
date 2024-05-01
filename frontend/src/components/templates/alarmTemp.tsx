@@ -1,10 +1,10 @@
 import AlarmBlock from '../molecules/alarmBlock';
 import NavBlock from '../molecules/navBlock';
-import { ApiDataItem } from '../../types/types';
+// import { ApiDataItem } from '../../types/types';
 
-interface AlarmTemplateProps {
+// interface AlarmTemplateProps {
   
-}
+// }
 
 export default function AlarmTemplate() {
   return (
