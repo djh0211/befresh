@@ -81,7 +81,8 @@ function SignUpForm({ onSignUp, refId, getRefId }: Readonly<{ onSignUp: (formDat
         onClose={handleClose}
       >
         <DialogContent>
-          <div style={{width:'300px', height:'300px'}}>
+          <div style={{width:'550px'}}>
+            <p style={{textAlign:'center', fontSize:'1.3rem'}}>냉장고의 QR코드를 인식해주세요.</p>
             {open && (<QrReader
               onResult={(result:any, _err:any) => {
                 if (result) {
@@ -89,10 +90,9 @@ function SignUpForm({ onSignUp, refId, getRefId }: Readonly<{ onSignUp: (formDat
                   console.log(tempRefId[1])
                   getRefId(tempRefId[1])
                   setOpen(false);
-                  return
                 }
               }}
-              constraints={{facingMode: 'user'}}
+              constraints={{facingMode: 'environment'}}
             />)}
           </div>
         </DialogContent>
