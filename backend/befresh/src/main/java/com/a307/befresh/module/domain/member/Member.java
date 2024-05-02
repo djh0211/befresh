@@ -1,6 +1,7 @@
 package com.a307.befresh.module.domain.member;
 
 import com.a307.befresh.module.domain.BaseEntity;
+import com.a307.befresh.module.domain.memberToken.MemberToken;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,6 +30,9 @@ public class Member extends BaseEntity {
     @Column(length = 100)
     @Setter
     private String password;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private Set<MemberToken> memberTokenSet;
 
     @Column(name ="refresh_token")
     private String refreshToken;

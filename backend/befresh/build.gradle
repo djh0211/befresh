@@ -48,6 +48,11 @@ dependencies {
 
 	// firebase
 	implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+	// spring batch
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	implementation 'org.springframework.boot:spring-boot-starter-quartz'
+
 }
 
 tasks.named('test') {
