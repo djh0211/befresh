@@ -4,7 +4,8 @@ import SignupInputBlock from "../molecules/sighupInputBlock";
 import MemberButton from "../atoms/Button";
 import LogoComponent from "../atoms/LogoComponent";
 import Swal from 'sweetalert2';
-// import { useSelector } from 'react-redux';
+import { QrReader } from 'react-qr-reader';
+import { Dialog, DialogContent } from '@mui/material';
 
 const SignUpContainer = styled.div`
   display: flex;
@@ -12,6 +13,7 @@ const SignUpContainer = styled.div`
   align-items: center;
   min-height: 90vh;
 `;
+
 interface SignUpFormData {
   id: string;
   password: string;
@@ -19,9 +21,7 @@ interface SignUpFormData {
 }
 
 
-function SignUpForm({ onSignUp }: Readonly<{ onSignUp: (formData: SignUpFormData) => void }>) {
-  // 리덕스 스토어에서 냉장고 ID 가져오기
-  // const refrigeratorId = useSelector((state: RootState) => state.refrigerator.id);
+function SignUpForm({ onSignUp, refId, getRefId }: Readonly<{ onSignUp: (formData: SignUpFormData) => void, refId: string|null, getRefId: (ref:string) => void }>) {
 
   // 아이디, 비밀번호, 비밀번호 확인을 위한 state 선언
   const [id, setId] = useState('');
@@ -47,6 +47,17 @@ function SignUpForm({ onSignUp }: Readonly<{ onSignUp: (formData: SignUpFormData
     };
     onSignUp(formData);
   };
+
+
+  // 모달용 변수들
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const openScanner = () => {
+    setOpen(true)
+  }
+
   return (
     <div>
       <SignUpContainer>
@@ -57,8 +68,35 @@ function SignUpForm({ onSignUp }: Readonly<{ onSignUp: (formData: SignUpFormData
           onPasswordChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
           onConfirmPasswordChange={(event: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(event.target.value)}
         />
-        <MemberButton onClick={handleSignUp}>회원가입</MemberButton>
+        {
+          refId == null ? (
+            <MemberButton onClick={openScanner}>냉장고 등록</MemberButton>
+          ) : (
+            <MemberButton onClick={handleSignUp}>회원가입</MemberButton>
+          )
+        }
       </SignUpContainer>
+      <Dialog 
+        open={open}
+        onClose={handleClose}
+      >
+        <DialogContent>
+          <div style={{width:'300px', height:'300px'}}>
+            {open && (<QrReader
+              onResult={(result:any, _err:any) => {
+                if (result) {
+                  let tempRefId = result?.text.split('refId=')
+                  console.log(tempRefId[1])
+                  getRefId(tempRefId[1])
+                  setOpen(false);
+                  return
+                }
+              }}
+              constraints={{facingMode: 'user'}}
+            />)}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

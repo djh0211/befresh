@@ -1,13 +1,11 @@
-import Badge from '@mui/material/Badge';
-import Stack from '@mui/material/Stack';
 import MailIcon from '@mui/icons-material/Mail';
+import { Badge } from '@mui/material';
 
 export default function AlarmIcon() {
+  const location :string = window.location.href
   return (
-    <Stack spacing={2} direction="row">
-      <Badge badgeContent={4} color="success">
-        <MailIcon color="action" />
-      </Badge>
-    </Stack>
+    <Badge badgeContent={3} color='success' variant="dot">
+      <MailIcon color={location.includes('alarm') ? "success" : "action"} sx={{fontSize:'5rem'}}/>
+    </Badge>
   );
 }
