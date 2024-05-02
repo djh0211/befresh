@@ -3,6 +3,8 @@
 import styled from "styled-components";
 import SignUpTemp from "../components/templates/signupTemp";
 import { signUp } from "../api/member/memberApi"; // signUp API import
+import { useEffect } from "react";
+import { useState } from "react";
 
 const SignUpPageContainer = styled.div`
   display: flex;
@@ -31,9 +33,23 @@ function SignupPage() {
     }
   };
 
+  // 냉장고 아이디(refId)
+  const [refId, setRefId] = useState<string|null>(null)
+  useEffect(()=> {
+    let query = window.location.search
+    let param = new URLSearchParams(query);
+    let tempRefid = param.get('refId');
+    setRefId(tempRefid)
+  }, [])
+
+  const getRefId = (ref:string) => {
+    setRefId(ref)
+  }
+
+
   return (
     <SignUpPageContainer>
-      <SignUpTemp onSignUp={handleSignUp} />
+      <SignUpTemp onSignUp={handleSignUp} refId={refId} getRefId={getRefId}/>
     </SignUpPageContainer>
   );
 }

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import AlarmIcon from "../atoms/alarmIcon";
-import FailIcon from "../atoms/failIcon";
+import InfoIcon from "../atoms/infoIcon";
 import HomeIcon from "../atoms/homeIcon";
 import Stack from '@mui/material/Stack';
 
@@ -10,14 +10,15 @@ const CenteredStack = styled(Stack)`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  border: 1px solid #ccc;
+  border-top: 1px solid #ccc;
   padding: 10px;
+  height: 8vh;
 `;
 
 export default function NavBlock() {
   return (
     <CenteredStack direction="row" spacing={3}>
-      <Link to="/unregister"><FailIcon /></Link>
+      <Link to="/info"><InfoIcon /></Link>
       <Link to="/main"><HomeIcon /></Link>
       <Link to="/alarm"><AlarmIcon /></Link>
     </CenteredStack>
