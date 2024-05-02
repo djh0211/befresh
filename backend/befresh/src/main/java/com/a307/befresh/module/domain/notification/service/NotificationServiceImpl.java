@@ -23,31 +23,6 @@ public class NotificationServiceImpl implements NotificationService {
     private final MemberRepository memberRepository;
 
     @Override
-    public void sendFreshWarnMessage() {
-        NotificationRegisterRes test = NotificationRegisterRes.builder()
-                .token("fLW0wNSODS-Sw4B0_Ufj3f:APA91bENH5knCjgl_aXqljQpaq6glOI_a5YxwdFKdm4v5AygUwe9tvHaEgiZdUYTPa3jf9XidVcL0MupNie9AUYYI2aExTYiN6iyzD05DTvvrrnn3qSdZ-3dQhLZqwYTNbL3eqcnsLKU")
-                .title("title")
-                .body("body")
-                .build();
-
-        Message message = Message.builder()
-                .setToken(test.token())
-                .setNotification(Notification.builder()
-                        .setTitle(test.title())
-                        .setBody(test.body())
-                        .build()
-                )
-                .build();
-
-        try {
-            String response = FirebaseMessaging.getInstance().send(message);
-            log.info("[FCM send] " + response);
-        } catch (FirebaseMessagingException e) {
-            log.info("[FCM except]" + e.getMessage());
-        }
-    }
-
-    @Override
     public void sendExpireNotification(long refrigeratorId, List<Food> foodList, int daysBefore) {
         List<Member> memberList = memberRepository.findByRefrigerator_Id(refrigeratorId);
         log.info("memberList = " + memberList);
@@ -60,27 +35,23 @@ public class NotificationServiceImpl implements NotificationService {
                     Message message = Message.builder()
                             .setToken(memberToken.getToken())
                             .setNotification(Notification.builder()
-                                    .setTitle("title")
+                                    .setTitle("유통기한 알림")
                                     .setBody(food.getName() + "의 유통기한이 " + daysBefore + "일 남았습니다!")
                                     .build()
                             )
                             .build();
-//                        .token("fLW0wNSODS-Sw4B0_Ufj3f:APA91bENH5knCjgl_aXqljQpaq6glOI_a5YxwdFKdm4v5AygUwe9tvHaEgiZdUYTPa3jf9XidVcL0MupNie9AUYYI2aExTYiN6iyzD05DTvvrrnn3qSdZ-3dQhLZqwYTNbL3eqcnsLKU")
 
                     log.info("message = " + message);
 
                     try {
                         String response = FirebaseMessaging.getInstance().send(message);
                         log.info("[FCM send] " + response);
-                    } catch (FirebaseMessagingException e) {
+                    }
+                    catch (FirebaseMessagingException e) {
                         log.info("[FCM except]" + e.getMessage());
                     }
                 }
             }
         }
-    }
-
-    List<Food> findUnfreshFood(long refrigeratorId){
-        return null;
     }
 }

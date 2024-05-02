@@ -57,11 +57,11 @@ public class ExpireBatchConfig {
     @Bean
     public Tasklet foodExpirationTasklet() {
         return (contribution, chunkContext) -> {
-//            sendNotificationsForDays(7);
-//            sendNotificationsForDays(1);
+            sendNotificationsForDays(7);
+            sendNotificationsForDays(1);
             sendNotificationsForDays(0);
-//            sendNotificationsForDays(-1);
-//            sendNotificationsForDays(-7);
+            sendNotificationsForDays(-1);
+            sendNotificationsForDays(-7);
             return RepeatStatus.FINISHED;
         };
     }
@@ -73,18 +73,12 @@ public class ExpireBatchConfig {
 
         for (Refrigerator refrigerator : refrigeratorList) {
             List<Food> expireFoodList = foodRepository.findExpireFood(refrigerator.getId(), targetDate);
-            for (Food food : expireFoodList) {
-                System.out.println("food.getExpirationDate() = " + food.getExpirationDate());
-                System.out.println("targetDate = " + targetDate);
-                System.out.println("food.getExpirationDate().equals(targetDate) = " + food.getExpirationDate().equals(targetDate));
-            }
-
             log.info("expireFoodList = " + expireFoodList);
             notificationService.sendExpireNotification(refrigerator.getId(), expireFoodList, daysBefore);
         }
     }
 
-    @Scheduled(fixedRate = 60000) // 60000 milliseconds = 1 minute
+    @Scheduled(cron = "0 0 6 * * ?") // 매일 오전 6시에 실행
     public void runJob() {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())
