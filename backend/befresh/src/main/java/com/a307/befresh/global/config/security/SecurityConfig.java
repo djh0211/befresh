@@ -71,6 +71,10 @@ public class SecurityConfig {
             "Content-Type"
         ));
         configuration.setAllowCredentials(true);    // 인증 정보(cookies, headers) 등을 포함한 요청을 허용하도록 설정
+        configuration.setExposedHeaders(Arrays.asList(
+            "Authorization",
+            "Authorization-refresh"
+        ));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();     // URL 기반의 CORS 설정 소스 객체 생성
         source.registerCorsConfiguration("/**", configuration);     // 모든 url 패턴에 대해 CORS 설정 적용
