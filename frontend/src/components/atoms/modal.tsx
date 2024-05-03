@@ -59,7 +59,7 @@ export default function BasicModal() {
             <FoodModalDetail><DetailList>유통기한  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
             <FoodModalDetail><DetailList>상태  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
             
-            <Button onClick={() => { navigate('/alarm') }}>gg</Button>
+            <Button onClick={() => { navigate('/info') }}>세부 기록</Button>
             
           </Typography>
         </Sheet>
