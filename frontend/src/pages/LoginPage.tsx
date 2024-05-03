@@ -21,6 +21,7 @@ function LoginPage() {
       const response = await logIn({...formData})
       console.log("실행은 됨:",response);
       if (response !== 0) {
+        console.log(response,'hi')
         navigator('/main')
       }
     } catch (error) {

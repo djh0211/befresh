@@ -23,6 +23,8 @@ export async function signUp(formData: { id: string, password: string, refrigera
 export async function logIn(formData: { id: string, password: string }): Promise<any> {
   try {
     const response = await axios.post('https://be-fresh.site/api/login', formData);
+    // console.log(response.headers['authorization'])
+    // console.log(response.headers['authorization-refresh'])
     return response.data;
   } catch (err) {
     Swal.fire({
