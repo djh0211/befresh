@@ -2,9 +2,11 @@ import axios from 'axios';
 import Swal from "sweetalert2";
 
 // 회원가입 API 
-export async function signUp(formData: { id: string, password: string }): Promise<any> {
+export async function signUp(formData: { id: string, password: string, refrigeratorId:number }): Promise<any> {
   try {
     const response = await axios.post('https://be-fresh.site/api/member/signup', formData);
+    console.log(formData.refrigeratorId)
+    console.log(response)
     return response.data;
   } catch (err) {
     Swal.fire({
@@ -12,6 +14,7 @@ export async function signUp(formData: { id: string, password: string }): Promis
       icon:'warning'
     })
     console.log(err);
+    return 0
   }
 }
 
@@ -26,5 +29,6 @@ export async function logIn(formData: { id: string, password: string }): Promise
       icon: 'warning'
     })
     console.log(err);
+    return 0
   }
 }

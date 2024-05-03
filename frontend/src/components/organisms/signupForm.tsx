@@ -43,7 +43,7 @@ function SignUpForm({ onSignUp }: Readonly<{ onSignUp: (formData: SignUpFormData
       id: id,
       password: password,
       // refrigeratorId: refrigeratorId, // 가져온 냉장고 ID 사용
-      refrigeratorId: 1, // 가져온 냉장고 ID 사용
+      refrigeratorId: 101, // 가져온 냉장고 ID 사용
     };
     onSignUp(formData);
   };

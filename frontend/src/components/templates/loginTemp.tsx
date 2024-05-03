@@ -8,12 +8,17 @@ const LoginPageContainer = styled.div`
   min-height: 90vh;
 `;
 
+interface LoginFormData {
+  id: string;
+  password: string
+}
 
-function LoginTemp() {
+
+function LoginTemp( { onLogIn }: Readonly<{ onLogIn: (formData: LoginFormData) => void }>) {
   return (
     <div>
       <LoginPageContainer>
-        <LoginForm />
+        <LoginForm onLogIn={ onLogIn } />
       </LoginPageContainer>
     </div>
   );

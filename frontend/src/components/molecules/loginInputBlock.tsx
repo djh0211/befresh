@@ -12,16 +12,23 @@ const InputContainer = styled.div`
   width: 100%;
 `;
 
-function LoginBlock() {
-  const [id, setId] = useState(''); // eslint-disable-line no-unused-vars
-  const [password, setPassword] = useState(''); // eslint-disable-line no-unused-vars
+interface LogInInputBlockProps {
+  onIdChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onPasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+function LoginInputBlock( {onIdChange, onPasswordChange}: Readonly<LogInInputBlockProps>) {
+  const [_id, setId] = useState(''); 
+  const [_password, setPassword] = useState(''); 
 
   const handleIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setId(event.target.value);
+    onIdChange(event);
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
+    onPasswordChange(event);
   };
 
   return (
@@ -34,4 +41,4 @@ function LoginBlock() {
   );
 }
 
-export default LoginBlock;
+export default LoginInputBlock;

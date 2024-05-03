@@ -20,7 +20,7 @@ const InputContainer = styled.div`
 
 function SignupInputBlock({ onIdChange, onPasswordChange, onConfirmPasswordChange }: Readonly<SignupInputBlockProps>) {
   // 아이디를 위한 state 선언
-  const [id, setId] = useState('');// eslint-disable-line no-unused-vars
+  const [_id, setId] = useState('');
 
   // 아이디 입력 값 변경 시 호출되는 이벤트 핸들러
   const handleIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
