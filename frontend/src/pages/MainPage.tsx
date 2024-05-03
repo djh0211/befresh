@@ -28,7 +28,7 @@
 
 // export default MainPage;
 
-import MainPageTemplate from "../components/templates/mainTemplates";
+import MainPageTemplate from "../components/templates/mainTemp";
 import { useEffect, useState } from 'react';
 
 function MainPage() {
