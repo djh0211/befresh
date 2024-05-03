@@ -17,7 +17,7 @@ const SignUpContainer = styled.div`
 interface SignUpFormData {
   id: string;
   password: string;
-  refrigeratorId: number;
+  refrigeratorId: string;
 }
 
 
@@ -30,22 +30,25 @@ function SignUpForm({ onSignUp, refId, getRefId }: Readonly<{ onSignUp: (formDat
 
   // 회원가입 버튼 클릭 시 호출되는 함수
   const handleSignUp = () => {
-    // 비밀번호와 비밀번호 확인이 일치하는지 확인
-    if (password !== confirmPassword) {
-      Swal.fire({
-        text: '비밀번호와 비밀번호 확인이 일치하지 않습니다.',
-        icon: 'error',
-      });
-      return;
+    if (refId !== null){
+      // 비밀번호와 비밀번호 확인이 일치하는지 확인
+      if (password !== confirmPassword) {
+        Swal.fire({
+          text: '비밀번호와 비밀번호 확인이 일치하지 않습니다.',
+          icon: 'error',
+        });
+        return;
+      }
+
+      console.log('refId', refId)
+      // 회원가입 정보를 모아서 onSignUp 콜백 함수에 전달
+      const formData: SignUpFormData = {
+        id: id,
+        password: password,
+        refrigeratorId: refId, // 가져온 냉장고 ID 사용
+      };
+      onSignUp(formData);
     }
-    // 회원가입 정보를 모아서 onSignUp 콜백 함수에 전달
-    const formData: SignUpFormData = {
-      id: id,
-      password: password,
-      // refrigeratorId: refrigeratorId, // 가져온 냉장고 ID 사용
-      refrigeratorId: 1, // 가져온 냉장고 ID 사용
-    };
-    onSignUp(formData);
   };
 
 

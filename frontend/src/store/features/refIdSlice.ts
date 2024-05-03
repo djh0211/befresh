@@ -1,21 +1,23 @@
-// import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// interface RefIdState{
-//   value : string
-// }
+interface RefIdState {
+  refId: string;
+}
 
-// const initialState: RefIdState = {
-//   value:""
-// }
+const initialRefIdState: RefIdState = {
+  refId: ""
+};
 
-// export const refIdSlice = createSlice({
-//   name: 'refid',
-//   initialState,
-//   reducers: {
+const refIdSlice = createSlice({
+  name: 'refId',
+  initialState: initialRefIdState,
+  reducers: {
+    setRefId: (state, action: PayloadAction<string>) => {
+      state.refId = action.payload;
+    }
+  }
+});
 
-//   }
-// })
+export const { setRefId } = refIdSlice.actions; // 액션 생성자 추출
 
-// export const{ increment, decrement, incrementByAmount  } = refIdSlice.actions;
-
-// export default refIdSlice.reducer;
+export default refIdSlice.reducer; // 리듀서 함수 추출

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 import LoginBlock from "../molecules/loginInputBlock";
 import MemberButton from "../atoms/Button";
@@ -10,15 +11,34 @@ const LoginPageContainer = styled.div`
   min-height: 90vh;
 `;
 
+interface LoginFormData {
+  id: string;
+  password: string;
+}
 
 
-function LoginForm() {
+function LoginForm({ onLogIn }: Readonly<{ onLogIn: (formData: LoginFormData) => void}>) {
+  
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+  
+  const handleLogIn = () => {
+
+    const formData: LoginFormData ={
+      id: id,
+      password: password,
+    }
+    onLogIn(formData);
+  };
   return (
     <div>
       <LoginPageContainer>
         <LogoComponent />
-        <LoginBlock />
-        <MemberButton>로그인</MemberButton>
+        <LoginBlock
+        onIdChange={(event: React.ChangeEvent<HTMLInputElement>) => setId(event.target.value)}
+        onPasswordChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
+        />
+        <MemberButton onClick={handleLogIn}>로그인</MemberButton>
       </LoginPageContainer>
     </div>
   );
