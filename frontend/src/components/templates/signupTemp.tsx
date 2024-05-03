@@ -11,14 +11,14 @@ const SignUpTempContainer = styled.div`
 interface SignUpFormData {
   id: string;
   password: string;
-  refrigeratorId: number;
+  refrigeratorId: string;
 }
 
-function SignUpTemp({ onSignUp }: Readonly<{ onSignUp: (formData: SignUpFormData) => void }>) {
+function SignUpTemp({ onSignUp, refId, getRefId }: Readonly<{ onSignUp: (formData: SignUpFormData) => void, refId: string|null, getRefId: (ref:string) => void }>) {
   return (
     <div>
       <SignUpTempContainer>
-        <SignUpForm onSignUp={onSignUp} />
+        <SignUpForm onSignUp={onSignUp} refId={refId} getRefId={getRefId}/>
       </SignUpTempContainer>
     </div>
   );

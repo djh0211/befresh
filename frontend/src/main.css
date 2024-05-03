@@ -17,6 +17,7 @@
 
 body {
   font-family: 'TheJamsil5Bold', sans-serif, "JamsilThin", "JamsilRegular" ;
+  margin: 0;
 }
 
 ::-webkit-scrollbar {

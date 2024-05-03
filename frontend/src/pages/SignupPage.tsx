@@ -3,6 +3,8 @@ import SignUpTemp from "../components/templates/signupTemp";
 import { signUp, logIn } from "../api/member/memberApi";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const SignUpPageContainer = styled.div`
   display: flex;
@@ -14,12 +16,12 @@ const SignUpPageContainer = styled.div`
 interface SignUpFormData {
   id: string;
   password: string;
-  refrigeratorId: number;
+  refrigeratorId: string;
 }
 
 function SignupPage() {
   const navigator = useNavigate()
-  const { refId } = useParams<{ refId: string }>(); // refId 파라미터 받아오기
+  // const { refId } = useParams<{ refId: string }>(); // refId 파라미터 받아오기
 
   const handleSignUp = async (formData: SignUpFormData) => {
     console.log(formData)
@@ -44,9 +46,23 @@ function SignupPage() {
     }
   };
 
+  // 냉장고 아이디(refId)
+  const [refId, setRefId] = useState<string|null>(null)
+  useEffect(()=> {
+    let query = window.location.search
+    let param = new URLSearchParams(query);
+    let tempRefid = param.get('refId');
+    setRefId(tempRefid)
+  }, [])
+
+  const getRefId = (ref:string) => {
+    setRefId(ref)
+  }
+
+
   return (
     <SignUpPageContainer>
-      <SignUpTemp onSignUp={handleSignUp} />
+      <SignUpTemp onSignUp={handleSignUp} refId={refId} getRefId={getRefId}/>
     </SignUpPageContainer>
   );
 }

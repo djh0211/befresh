@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 // 회원가입 API 
 export async function signUp(formData: { id: string, password: string, refrigeratorId:number }): Promise<any> {
   try {
+    console.log("냉장고0503",typeof(formData.refrigeratorId))
     const response = await axios.post('https://be-fresh.site/api/member/signup', formData);
     console.log(formData.refrigeratorId)
     console.log(response)

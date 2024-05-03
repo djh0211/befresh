@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -17,9 +18,23 @@ public class MemberToken extends BaseEntity {
     private Long memberTokenId;
 
     @ManyToOne
+    @Setter
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Column(nullable = false, length = 300)
+    @Setter
     private String token;
+
+    public static MemberToken createMemberToken(Member member, String token) {
+        MemberToken memberToken = new MemberToken();
+
+        memberToken.setMember(member);
+        member.getMemberTokenSet().add(memberToken);
+        memberToken.setToken(token);
+        memberToken.setModUserSeq(member.getId());
+        memberToken.setRegUserSeq(member.getId());
+
+        return memberToken;
+    }
 }

@@ -117,9 +117,9 @@ public class FoodServiceImpl implements FoodService {
 
             // TODO: 신선도는 나중에 다르게 설정
             int totalDays = Period.between(food.getRegDttm().toLocalDate(),
-                    food.getExpirationDate().toLocalDate()).getDays();
-            int remindDays = Period.between(LocalDateTime.now().toLocalDate(),
-                    food.getExpirationDate().toLocalDate()).getDays();
+                    food.getExpirationDate()).getDays();
+            int remindDays = Period.between(LocalDate.now(),
+                    food.getExpirationDate()).getDays();
 
             Double freshState = 0.0;
 

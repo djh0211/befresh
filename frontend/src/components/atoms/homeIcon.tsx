@@ -1,4 +1,3 @@
-import Stack from '@mui/material/Stack';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
 function NavHomeIcon(props: SvgIconProps) {
@@ -10,9 +9,9 @@ function NavHomeIcon(props: SvgIconProps) {
 }
 
 export default function HomeIcon() {
+  const location :string = window.location.href
+
   return (
-    <Stack direction="row" spacing={3}>
-      <NavHomeIcon color="success" fontSize='large' />
-    </Stack>
+    <NavHomeIcon color={location.includes('main') ? "success" : "action"} sx={{fontSize:'6rem'}}/>
   );
 }

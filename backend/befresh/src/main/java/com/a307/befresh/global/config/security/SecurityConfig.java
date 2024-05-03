@@ -45,7 +45,7 @@ public class SecurityConfig {
             .httpBasic(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers("/api/health", "/api/login", "/api/member/**").permitAll()
+                .requestMatchers("/api/health", "/api/login", "/api/member/signup").permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
                 SessionCreationPolicy.STATELESS));

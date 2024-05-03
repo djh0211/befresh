@@ -8,9 +8,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Entity
@@ -30,8 +30,8 @@ public class Food extends BaseEntity {
     @Column
     private String image;
 
-    @Column
-    private LocalDateTime expirationDate;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDate expirationDate;
 
     @Column(name = "miss_registered")
     private boolean missRegistered;
@@ -48,7 +48,7 @@ public class Food extends BaseEntity {
     @JoinColumn(name = "refrigerator_id", nullable = false)
     private Refrigerator refrigerator;
 
-    public static Food createFood(String name, String image, LocalDateTime expirationDate, Refresh refresh,
+    public static Food createFood(String name, String image, LocalDate expirationDate, Refresh refresh,
         Ftype ftype, Refrigerator refrigerator, boolean missRegistered) {
         Food food = new Food();
 
