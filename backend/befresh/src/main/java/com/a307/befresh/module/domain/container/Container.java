@@ -4,8 +4,7 @@ import com.a307.befresh.module.domain.Ftype.Ftype;
 import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.refresh.Refresh;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +29,10 @@ public class Container extends Food {
 
     @Column(name = "qr_id")
     private Long qrId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prev_refresh")
+    private Refresh prevRefresh;
 
     public static Container createContainer(String name, String image, LocalDate expirationDate,
         Refresh refresh, Ftype ftype, Refrigerator refrigerator, boolean missRegistered,
