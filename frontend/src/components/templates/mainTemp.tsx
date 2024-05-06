@@ -1,10 +1,10 @@
 import CardForm from '../organisms/cardForm';
 import NavBlock from '../molecules/navBlock';
-import { ApiDataItem } from '../../types/types';
+import { FoodTypes } from '../../types/foodTypes';
 import styled from 'styled-components';
 
 interface MainPageTemplateProps {
-  cardApiData: ApiDataItem[];
+  cardApiData: FoodTypes[];
 }
 
 const Main = styled.div`
