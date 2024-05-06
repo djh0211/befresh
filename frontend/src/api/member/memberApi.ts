@@ -1,4 +1,5 @@
 import axios from 'axios';
+import axiosInstance from '../../utils/axiosConfig';
 import Swal from "sweetalert2";
 import { saveTokens } from '../../utils/tokenUtils';
 

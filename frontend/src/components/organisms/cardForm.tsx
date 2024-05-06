@@ -1,18 +1,28 @@
-import ImgMediaCard from '../molecules/Card';
-import Stack from '@mui/material/Stack';
+import ImgMediaCard from '../molecules/foodCard';
+import Grid from '@mui/material/Grid';
 import styled from 'styled-components';
-import { ApiDataItem } from '../../types/types'; // 타입 가져오기
+import { FoodTypes } from '../../types/foodTypes';
 
 interface CardFormProps {
-  cardApiData: ApiDataItem[];
+  cardApiData: FoodTypes[];
 }
+
+const StyledGridContainer = styled(Grid)`
+  && {
+    margin-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+`;
 
 export default function CardForm({ cardApiData }: Readonly<CardFormProps>) {
   return (
-    <Stack spacing={2}>
-      {cardApiData.map((item, index) => (
-        <ImgMediaCard key={index} progressValue={item.progressValue} />
+    <StyledGridContainer container spacing={2}>
+      {cardApiData.map((foodData, index) => (
+        <Grid item key={index} xs={4}>
+          <ImgMediaCard foodData={foodData} />
+        </Grid>
       ))}
-    </Stack>
+    </StyledGridContainer>
   );
 }

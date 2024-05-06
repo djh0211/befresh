@@ -16,9 +16,20 @@ const DetailList = styled.p`
   text-align: center;
 `;
 
-export default function BasicModal() {
+interface ModalProps {
+  foodData: {
+    name: string;
+    expirationDate: string;
+    regDttm: string;
+    elapsedTime: number;
+    refresh: string;
+  };
+}
+
+const BasicModal: React.FC<ModalProps> = ({ foodData }) => {
   const [open, setOpen] = React.useState<boolean>(false);
   const navigate = useNavigate()
+
   return (
     <React.Fragment>
       <Button variant="outlined" color="neutral" onClick={() => setOpen(true)}>
@@ -51,19 +62,19 @@ export default function BasicModal() {
             fontWeight="lg"
             mb={1}
           >
-            음식이름
+            {foodData.name}
           </Typography>
           <Typography id="modal-desc" textColor="text.tertiary">
-            <FoodModalDetail><DetailList>들어온시간  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
-            <FoodModalDetail><DetailList>경과시간  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
-            <FoodModalDetail><DetailList>유통기한  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
-            <FoodModalDetail><DetailList>상태  </DetailList><p>:</p><p>24.00.00</p></FoodModalDetail>
-            
+            <FoodModalDetail><DetailList>들어온시간  </DetailList><p>:</p><p>{foodData.regDttm}</p></FoodModalDetail>
+            <FoodModalDetail><DetailList>경과시간  </DetailList><p>:</p><p>{foodData.elapsedTime}</p></FoodModalDetail>
+            <FoodModalDetail><DetailList>유통기한  </DetailList><p>:</p><p>{foodData.expirationDate}</p></FoodModalDetail>
+            <FoodModalDetail><DetailList>상태  </DetailList><p>:</p><p>{foodData.refresh}</p></FoodModalDetail>
             <Button onClick={() => { navigate('/info') }}>세부 기록</Button>
-            
           </Typography>
         </Sheet>
       </Modal>
     </React.Fragment>
   );
 }
+
+export default BasicModal;
