@@ -1,6 +1,5 @@
 import AppRoutes from "./routes/AppRoutes"; 
-// import { initializeApp } from "firebase/app";
-// import { getMessaging, getToken } from 'firebase/messaging';
+import './fcm/firebase'
 
 const App = () => {
   return <AppRoutes />;
