@@ -8,6 +8,15 @@
     <title>befresh!</title>
     <meta name="theme-color" content="#ffffff" />
     <meta name="description" content="BeFresh" />
+    <script>
+      if('serviceWorker' in navigator) {
+        if (!window.location.pathname.startsWith('/jenkins') && !window.location.pathname.startsWith('/sonar')) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          })
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
