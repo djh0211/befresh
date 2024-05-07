@@ -2,6 +2,7 @@ import ImgMediaCard from '../molecules/foodCard';
 import Grid from '@mui/material/Grid';
 import styled from 'styled-components';
 import { FoodTypes } from '../../types/foodTypes';
+import { useEffect } from 'react';
 
 interface CardFormProps {
   cardApiData: FoodTypes[];
@@ -16,6 +17,10 @@ const StyledGridContainer = styled(Grid)`
 `;
 
 export default function CardForm({ cardApiData }: Readonly<CardFormProps>) {
+  useEffect(()=>{
+    console.log(cardApiData)
+  },[])
+  
   return (
     <StyledGridContainer container spacing={2}>
       {cardApiData.map((foodData, index) => (

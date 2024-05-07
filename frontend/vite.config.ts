@@ -1,12 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from 'vite-plugin-pwa'
-import { readFileSync } from 'fs'
 
-// registerSW.js 파일의 내용을 읽어와서 injectRegister 옵션으로 설정
-const registerSWContent: any = readFileSync('./dev-dist/registerSW.js', 'utf-8')
-
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
@@ -15,8 +10,7 @@ export default defineConfig({
       devOptions: {
         enabled: true
       },
-      injectRegister: registerSWContent,
-      // injectRegister: 'auto',
+      injectRegister: 'auto',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
         name: 'BeFresh : suzume의 냉장고 단속',
