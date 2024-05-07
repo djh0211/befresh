@@ -50,14 +50,18 @@ public class FoodServiceImpl implements FoodService {
 
     private void asyncRegisterFood(Refrigerator refrigerator, FoodRegisterReq foodRegisterReq) {
 
-        System.out.println(
-                Thread.currentThread().toString() + " " + Thread.currentThread().isVirtual());
-        System.out.println(foodRegisterReq.name());
+        log.info("[asyncRegisterFood] Food Name: {}, Current Thread: {}, isVirtual: {}",
+            foodRegisterReq.name(), Thread.currentThread().toString(), Thread.currentThread().isVirtual());
+
         Optional<Ftype> ftypeOptional = ftypeRepository.findById(foodRegisterReq.ftypeId());
 
-        if(ftypeOptional.isEmpty()) return;
+        if (ftypeOptional.isEmpty()) {
+            return;
+        }
 
         Ftype ftype = ftypeOptional.get();
+
+
 
         // TODO: 신선도 로직 구현 후 변경
         Optional<Refresh> refresh = refreshRepository.findById(1L);
@@ -67,18 +71,18 @@ public class FoodServiceImpl implements FoodService {
         boolean missRegistered = ftype.getId() == 2;
 
         // elastic search를 통한 음식 검색
-        if(ftype.getId() != 2) {
+        if (ftype.getId() != 2) {
             List<ElasticDocument> elasticDocuments = elasticRepository.searchBefreshByName(
                 foodRegisterReq.name());
 
-            if (elasticDocuments != null && !elasticDocuments.isEmpty() ) {
+            if (elasticDocuments != null && !elasticDocuments.isEmpty()) {
                 ElasticDocument top = elasticDocuments.getFirst();
 
                 name = top.getName();
                 expirationDate = LocalDate.now().plusDays(top.getExpiration_date());
                 missRegistered = true;
 
-                log.debug("Elastic Search - name: {}, expiration_date: {}, score: {}",
+                log.info("Elastic Search - name: {}, expiration_date: {}, score: {}",
                     top.getName(), top.getExpiration_date(), top.getScore());
 
                 for (ElasticDocument elasticDocument : elasticDocuments) {
@@ -88,7 +92,7 @@ public class FoodServiceImpl implements FoodService {
                         expirationDate = LocalDate.now()
                             .plusDays(elasticDocument.getExpiration_date());
 
-                        log.debug("Elastic Search - name: {}, expiration_date: {}, score: {}",
+                        log.info("Elastic Search - name: {}, expiration_date: {}, score: {}",
                             elasticDocument.getName(), elasticDocument.getExpiration_date(),
                             elasticDocument.getScore());
                         break;
@@ -100,21 +104,21 @@ public class FoodServiceImpl implements FoodService {
         if (ftype.getId() == 1) {
 
             Container container = Container.createContainer(name,
-                    foodRegisterReq.image(),
-                    expirationDate,
-                    refresh.get(), ftype, refrigerator, missRegistered,
-                    foodRegisterReq.temperature(),
-                    foodRegisterReq.humidity(), foodRegisterReq.zCoordinate(),
-                    foodRegisterReq.qrId());
+                foodRegisterReq.image(),
+                expirationDate,
+                refresh.get(), ftype, refrigerator, missRegistered,
+                foodRegisterReq.temperature(),
+                foodRegisterReq.humidity(), foodRegisterReq.zCoordinate(),
+                foodRegisterReq.qrId());
 
             containerRepository.save(container);
 
             log.debug("asyncRegisterFood method : container {} success", container.getFoodId());
         } else {
             Food food = Food.createFood(name,
-                    foodRegisterReq.image(),
-                    expirationDate,
-                    refresh.get(), ftype, refrigerator, missRegistered);
+                foodRegisterReq.image(),
+                expirationDate,
+                refresh.get(), ftype, refrigerator, missRegistered);
 
             foodRepository.save(food);
 
@@ -126,12 +130,12 @@ public class FoodServiceImpl implements FoodService {
     @Async("virtualExecutor")
     public void registerFood(FoodRegisterReqList foodRegisterReqList) {
         Optional<Refrigerator> refrigerator = refrigeratorRepository.findById(
-                foodRegisterReqList.refrigeratorId());
+            foodRegisterReqList.refrigeratorId());
         log.debug("registerFood method start : {} ", Thread.currentThread().toString());
 
         if (refrigerator.isEmpty()) {
             log.error("registerFood method refirgerator: {}이 없습니다.",
-                    foodRegisterReqList.refrigeratorId());
+                foodRegisterReqList.refrigeratorId());
             return;
         }
 
@@ -153,13 +157,13 @@ public class FoodServiceImpl implements FoodService {
         for (Food food : foodList) {
 
             int elapsedTime = Period.between(food.getRegDttm().toLocalDate(),
-                    LocalDateTime.now().toLocalDate()).getDays();
+                LocalDateTime.now().toLocalDate()).getDays();
 
             // TODO: 신선도는 나중에 다르게 설정
             int totalDays = Period.between(food.getRegDttm().toLocalDate(),
-                    food.getExpirationDate()).getDays();
+                food.getExpirationDate()).getDays();
             int remindDays = Period.between(LocalDate.now(),
-                    food.getExpirationDate()).getDays();
+                food.getExpirationDate()).getDays();
 
             Double freshState = 0.0;
 
@@ -168,16 +172,16 @@ public class FoodServiceImpl implements FoodService {
             }
 
             foodListDetailResList.add(
-                    FoodListDetailRes.builder()
-                            .id(food.getFoodId())
-                            .name(food.getName())
-                            .image(food.getImage())
-                            .regDttm(food.getRegDttm())
-                            .elapsedTime(elapsedTime)
-                            .freshState(freshState)
-                            .refresh(food.getRefresh().getName())
-                            .ftype(food.getFtype().getName())
-                            .build()
+                FoodListDetailRes.builder()
+                    .id(food.getFoodId())
+                    .name(food.getName())
+                    .image(food.getImage())
+                    .regDttm(food.getRegDttm())
+                    .elapsedTime(elapsedTime)
+                    .freshState(freshState)
+                    .refresh(food.getRefresh().getName())
+                    .ftype(food.getFtype().getName())
+                    .build()
             );
         }
 
@@ -189,20 +193,20 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public FoodDetailRes getFoodDetail(long foodId) {
         return containerRepository.findById(foodId)
-                .map(this::createFoodDetailFromContainer)
-                .orElseGet(() -> createFoodDetailFromFood(foodId));
+            .map(this::createFoodDetailFromContainer)
+            .orElseGet(() -> createFoodDetailFromFood(foodId));
     }
 
     @Override
     public List<FoodFailRes> getFoodFailList(long refrigeratorId) {
         return foodRepository.findFailFood(refrigeratorId).stream()
-                .map(food -> FoodFailRes.builder()
-                        .id(food.getFoodId())
-                        .name(food.getName())
-                        .image(food.getImage())
-                        .regDttm(food.getRegDttm())
-                        .build())
-                .toList();
+            .map(food -> FoodFailRes.builder()
+                .id(food.getFoodId())
+                .name(food.getName())
+                .image(food.getImage())
+                .regDttm(food.getRegDttm())
+                .build())
+            .toList();
     }
 
     @Override
@@ -226,18 +230,18 @@ public class FoodServiceImpl implements FoodService {
         double freshState = calculateFreshState(); // 추후 계산 로직 추가
 
         return FoodDetailRes.builder()
-                .id(container.getFoodId())
-                .name(container.getName())
-                .image(container.getImage())
-                .expirationDate(container.getExpirationDate())
-                .regDttm(container.getRegDttm())
-                .elapsedTime(elapsedTime)
-                .freshState(freshState)
-                .refresh(container.getRefresh().getName())
-                .ftype(container.getFtype().getName())
-                .temperature(container.getTemperature())
-                .humidity(container.getHumidity())
-                .build();
+            .id(container.getFoodId())
+            .name(container.getName())
+            .image(container.getImage())
+            .expirationDate(container.getExpirationDate())
+            .regDttm(container.getRegDttm())
+            .elapsedTime(elapsedTime)
+            .freshState(freshState)
+            .refresh(container.getRefresh().getName())
+            .ftype(container.getFtype().getName())
+            .temperature(container.getTemperature())
+            .humidity(container.getHumidity())
+            .build();
     }
 
     private FoodDetailRes createFoodDetailFromFood(long foodId) {
@@ -246,16 +250,16 @@ public class FoodServiceImpl implements FoodService {
         double freshState = calculateFreshState(); // TODO : 추후 계산 로직 추가
 
         return FoodDetailRes.builder()
-                .id(food.getFoodId())
-                .name(food.getName())
-                .image(food.getImage())
-                .expirationDate(food.getExpirationDate())
-                .regDttm(food.getRegDttm())
-                .elapsedTime(elapsedTime)
-                .freshState(freshState)
-                .refresh(food.getRefresh().getName())
-                .ftype(food.getFtype().getName())
-                .build();
+            .id(food.getFoodId())
+            .name(food.getName())
+            .image(food.getImage())
+            .expirationDate(food.getExpirationDate())
+            .regDttm(food.getRegDttm())
+            .elapsedTime(elapsedTime)
+            .freshState(freshState)
+            .refresh(food.getRefresh().getName())
+            .ftype(food.getFtype().getName())
+            .build();
     }
 
     private int calculateElapsedTime(LocalDateTime registrationDateTime) {
