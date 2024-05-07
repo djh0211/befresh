@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import { saveTokens } from "../utils/tokenUtils";
+import { getFcmToken } from "../fcm/fcmToken";
+import { sendFcmToken } from "../api/alarm/alarmApi";
 
 const SignUpPageContainer = styled.div`
   display: flex;
@@ -22,6 +24,7 @@ interface SignUpFormData {
 
 function SignupPage() {
   const navigator = useNavigate()
+  const fcmToken = getFcmToken()
   // const { refId } = useParams<{ refId: string }>(); // refId 파라미터 받아오기
 
   const handleSignUp = async (formData: SignUpFormData) => {
@@ -41,7 +44,12 @@ function SignupPage() {
             if (accessToken && refreshToken) {
               // 토큰이 있는 경우에만 저장
               saveTokens(accessToken, refreshToken);
+              // fcm 토큰도 같이 보내주기
+              if (fcmToken) {
+                sendFcmToken(fcmToken, accessToken)
+              }
             }
+            
           }
           navigator('/main')
         }

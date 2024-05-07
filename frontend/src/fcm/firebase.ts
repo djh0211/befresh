@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from 'firebase/messaging';
-import axios from "axios";
 import { getAccessToken } from "../utils/tokenUtils";
+import { saveFcmTokens } from "./fcmToken";
+import { sendFcmToken } from "../api/alarm/alarmApi";
 
 // fcm 정보
 const config = {
@@ -27,17 +28,14 @@ export function requestPermission() {
 	Notification.requestPermission().then((permission) => {
 		if (permission === 'granted') {
 			console.log('Notification permission granted.');
-			getToken(messaging, { vapidKey: vapidKey }).then((currnetToken) => {
-				if (currnetToken) {
-					console.log(currnetToken)
-					axios.post('https://be-fresh.site/api/member/fcmToken', {
-						'fcmToken': currnetToken
-					},{
-						headers: {
-							'Authorization' : `Bearer ${userToken}`
-						}
-					}).then((res) => console.log(res))
-					.catch((err) => console.log(err))
+			getToken(messaging, { vapidKey: vapidKey }).then((currentToken) => {
+				if (currentToken) {
+					saveFcmTokens(currentToken)
+					if (userToken) {
+						sendFcmToken(currentToken, userToken)
+					} else {
+						console.log('아직 로그인 하지 않음')
+					}
 				} else {
 					console.log('알림 토큰을 가져오는 데에 실패!')
 				}
@@ -47,11 +45,3 @@ export function requestPermission() {
 		}
 	})
 }
-
-// getToken(messaging, { vapidKey: vapidKey }).then((currnetToken) => {
-// 	if (currnetToken) {
-// 		console.log(currnetToken)
-// 	} else {
-// 		console.log('알림 토큰을 가져오는 데에 실패!')
-// 	}
-// }).catch((err) => console.log(err))
