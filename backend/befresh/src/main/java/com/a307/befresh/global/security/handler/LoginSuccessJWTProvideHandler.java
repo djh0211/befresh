@@ -35,12 +35,12 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         String memberId = userDetails.getUsername();
-        Optional<Member> member = memberRepository.findByMemberId(memberId);
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow();
 
-        Long id = member.get().getId();
-        Long refrigerator_id = member.get().getRefrigerator().getId();
+        Long id = member.getId();
+        Long refrigeratorId = member.getRefrigerator().getId();
 
-        String accessToken = jwtService.createAccessToken(id, refrigerator_id);
+        String accessToken = jwtService.createAccessToken(id, refrigeratorId);
         String refreshToken = jwtService.createRefreshToken();
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
@@ -52,12 +52,6 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
 
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-
-        LoginDto loginDto = LoginDto.builder()
-            .id(id)
-            .accessToken(accessToken)
-            .refreshToken(refreshToken)
-            .build();
 
         response.getWriter().write("{\n"
             + "    \"result\": " + "\"token 생성 성공\", \n"
