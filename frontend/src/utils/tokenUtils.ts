@@ -9,6 +9,7 @@
   }
 
   export function getAccessToken(): string | null {
+    console.log('겟 억세스 토큰')
     return localStorage.getItem(TOKEN_KEY);
   }
 

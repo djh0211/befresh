@@ -7,8 +7,10 @@ const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use(
   async (config) => {
     const accessToken = getAccessToken();
+    console.log('헤더에 토큰 넣기전')
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
+      console.log('헤더에 토큰 넣음')
     }
     return config;
   },
