@@ -4,6 +4,8 @@ import com.a307.befresh.module.domain.Ftype.Ftype;
 import com.a307.befresh.module.domain.Ftype.repository.FtypeRepository;
 import com.a307.befresh.module.domain.container.Container;
 import com.a307.befresh.module.domain.container.repository.ContainerRepository;
+import com.a307.befresh.module.domain.elastic.ElasticDocument;
+import com.a307.befresh.module.domain.elastic.repository.ElasticRepository;
 import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReq;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
@@ -39,6 +41,7 @@ public class FoodServiceImpl implements FoodService {
     private final RefreshRepository refreshRepository;
     private final FtypeRepository ftypeRepository;
     private final ContainerRepository containerRepository;
+    private final ElasticRepository elasticRepository;
 
     @Override
     public void blocking() throws InterruptedException {
@@ -50,19 +53,56 @@ public class FoodServiceImpl implements FoodService {
         System.out.println(
                 Thread.currentThread().toString() + " " + Thread.currentThread().isVirtual());
         System.out.println(foodRegisterReq.name());
-        Optional<Ftype> ftype = ftypeRepository.findById(foodRegisterReq.ftypeId());
+        Optional<Ftype> ftypeOptional = ftypeRepository.findById(foodRegisterReq.ftypeId());
+
+        if(ftypeOptional.isEmpty()) return;
+
+        Ftype ftype = ftypeOptional.get();
 
         // TODO: 신선도 로직 구현 후 변경
         Optional<Refresh> refresh = refreshRepository.findById(1L);
 
-        // TODO: 음식 검색 기능을 통해서 유통기한 설정 -> 검색이 안될 경우 missRegistered true 처리
+        String name = foodRegisterReq.name();
+        LocalDate expirationDate = foodRegisterReq.expirationDate();
+        boolean missRegistered = ftype.getId() == 2;
 
-        if (ftype.get().getId() == 1) {
+        // elastic search를 통한 음식 검색
+        if(ftype.getId() != 2) {
+            List<ElasticDocument> elasticDocuments = elasticRepository.searchBefreshByName(
+                foodRegisterReq.name());
 
-            Container container = Container.createContainer(foodRegisterReq.name(),
+            if (elasticDocuments != null && !elasticDocuments.isEmpty() ) {
+                ElasticDocument top = elasticDocuments.getFirst();
+
+                name = top.getName();
+                expirationDate = LocalDate.now().plusDays(top.getExpiration_date());
+                missRegistered = true;
+
+                log.debug("Elastic Search - name: {}, expiration_date: {}, score: {}",
+                    top.getName(), top.getExpiration_date(), top.getScore());
+
+                for (ElasticDocument elasticDocument : elasticDocuments) {
+                    if (elasticDocument.getName().replaceAll("\\s+", "")
+                        .equals(foodRegisterReq.name().replaceAll("\\s+", ""))) {
+                        name = elasticDocument.getName();
+                        expirationDate = LocalDate.now()
+                            .plusDays(elasticDocument.getExpiration_date());
+
+                        log.debug("Elastic Search - name: {}, expiration_date: {}, score: {}",
+                            elasticDocument.getName(), elasticDocument.getExpiration_date(),
+                            elasticDocument.getScore());
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (ftype.getId() == 1) {
+
+            Container container = Container.createContainer(name,
                     foodRegisterReq.image(),
-                    foodRegisterReq.expirationDate(),
-                    refresh.get(), ftype.get(), refrigerator, false,
+                    expirationDate,
+                    refresh.get(), ftype, refrigerator, missRegistered,
                     foodRegisterReq.temperature(),
                     foodRegisterReq.humidity(), foodRegisterReq.zCoordinate(),
                     foodRegisterReq.qrId());
@@ -71,10 +111,10 @@ public class FoodServiceImpl implements FoodService {
 
             log.debug("asyncRegisterFood method : container {} success", container.getFoodId());
         } else {
-            Food food = Food.createFood(foodRegisterReq.name(),
+            Food food = Food.createFood(name,
                     foodRegisterReq.image(),
-                    foodRegisterReq.expirationDate(),
-                    refresh.get(), ftype.get(), refrigerator, false);
+                    expirationDate,
+                    refresh.get(), ftype, refrigerator, missRegistered);
 
             foodRepository.save(food);
 
