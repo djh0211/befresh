@@ -2,6 +2,7 @@ import axios from 'axios';
 import axiosInstance from '../../utils/axiosConfig';
 import Swal from "sweetalert2";
 import { saveTokens } from '../../utils/tokenUtils';
+import { sendFcmToken } from '../alarm/alarmApi';
 
 // 회원가입 API 
 export async function signUp(formData: { id: string, password: string, refrigeratorId:number }): Promise<any> {

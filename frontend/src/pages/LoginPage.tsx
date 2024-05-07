@@ -3,6 +3,8 @@ import LoginTemp from "../components/templates/loginTemp";
 import { logIn } from "../api/member/memberApi";
 import { useNavigate } from "react-router-dom";
 import { saveTokens } from "../utils/tokenUtils";
+import { sendFcmToken } from "../api/alarm/alarmApi";
+import { getFcmToken } from "../fcm/fcmToken";
 
 const LoginPageContainer = styled.div`
   display: flex;
@@ -17,6 +19,7 @@ interface LoginFormData {
 
 function LoginPage() {
   const navigator = useNavigate();
+  const fcmToken = getFcmToken();
   const handleLogIn = async (formData: LoginFormData) => {
     console.log("로그인폼데이타:", formData);
     try {
@@ -32,6 +35,11 @@ function LoginPage() {
           if (accessToken && refreshToken) {
             // 토큰이 있는 경우에만 저장
             saveTokens(accessToken, refreshToken);
+
+            // fcm 토큰도 같이 보내주기
+            if (fcmToken) {
+              sendFcmToken(fcmToken, accessToken)
+            }
           }
         }
         navigator('/main');
