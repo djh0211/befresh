@@ -82,10 +82,11 @@ define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "registerSW.js",
-    "revision": "a6852af8140a073616f61f0acefca65c"
+    "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
     "url": "index.html",
-    "revision": "0.ahndka96aq"
+    // "revision": "0.ahndka96aq" 머지 후 아래걸로 바뀜
+    "revision": "0.qjqm1amqahg"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {

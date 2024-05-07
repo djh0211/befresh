@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import ProgressBar from "../atoms/progerssBar";
-import BasicModal from "../atoms/modal";
+import BasicModal from "../../pages/modal";
 import sampleimg from "../../assets/sampleimg.png";
 import { FoodData } from "../../types/foodTypes"; // FoodData 타입을 import합니다.
 
