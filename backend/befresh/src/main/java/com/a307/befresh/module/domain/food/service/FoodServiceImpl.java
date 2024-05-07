@@ -70,7 +70,7 @@ public class FoodServiceImpl implements FoodService {
 
             if (elasticDocument != null) {
                 name = elasticDocument.getName();
-                expirationDate = LocalDate.now().plusDays(elasticDocument.getExpiration_date());
+                expirationDate = LocalDate.now().plusDays(elasticDocument.getExpirationDate());
                 missRegistered = true;
             }
         }
@@ -237,14 +237,14 @@ public class FoodServiceImpl implements FoodService {
             ElasticDocument top = elasticDocuments.getFirst();
 
             log.info("Elastic Search - name: {}, expiration_date: {}, score: {}", top.getName(),
-                top.getExpiration_date(), top.getScore());
+                top.getExpirationDate(), top.getScore());
 
             for (ElasticDocument elasticDocument : elasticDocuments) {
                 if (elasticDocument.getName().replaceAll("\\s+", "")
                     .equals(name.replaceAll("\\s+", ""))) {
 
                     log.info("Elastic Search - name: {}, expiration_date: {}, score: {}",
-                        elasticDocument.getName(), elasticDocument.getExpiration_date(),
+                        elasticDocument.getName(), elasticDocument.getExpirationDate(),
                         elasticDocument.getScore());
                     return elasticDocument;
                 }
