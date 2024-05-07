@@ -85,8 +85,8 @@ define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
     "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
     "url": "index.html",
-    // "revision": "0.ahndka96aq" 머지 후 아래걸로 바뀜
-    "revision": "0.qjqm1amqahg"
+    "revision": "0.ahndka96aq" 
+    // "revision": "0.qjqm1amqahg" 머지 후 이걸로 바뀜
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
