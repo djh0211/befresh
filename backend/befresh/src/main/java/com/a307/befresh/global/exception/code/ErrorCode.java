@@ -73,7 +73,7 @@ public enum ErrorCode {
 
     // 유저가 존재하지 않음
     NOT_FOUND_USER_EXCEPTION(404, "B200", "존재하지 않는 유저입니다."),
-    NOT_FOUND_ITEM_EXCEPTION(404, "B201", "존재하지 않는 아이템입니다."),
+    NOT_FOUND_REFRIGERATOR_EXCEPTION(404, "B201", "존재하지 않는 냉장고입니다."),
     NOT_FOUND_POST_EXCEPTION(404, "B202", "존재하지 않는 글입니다."),
 
     NOT_FOUND_ARCHIVE_EXCEPTION(404, "B203", "존재하지 않는 아카이브입니다."),
