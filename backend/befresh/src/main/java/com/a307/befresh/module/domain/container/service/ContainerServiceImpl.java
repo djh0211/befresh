@@ -3,15 +3,12 @@ package com.a307.befresh.module.domain.container.service;
 import com.a307.befresh.module.domain.container.Container;
 import com.a307.befresh.module.domain.container.dto.request.ContainerUpdateSensorListReq;
 import com.a307.befresh.module.domain.container.repository.ContainerRepository;
-import com.a307.befresh.module.domain.container.dto.request.ContainerUpdateSensorReq;
 import com.a307.befresh.module.domain.refresh.Refresh;
 import com.a307.befresh.module.domain.refresh.repository.RefreshRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Log4j2
 @Service

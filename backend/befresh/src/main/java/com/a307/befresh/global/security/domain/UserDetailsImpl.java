@@ -6,18 +6,7 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Getter
-public class UserDetailsImpl implements UserDetails {
-
-    private final Member member;
-
-    public UserDetailsImpl(Member member) {
-        this.member = member;
-    }
-
-    public Member getMember() {
-        return member;
-    }
+public record UserDetailsImpl(Member member) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

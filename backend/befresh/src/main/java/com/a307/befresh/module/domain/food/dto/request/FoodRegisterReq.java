@@ -17,7 +17,7 @@ public record FoodRegisterReq(
     Double humidity,
     Double zCoordinate,
 
-    Long qrId
+    String qrId
 
 ) {
 

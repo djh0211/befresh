@@ -34,7 +34,7 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private Set<MemberToken> memberTokenSet;
 
-    @Column(name ="refresh_token")
+    @Column(name = "refresh_token")
     private String refreshToken;
 
     //     Member - Refrigerator 연관 관계
@@ -50,15 +50,15 @@ public class Member extends BaseEntity {
         this.refreshToken = null;
     }
 
-    public void encodePassword(PasswordEncoder passwordEncoder){
+    public void encodePassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(password);
     }
 
-    public static Member createMember(String member_id, String password, Refrigerator refrigerator) {
+    public static Member createMember(String memberId, String password, Refrigerator refrigerator) {
 
         Member member = new Member();
 
-        member.setMemberId(member_id);
+        member.setMemberId(memberId);
         member.setPassword(password);
         member.setRefrigerator(refrigerator);
         return member;
