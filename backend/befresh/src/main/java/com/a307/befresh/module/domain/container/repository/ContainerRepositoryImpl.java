@@ -28,7 +28,7 @@ public class ContainerRepositoryImpl implements ContainerRepositoryCustom {
     public List<Container> findBadFood() {
         return queryFactroy
                 .selectFrom(container)
-                .where(container.refresh.ne(container.prevRefresh))
+                .where(container.refresh.id.gt(container.prevRefresh.id))
                 .join(container.refrigerator, refrigerator).fetchJoin()
                 .fetch();
     }
