@@ -9,9 +9,10 @@ interface CardFormProps {
 
 const StyledGridContainer = styled(Grid)`
   && {
-    margin-top: 20px;
+    margin-top: 60px;
     padding-left: 20px;
     padding-right: 20px;
+    padding-top: 60px;
   }
 `;
 
@@ -19,7 +20,7 @@ export default function CardForm({ cardApiData }: Readonly<CardFormProps>) {
   return (
     <StyledGridContainer container spacing={2}>
       {cardApiData.map((foodData, index) => (
-        <Grid item key={index} xs={4}>
+        <Grid item key={index} xs={4} style={{ paddingBottom: '100px' }}>
           <ImgMediaCard foodData={foodData} />
         </Grid>
       ))}

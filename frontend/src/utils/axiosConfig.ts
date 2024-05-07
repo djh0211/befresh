@@ -24,11 +24,12 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    if (error.response && error.response.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = getRefreshToken();
       if (refreshToken) {
         try {
+          console.log('새 토큰 내놔')
           // 리프레시 토큰으로 새로운 액세스 토큰 요청
           const response = await axios.post('https://be-fresh.site/api/refresh-token', { refreshToken });
           const newAccessToken = response.data.accessToken;

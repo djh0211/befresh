@@ -12,7 +12,7 @@ const FoodModalDetail = styled.div`
   justify-content: space-between;
 `;
 const DetailList = styled.p`
-  width: 120px; /* 원하는 길이로 조절하세요 */
+  width: 120px;
   text-align: center;
 `;
 
@@ -32,7 +32,7 @@ const BasicModal: React.FC<ModalProps> = ({ foodData }) => {
 
   return (
     <React.Fragment>
-      <Button variant="outlined" color="neutral" onClick={() => setOpen(true)}>
+      <Button variant="outlined" color="success" onClick={() => setOpen(true)}>
         상세보기
       </Button>
       <Modal
