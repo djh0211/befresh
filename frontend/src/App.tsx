@@ -1,5 +1,7 @@
 import AppRoutes from "./routes/AppRoutes"; 
-import './fcm/firebase'
+import {requestPermission} from './fcm/firebase'
+
+// requestPermission();
 
 const App = () => {
   return <AppRoutes />;

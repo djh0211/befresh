@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
+import { saveTokens } from "../utils/tokenUtils";
 
 const SignUpPageContainer = styled.div`
   display: flex;
@@ -33,13 +34,17 @@ function SignupPage() {
         console.log("dd",response)
         const loginResponse = await logIn({ id: formData.id, password: formData.password })
         if (loginResponse !== 0) {
-          navigator('/login')
+          if (loginResponse.headers) {
+            console.log("헤더있음")
+            const accessToken = loginResponse.headers.get('Authorization');
+            const refreshToken = loginResponse.headers.get('Authorization-refresh');
+            if (accessToken && refreshToken) {
+              // 토큰이 있는 경우에만 저장
+              saveTokens(accessToken, refreshToken);
+            }
+          }
+          navigator('/main')
         }
-      }
-      // 로그인 성공 시 메인 페이지로 리다이렉트
-      console.log("돌아는감:", response);
-            if (response !== 0) {
-        navigator('/main')
       }
     } catch (error) {
       console.error("안돌아감:", error);
