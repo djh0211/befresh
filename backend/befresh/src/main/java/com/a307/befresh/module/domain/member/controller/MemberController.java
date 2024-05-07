@@ -37,7 +37,7 @@ public class MemberController {
     public ResponseEntity<BaseResponse<Long>> registerFcmToken(
             @RequestBody MemberTokenReq memberTokenReq, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        Long id = memberService.registerFcmToken(memberTokenReq, userDetails.getMember());
+        Long id = memberService.registerFcmToken(memberTokenReq, userDetails.member());
 
         return BaseResponse.success(SuccessCode.INSERT_SUCCESS, id);
     }

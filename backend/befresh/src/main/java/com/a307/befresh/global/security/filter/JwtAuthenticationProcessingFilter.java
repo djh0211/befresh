@@ -38,8 +38,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();//5
 
-    private final String NO_CHECK_URL = "/api/login";//1
-
     /**
      * 1. 리프레시 토큰이 오는 경우 -> 유효하면 AccessToken 재발급후, 필터 진행 X, 바로 튕기기
      * <p>
@@ -73,13 +71,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
 
-        jwtService.extractAccessToken(request).filter(jwtService::isTokenValid).ifPresent(
-            accessToken -> jwtService.extractId(accessToken).ifPresent(
-                id -> memberRepository.findById(id).ifPresent(
-                    member -> saveAuthentication(member)
-                )
-            )
-        );
+        jwtService.extractAccessToken(request).filter(jwtService::isTokenValid).flatMap(
+                accessToken -> jwtService.extractId(accessToken).flatMap(memberRepository::findById))
+            .ifPresent(this::saveAuthentication);
 
         filterChain.doFilter(request, response);
     }

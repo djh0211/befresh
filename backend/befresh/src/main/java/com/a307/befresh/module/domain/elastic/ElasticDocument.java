@@ -26,7 +26,7 @@ public class ElasticDocument {
     private String name;
 
     @Field(type=FieldType.Integer, name ="expiration_date")
-    private int expiration_date;
+    private int expirationDate;
 
     private double score;
 }

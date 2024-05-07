@@ -1,6 +1,7 @@
 package com.a307.befresh.module.domain.member.service;
 
 import static com.a307.befresh.global.exception.code.ErrorCode.DUPLICATED_USER;
+import static com.a307.befresh.global.exception.code.ErrorCode.NOT_FOUND_REFRIGERATOR_EXCEPTION;
 
 import com.a307.befresh.global.exception.BaseExceptionHandler;
 import com.a307.befresh.module.domain.member.Member;
@@ -35,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
             memberSignupReq.refrigeratorId());
 
         if (refrigerator.isEmpty()) {
-            return null;
+            throw new BaseExceptionHandler(NOT_FOUND_REFRIGERATOR_EXCEPTION);
         }
 
         if(memberRepository.existsByMemberId(memberSignupReq.id())) {

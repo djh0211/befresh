@@ -2,7 +2,6 @@ package com.a307.befresh.module.domain.elastic.service;
 
 import com.a307.befresh.module.domain.elastic.ElasticDocument;
 import com.a307.befresh.module.domain.elastic.repository.ElasticRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

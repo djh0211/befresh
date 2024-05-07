@@ -29,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Setter(value = AccessLevel.PRIVATE)
 @Slf4j
-public class JWTServiceImpl implements JwtService{
+public class JWTServiceImpl implements JwtService {
+
     //== jwt.yml에 설정된 값 가져오기 ==//
     @Value("${jwt.secret}")
     private String secret;
@@ -47,13 +48,11 @@ public class JWTServiceImpl implements JwtService{
     //== 1 ==//
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
-    private static final String USERID_CLAIM="id";
+    private static final String USERID_CLAIM = "id";
     private static final String REFRIGERATOR_CLAIM = "refrigerator_id";
     private static final String BEARER = "Bearer ";
 
     private final MemberRepository memberRepository;
-    private final ObjectMapper objectMapper;
-
 
     /**
      * 토큰 생성 메서드
@@ -64,7 +63,8 @@ public class JWTServiceImpl implements JwtService{
             // JWT의 subject 설정
             .withSubject(ACCESS_TOKEN_SUBJECT)
             // 만료 시간 설정
-            .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenValidityInSeconds * 1000))
+            .withExpiresAt(
+                new Date(System.currentTimeMillis() + accessTokenValidityInSeconds * 1000))
             // id와 냉장고 id를 token에 삽입
             .withClaim(USERID_CLAIM, id)
             .withClaim(REFRIGERATOR_CLAIM, refrigeratorId)
@@ -76,7 +76,8 @@ public class JWTServiceImpl implements JwtService{
     public String createRefreshToken() {
         return JWT.create()
             .withSubject(REFRESH_TOKEN_SUBJECT)
-            .withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenValidityInSeconds * 1000))
+            .withExpiresAt(
+                new Date(System.currentTimeMillis() + refreshTokenValidityInSeconds * 1000))
             .sign(Algorithm.HMAC512(secret));
     }
 
@@ -84,7 +85,9 @@ public class JWTServiceImpl implements JwtService{
     public void updateRefreshToken(Long id, String refreshToken) {
         Optional<Member> member = memberRepository.findById(id);
 
-        if(member.isEmpty()) new BaseExceptionHandler(NOT_FOUND_USER_EXCEPTION);
+        if (member.isEmpty()) {
+            throw new BaseExceptionHandler(NOT_FOUND_USER_EXCEPTION);
+        }
 
         Member member1 = member.get();
 
@@ -94,11 +97,12 @@ public class JWTServiceImpl implements JwtService{
 
     @Override
     public void destroyRefreshToken(String id) {
-        memberRepository.findByMemberId(id)
-            .ifPresentOrElse(
-                member -> member.destroyRefreshToken(),
-                () -> new BaseExceptionHandler(NOT_FOUND_USER_EXCEPTION)
-            );
+        Optional<Member> memberOptional = memberRepository.findByMemberId(id);
+        if (memberOptional.isPresent()) {
+            memberOptional.get().destroyRefreshToken();
+        } else {
+            throw new BaseExceptionHandler(NOT_FOUND_USER_EXCEPTION);
+        }
     }
 
     @Override
@@ -145,7 +149,8 @@ public class JWTServiceImpl implements JwtService{
     public Optional<Long> extractId(String accessToken) {
         try {
             return Optional.ofNullable(
-                JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken).getClaim(USERID_CLAIM)
+                JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken)
+                    .getClaim(USERID_CLAIM)
                     .asLong());
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -156,7 +161,8 @@ public class JWTServiceImpl implements JwtService{
     public Optional<String> extractRefrigeratorId(String accessToken) {
         try {
             return Optional.ofNullable(
-                JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken).getClaim(REFRIGERATOR_CLAIM)
+                JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken)
+                    .getClaim(REFRIGERATOR_CLAIM)
                     .asString());
         } catch (Exception e) {
             log.error(e.getMessage());

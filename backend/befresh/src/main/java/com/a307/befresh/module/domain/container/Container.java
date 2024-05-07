@@ -28,7 +28,7 @@ public class Container extends Food {
     private Double zCoordinate;
 
     @Column(name = "qr_id")
-    private Long qrId;
+    private String qrId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prev_refresh")
@@ -37,7 +37,7 @@ public class Container extends Food {
     public static Container createContainer(String name, String image, LocalDate expirationDate,
         Refresh refresh, Ftype ftype, Refrigerator refrigerator, boolean missRegistered,
         Double temperature,
-        Double humidity, Double zCoordinate, Long qrId) {
+        Double humidity, Double zCoordinate, String qrId) {
 
         Container container = new Container();
 
