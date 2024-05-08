@@ -1,16 +1,41 @@
 import axios from 'axios';
-import { getAccessToken, removeTokens,getRefreshToken,saveTokens } from './tokenUtils';
+import { getAccessToken, getRefreshToken, removeTokens, saveTokens } from './tokenUtils';
+
+// JWT 토큰을 해독하여 페이로드 반환하는 함수
+const decodeToken = (token: string) => {
+  const [headerEncoded, payloadEncoded] = token.split('.');
+
+  // base64 디코딩
+  const decodeBase64 = (str: string) => {
+    return decodeURIComponent(atob(str).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+  };
+
+  const header = JSON.parse(decodeBase64(headerEncoded));
+  const payload = JSON.parse(decodeBase64(payloadEncoded));
+
+  return { ...header, ...payload };
+};
+
+// 토큰 만료 여부 확인 함수
+const isTokenExpired = () => {
+  const accessToken = getAccessToken();
+  if (!accessToken) return true; // 액세스 토큰이 없으면 만료된 것으로 간주
+  const decodedToken = decodeToken(accessToken);
+  return decodedToken.exp < Date.now() / 1000; // 토큰 만료 시간이 현재 시간보다 작으면 만료된 것으로 간주
+};
 
 const axiosInstance = axios.create();
 
 // Request interceptor 설정
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const accessToken = getAccessToken();
-    console.log('헤더에 토큰 넣기전')
-    if (accessToken) {
+    console.log('헤더에 토큰 넣기전');
+    if (!isTokenExpired()) { // 토큰이 만료되지 않았다면
+      const accessToken = getAccessToken();
       config.headers['Authorization'] = `Bearer ${accessToken}`;
-      console.log('헤더에 토큰 넣음')
+      console.log('헤더에 토큰 넣음');
     }
     return config;
   },
@@ -31,13 +56,14 @@ axiosInstance.interceptors.response.use(
       const refreshToken = getRefreshToken();
       if (refreshToken) {
         try {
-          console.log('새 토큰 내놔')
+          console.log('새 토큰 내놔');
           // 리프레시 토큰으로 새로운 액세스 토큰 요청
           const response = await axios.post('https://be-fresh.site/api/refresh-token', { refreshToken });
           const newAccessToken = response.data.accessToken;
           // 새로운 액세스 토큰 로컬 스토리지에 저장
           saveTokens(newAccessToken, refreshToken);
           // 새로운 액세스 토큰으로 원래 요청 재시도
+          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
           return axiosInstance(originalRequest);
         } catch (refreshError) {
           // 리프레시 토큰 갱신에 실패한 경우 로그아웃 또는 다른 처리

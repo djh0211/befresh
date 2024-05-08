@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 interface MainPageTemplateProps {
   cardApiData: FoodTypes[];
+  setData:React.Dispatch<React.SetStateAction<FoodTypes[]>>
 }
 
 const Main = styled.div`
@@ -14,13 +15,23 @@ const Main = styled.div`
   justify-content: space-between;
 `
 
-export default function MainPageTemplate({ cardApiData }: Readonly<MainPageTemplateProps>) {
+const NavBlockWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #e9ffe6; 
+  z-index: 999; 
+`;
+
+export default function MainPageTemplate({ cardApiData, setData }: Readonly<MainPageTemplateProps>) {
   return (
     <div>
       <Main>
-        <CardForm cardApiData={cardApiData} />
-        <NavBlock />
+        <CardForm cardApiData={cardApiData} setData={setData} />
       </Main>
+      <NavBlockWrapper>
+        <NavBlock />
+      </NavBlockWrapper>
     </div>
   );
 }

@@ -6,12 +6,19 @@ import Typography from "@mui/material/Typography";
 import ProgressBar from "../atoms/progerssBar";
 import BasicModal from "../../pages/modal";
 import sampleimg from "../../assets/sampleimg.png";
-import { FoodData } from "../../types/foodTypes"; // FoodData 타입을 import합니다.
+import { FoodData,FoodTypes } from "../../types/foodTypes"; // FoodData 타입을 import합니다.
+
+interface CardFormProps {
+  foodData:FoodData
+  cardApiData: FoodTypes[];
+  setData: React.Dispatch<React.SetStateAction<FoodTypes[]>>
+}
 
 export default function ImgMediaCard({
-  foodData,
-}: Readonly<{ foodData: FoodData }>) {
+  foodData, setData, cardApiData
+}: Readonly<CardFormProps>) {
   const { name, elapsedTime } = foodData;
+  console.log("내려옴?", foodData)
 
   // 등록일시를 Date 객체로 변환합니다.
   const regDttmDate = new Date(foodData.regDttm);
@@ -44,7 +51,7 @@ export default function ImgMediaCard({
         </Typography>
       </CardContent>
       <CardActions>
-        <BasicModal foodData={foodData} />
+        <BasicModal foodData={foodData} cardApiData={cardApiData} setData={setData} />
       </CardActions>
     </Card>
   );
