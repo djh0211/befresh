@@ -88,8 +88,14 @@ define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
     "revision": "0.1bc0ee128mg"
   }], {});
   workbox.cleanupOutdatedCaches();
-  workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
-    allowlist: [/^\/$/]
-  }));
+  // workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
+  //   allowlist: [/^\/$/]
+  // }));
 
+  workbox.registerRoute(
+    new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
+      allowlist: [/^\/(?!\/?jenkins)/, /^\/(?!\/?sonar)/],
+    })
+  );
+  
 }));
