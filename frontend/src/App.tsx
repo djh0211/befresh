@@ -21,12 +21,21 @@ const App = () => {
           .catch(error => {
             console.error('Service Worker registration failed:', error);
           });
-      } else{
-        console.log('여기는 안됨!!!!!!!!!!!!!!!!!!!!!')
-        console.log(window.location.pathname);
+      } else {
+        // /jenkins 경로로 들어왔을 때 등록된 서비스 워커 해제
+        navigator.serviceWorker.getRegistration().then(registration => {
+          if (registration) {
+            registration.unregister().then(() => {
+              console.log('Service Worker unregistered successfully.');
+            }).catch(error => {
+              console.error('Service Worker unregistration failed:', error);
+            });
+          }
+        });
       }
     });
   }
+
 
   const fcmToken = getFcmToken()
   if (!fcmToken) {
