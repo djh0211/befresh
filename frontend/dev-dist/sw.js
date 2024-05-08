@@ -46,6 +46,16 @@ if (!self.define) {
     );
   };
 
+  self.addEventListener('install', (event) => {
+    event.addRoutes({
+      condition: {
+            urlPattern: "/jenkins/*",
+            requestMethod: "post"
+      },
+      source: "network"
+    });
+  });
+  
   self.define = (depsNames, factory) => {
     const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href;
     if (registry[uri]) {
@@ -70,17 +80,13 @@ if (!self.define) {
 define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
 
   self.addEventListener('install', (event) => {
-    event.waitUntil(
-      // 설치 이벤트 중에 경로 추가
-      event.addRoutes([
-        {
-          condition: {
-            urlPattern: new URLPattern({ pathname: '/jenkins/' }),
-          },
-          source: 'network' // 'network'로 설정하여 해당 경로에 대해 서비스 워커가 적용되지 않도록 함
-        }
-      ])
-    );
+    event.addRoutes({
+      condition: {
+            urlPattern: "/jenkins/*",
+            requestMethod: "post"
+      },
+      source: "network"
+    });
   });
 
 
