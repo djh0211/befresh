@@ -3,8 +3,8 @@ import { requestPermission } from './fcm/firebase'
 import { getFcmToken } from "./fcm/fcmToken";
 
 const App = () => {
-  if('serviceWorker' in navigator && !window.location.pathname.startsWith('/jenkins') && !window.location.pathname.startsWith('/sonar')) {
-    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+  if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(function(registration) {
       console.log('ServiceWorker registration successful with scope: ', registration.active);
     });
   };
