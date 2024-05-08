@@ -1,7 +1,7 @@
 import MainPageTemplate from "../components/templates/mainTemp";
 import { useEffect, useState } from 'react';
 import { getFoods } from '../api/food/foodCardApi';
-import { FoodTypes } from "../types/foodTypes"; // 음식 데이터를 가져오는 API 함수 import
+import { FoodTypes } from "../types/foodTypes";
 
 function MainPage() {
   const [cardData, setCardData] = useState<FoodTypes[]>([]); // 카드 데이터 상태 초기화
