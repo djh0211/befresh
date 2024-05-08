@@ -32,7 +32,7 @@ function MainPage() {
       {/* MainPageTemplate 컴포넌트에 카드 데이터를 props로 전달 */}
       {
         cardData === undefined ? (<p>냉장고 데이터를 가져오는 것을 실패!</p>) : (
-          <MainPageTemplate cardApiData={cardData} /> 
+          <MainPageTemplate cardApiData={cardData} setData={setCardData} /> 
         )
       }
     </div>

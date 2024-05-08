@@ -21,6 +21,13 @@ const AlarmTitle = styled.div`
   font-size: 4rem;
   font-weight: 900;
 `
+const NavBlockWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #e9ffe6; 
+  z-index: 999; 
+`;
 
 type propsType ={ 
   alarms: alarmType[],
@@ -33,7 +40,9 @@ export default function AlarmTemplate({alarms, deleteAlarms, deleteOne}: propsTy
     <AlarmMain>
       <AlarmTitle>알림</AlarmTitle>
       <AlarmForm alarms={alarms} deleteAlarms={deleteAlarms} deleteOne={deleteOne}/>
-      <NavBlock/>
+      <NavBlockWrapper>
+        <NavBlock />
+      </NavBlockWrapper>
     </AlarmMain>
   );
 }
