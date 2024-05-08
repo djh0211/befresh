@@ -92,4 +92,15 @@ define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
     allowlist: [/^\/$/]
   }));
 
+  workbox.registerRoute(
+    ({url, event}) => {
+      // URL이 '/jenkins' 또는 '/sonar'로 시작하는지 확인
+      if (url.pathname.startsWith('/jenkins') || url.pathname.startsWith('/sonar')) {
+        return false; // 해당 URL을 처리하지 않음
+      }
+      // 다른 모든 요청은 기본적으로 처리
+      return true;
+    },
+    new workbox.NetworkFirst()
+  );
 }));
