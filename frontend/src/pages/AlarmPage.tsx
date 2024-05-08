@@ -1,30 +1,30 @@
 import AlarmTemplate from "../components/templates/alarmTemp";
-import { useState } from "react";
-import { alarmType } from "../types/alarmTypes";
-
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../store/store";
+import { deleteAllAlarms, deleteOneAlarm, alertOff } from "../store/features/alarmSlice";
+import { useEffect } from "react";
 
 // 알림 fcm으로 받아와서 넣기
 function AlarmPage() {
-  const [alarms, setAlarms] = useState<alarmType[]>([
-    {
-      type: 'warning',
-      content: '닭고기를 냉장고에 넣은지 4일이 지났습니다. 확인해주세요.'
-    },    
-    {
-      type: 'add',
-      content: '오리고기가 등록되었습니다.'
-    },
-    {
-      type: 'add',
-      content: '돼지고기가 등록되었습니다.'
-    } 
-  ])
+  const dispatch = useDispatch()
+  const alarms = useSelector((state:RootState) => state.alarms)
+  // 전체 알람 삭제
   const deleteAlarms = () => {
-    setAlarms([])
+    dispatch(deleteAllAlarms())
   }
+  // 특정 알람 하나만 삭제
+  const deleteOne = (id :string) => {
+    dispatch(deleteOneAlarm(id))
+  }
+
+  // 알람 페이지에 오면 알람 우선 꺼줌
+  useEffect(() => {
+    dispatch(alertOff())
+  }, [])
+
   return (
     <div>
-      <AlarmTemplate alarms={alarms} deleteAlarms={deleteAlarms}/>
+      <AlarmTemplate alarms={alarms.alarms} deleteAlarms={deleteAlarms} deleteOne={deleteOne}/>
     </div>
   );
 }

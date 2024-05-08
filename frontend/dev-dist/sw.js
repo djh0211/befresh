@@ -46,6 +46,16 @@ if (!self.define) {
     );
   };
 
+  self.addEventListener('install', (event) => {
+    event.addRoutes({
+      condition: {
+            urlPattern: "/jenkins/*",
+            requestMethod: "post"
+      },
+      source: "network"
+    });
+  });
+  
   self.define = (depsNames, factory) => {
     const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href;
     if (registry[uri]) {
@@ -69,6 +79,17 @@ if (!self.define) {
 }
 define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
 
+  self.addEventListener('install', (event) => {
+    event.addRoutes({
+      condition: {
+            urlPattern: "/jenkins/*",
+            requestMethod: "post"
+      },
+      source: "network"
+    });
+  });
+
+
   self.addEventListener('message', event => {
     if (event.data && event.data.type === 'SKIP_WAITING') {
       self.skipWaiting();
@@ -85,17 +106,17 @@ define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
     "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
     "url": "index.html",
-    "revision": "0.1bc0ee128mg"
+    "revision": "0.j47c6782vio"
   }], {});
   workbox.cleanupOutdatedCaches();
-  // workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
-  //   allowlist: [/^\/$/]
-  // }));
+  workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
+    allowlist: [/^\/$/]
+  }));
 
-  workbox.registerRoute(
-    new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
-      allowlist: [/^\/(?!\/?jenkins)/, /^\/(?!\/?sonar)/],
-    })
-  );
+  // workbox.registerRoute(
+  //   new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
+  //     allowlist: [/^\/(?!\/?jenkins)/, /^\/(?!\/?sonar)/],
+  //   })
+  // );
   
 }));

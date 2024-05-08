@@ -1,12 +1,10 @@
 import styled from "styled-components";
 import SignUpTemp from "../components/templates/signupTemp";
 import { signUp, logIn } from "../api/member/memberApi";
-import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
-import { saveTokens } from "../utils/tokenUtils";
-import { getFcmToken } from "../fcm/fcmToken";
+import { saveTokens, getFcmToken } from "../utils/tokenUtils";
 import { sendFcmToken } from "../api/alarm/alarmApi";
 
 const SignUpPageContainer = styled.div`
