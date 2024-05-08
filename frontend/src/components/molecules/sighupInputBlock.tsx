@@ -12,7 +12,6 @@ interface SignupInputBlockProps {
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 70px;
   min-height: 30vh;
   min-width: 400px;
   width: 100%;

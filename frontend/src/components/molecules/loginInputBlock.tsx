@@ -1,4 +1,4 @@
-import IdInputTextFields from "../atoms/IdInput"; // inputbox.tsx 파일의 컴포넌트를 import
+import IdInputTextFields from "../atoms/IdInput";
 import PasswordInputTextFields from "../atoms/PasswordInput";
 import styled from "styled-components";
 import React, { useState } from 'react';
@@ -6,7 +6,6 @@ import React, { useState } from 'react';
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 70px;
   min-height: 30vh;
   min-width: 400px;
   width: 100%;
