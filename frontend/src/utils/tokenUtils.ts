@@ -2,6 +2,7 @@
 
 const TOKEN_KEY = 'access_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
+const FCM_TOKEN = 'fcm_token';
 
 export function saveTokens(accessToken: string, refreshToken: string) {
   localStorage.setItem(TOKEN_KEY, accessToken);
@@ -19,4 +20,12 @@ export function getRefreshToken(): string | null {
 export function removeTokens() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
+}
+
+export function saveFcmTokens(fcmToken: string) {
+  localStorage.setItem(FCM_TOKEN, fcmToken);
+}
+
+export function getFcmToken(): string | null {
+  return localStorage.getItem(FCM_TOKEN);
 }

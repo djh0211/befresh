@@ -2,9 +2,8 @@ import styled from "styled-components";
 import LoginTemp from "../components/templates/loginTemp";
 import { logIn } from "../api/member/memberApi";
 import { useNavigate } from "react-router-dom";
-import { saveTokens } from "../utils/tokenUtils";
+import { saveTokens, getFcmToken } from "../utils/tokenUtils";
 import { sendFcmToken } from "../api/alarm/alarmApi";
-import { getFcmToken } from "../fcm/fcmToken";
 
 const LoginPageContainer = styled.div`
   display: flex;

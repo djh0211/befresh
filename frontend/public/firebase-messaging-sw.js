@@ -15,3 +15,13 @@ const config = {
 const firebaseApp = firebase.initializeApp(config)
 
 const messaging = firebase.messaging();
+
+messaging.onBackgroundMessage((payload) => {
+  console.log('메세지 수신', payload)
+	const notificationMessage = payload.data.message
+	self.registration.showNotification(notificationMessage);
+  // if (payload.data.message) {
+  //   const notificationMessage = payload.data.message
+  //   self.registration.showNotification(notificationMessage);
+  // }
+});
