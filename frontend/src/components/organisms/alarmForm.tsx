@@ -21,10 +21,11 @@ const AlarmList = styled.div`
 
 type propsType ={ 
   alarms: alarmType[],
-  deleteAlarms: () => void
+  deleteAlarms: () => void,
+  deleteOne: (id :string) => void
 }
 
-export default function AlarmForm({alarms, deleteAlarms}: propsType) {
+export default function AlarmForm({alarms, deleteAlarms, deleteOne}: propsType) {
   return (
     <AlarmBox>
       <ButtonContainer>
@@ -41,7 +42,14 @@ export default function AlarmForm({alarms, deleteAlarms}: propsType) {
         {
           alarms.map((alarm, idx) => {
             return(
-              <AlarmBlock key={idx} type={alarm.type} content={alarm.content}/>
+              <AlarmBlock 
+                key={idx} 
+                id={alarm.messageId} 
+                type={alarm.data.category} 
+                title={alarm.notification.title}
+                content={alarm.notification.body} 
+                deleteOne={deleteOne}
+              />
             )
           })
         }
