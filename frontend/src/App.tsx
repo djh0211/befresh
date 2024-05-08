@@ -13,7 +13,7 @@ const App = () => {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       // 서비스 워커 예외 경로 설정
-      if (!window.location.pathname.startsWith('/jenkins') || !window.location.pathname.startsWith('/sonar')) {
+      if (!window.location.pathname.includes('/jenkins/') || !window.location.pathname.includes('/sonar/')) {
         navigator.serviceWorker.register('/sw.js', { scope: '/' })
           .then(registration => {
             console.log('Service Worker registered with scope:', registration.scope);
