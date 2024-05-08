@@ -69,16 +69,16 @@ if (!self.define) {
 }
 define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
 
-  self.addEventListener('fetch', event => {
-    const requestUrl = new URL(event.request.url);
-  
-    // "/jenkins" 경로에 대한 요청은 무시
-    if (requestUrl.pathname.startsWith('/jenkins')) {
-      return;
-    }
-  
-    // 이하에 다른 요청 처리 로직을 추가
-  });
+  // self.addEventListener('fetch', event => {
+  //   const requestUrl = new URL(event.request.url);
+
+  //   // "/jenkins" 경로에 대한 요청은 무시
+  //   if (requestUrl.pathname.startsWith('/jenkins')) {
+  //     return;
+  //   }
+
+  //   // 이하에 다른 요청 처리 로직을 추가
+  // });
 
 
   self.addEventListener('message', event => {
@@ -100,14 +100,14 @@ define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
     "revision": "0.1bc0ee128mg"
   }], {});
   workbox.cleanupOutdatedCaches();
-  // workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
-  //   allowlist: [/^\/$/]
-  // }));
+  workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
+    allowlist: [/^\/$/]
+  }));
 
-  workbox.registerRoute(
-    new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
-      allowlist: [/^\/(?!\/?be-fresh.site\/jenkins)/, /^\/(?!\/?be-fresh.site\/sonar)/],
-    })
-  );
+  // workbox.registerRoute(
+  //   new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
+  //     allowlist: [/^\/(?!\/?jenkins)/, /^\/(?!\/?sonar)/],
+  //   })
+  // );
   
 }));
