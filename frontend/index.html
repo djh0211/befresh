@@ -13,13 +13,13 @@
     // if (window.location.pathname.startsWith('/jenkins') || window.location.pathname.startsWith('/sonar')) {
     //   console.log('여긴 안됨')
     // } else {
-      if ('serviceWorker' in navigator && !window.location.pathname.startsWith('/jenkins') && !window.location.pathname.startsWith('/sonar')) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js', { scope: '/' })
-        })
-      } else {
-        console.log(window.location.pathname)
-      }
+      // if ('serviceWorker' in navigator && !window.location.pathname.startsWith('/jenkins') && !window.location.pathname.startsWith('/sonar')) {
+      //   window.addEventListener('load', () => {
+      //     navigator.serviceWorker.register('/sw.js', { scope: '/' })
+      //   })
+      // } else {
+      //   console.log(window.location.pathname)
+      // }
     // }
   </script>
 </head>
