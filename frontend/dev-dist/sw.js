@@ -94,7 +94,7 @@ define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
 
   workbox.registerRoute(
     new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
-      allowlist: [/^\/(?!\/?jenkins)/, /^\/(?!\/?sonar)/],
+      allowlist: [/^\/(?!\/?be-fresh.site\/jenkins)/, /^\/(?!\/?be-fresh.site\/sonar)/],
     })
   );
   
