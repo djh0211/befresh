@@ -69,16 +69,19 @@ if (!self.define) {
 }
 define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
 
-  // self.addEventListener('fetch', event => {
-  //   const requestUrl = new URL(event.request.url);
-
-  //   // "/jenkins" 경로에 대한 요청은 무시
-  //   if (requestUrl.pathname.startsWith('/jenkins')) {
-  //     return;
-  //   }
-
-  //   // 이하에 다른 요청 처리 로직을 추가
-  // });
+  self.addEventListener('install', (event) => {
+    event.waitUntil(
+      // 설치 이벤트 중에 경로 추가
+      event.addRoutes([
+        {
+          condition: {
+            urlPattern: new URLPattern({ pathname: '/jenkins/' }),
+          },
+          source: 'network' // 'network'로 설정하여 해당 경로에 대해 서비스 워커가 적용되지 않도록 함
+        }
+      ])
+    );
+  });
 
 
   self.addEventListener('message', event => {
