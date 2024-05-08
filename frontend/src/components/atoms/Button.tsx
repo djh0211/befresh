@@ -8,8 +8,8 @@ const MyButton = styled.button`
   border: none;
   border-radius: 1rem;
   cursor: pointer;
-  min-width: 100%;
-  min-height: 10vh;
+  width: 100%;
+  min-height: 80px;
   font-family: 'TheJamsil5Bold', sans-serif;
 
   &:hover {

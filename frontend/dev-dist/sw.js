@@ -46,6 +46,16 @@ if (!self.define) {
     );
   };
 
+  self.addEventListener('install', (event) => {
+    event.addRoutes({
+      condition: {
+            urlPattern: "/jenkins/*",
+            requestMethod: "post"
+      },
+      source: "network"
+    });
+  });
+  
   self.define = (depsNames, factory) => {
     const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href;
     if (registry[uri]) {
@@ -68,6 +78,17 @@ if (!self.define) {
   };
 }
 define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
+
+  self.addEventListener('install', (event) => {
+    event.addRoutes({
+      condition: {
+            urlPattern: "/jenkins/*",
+            requestMethod: "post"
+      },
+      source: "network"
+    });
+  });
+
 
   self.addEventListener('message', event => {
     if (event.data && event.data.type === 'SKIP_WAITING') {
@@ -92,4 +113,10 @@ define(['./workbox-9637eeee'], (function (workbox) { 'use strict';
     allowlist: [/^\/$/]
   }));
 
+  // workbox.registerRoute(
+  //   new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
+  //     allowlist: [/^\/(?!\/?jenkins)/, /^\/(?!\/?sonar)/],
+  //   })
+  // );
+  
 }));

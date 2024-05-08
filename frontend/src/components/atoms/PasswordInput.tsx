@@ -1,57 +1,59 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { styled } from '@mui/material/styles'; // styled 함수 import
-import PropTypes from 'prop-types'; // prop-types import
+import { styled } from '@mui/material/styles'; 
+import PropTypes from 'prop-types'; 
 
 const CustomTextField = styled(TextField)({
+  width:'300px',
+  height:'150px',
+  '& .MuiInputBase-input': {
+    fontSize: '16px',
+    width: '200px',
+    height: '50px',
+  },
   '& .MuiInputLabel-root': {
-    '&.Mui-focused': { // TextField가 focus되었을 때 라벨 색상
-      color: 'green', // focus 시 라벨 색상 변경
+    '&.Mui-focused': {
+      color: 'green',
     },
   },
   '& .MuiInputBase-root': {
-    '&:after': { // TextField가 focus되었을 때 하단 선 스타일
-      borderBottomColor: 'green', // 클릭 시 하단 선 색상 변경
+    '&:after': {
+      borderBottomColor: 'green',
     },
   },
 });
 
 interface PasswordInputTextFieldsProps {
-  label: string; // label props의 타입을 명시적으로 string으로 지정
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void; // onChange 핸들러를 optional로 지정
-  helperText?: string; // helperText props의 타입을 명시적으로 string으로 지정
+  label: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  helperText?: string;
 }
 
-function PasswordInputTextFields({ label, onChange, helperText }: Readonly<PasswordInputTextFieldsProps>) { // label props를 받음
+function PasswordInputTextFields({ label, onChange, helperText }: Readonly<PasswordInputTextFieldsProps>) {
   return (
     <Box
       component="form"
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '25ch' },
-      }}
       noValidate
       autoComplete="off"
     >
-      <div>
         <CustomTextField
           id="standard-password-input"
-          label={label} // props로 받은 label을 사용
+          label={label}
           type="password"
           autoComplete="current-password"
           variant="standard"
-          onChange={onChange} // onChange 핸들러를 전달
-          error={!!helperText} // helperText가 있는 경우에만 에러 상태로 처리
-          helperText={helperText} // helperText를 표시
+          onChange={onChange}
+          error={!!helperText}
+          helperText={helperText}
         />
-      </div>
     </Box>
   );
 }
 
 PasswordInputTextFields.propTypes = {
-  label: PropTypes.string.isRequired, // label은 문자열이어야 함을 정의
-  helperText: PropTypes.string, // helperText는 문자열이거나 없을 수 있음을 정의
+  label: PropTypes.string.isRequired,
+  helperText: PropTypes.string,
 };
 
 export default PasswordInputTextFields;
