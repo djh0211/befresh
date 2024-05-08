@@ -1,15 +1,17 @@
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import ProgressBar from '../atoms/progerssBar';
-import BasicModal from '../atoms/modal';
-import sampleimg from '../../assets/sampleimg.png';
-import { FoodData } from '../../types/foodTypes'; // FoodData 타입을 import합니다.
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import ProgressBar from "../atoms/progerssBar";
+import BasicModal from "../../pages/modal";
+import sampleimg from "../../assets/sampleimg.png";
+import { FoodData } from "../../types/foodTypes"; // FoodData 타입을 import합니다.
 
-export default function ImgMediaCard({ foodData }: Readonly<{ foodData: FoodData }>) {
-  const { name } = foodData;
+export default function ImgMediaCard({
+  foodData,
+}: Readonly<{ foodData: FoodData }>) {
+  const { name, elapsedTime } = foodData;
 
   // 등록일시를 Date 객체로 변환합니다.
   const regDttmDate = new Date(foodData.regDttm);
@@ -32,6 +34,14 @@ export default function ImgMediaCard({ foodData }: Readonly<{ foodData: FoodData
           {`${formattedRegDttm}부터 보관중`}
         </Typography>
         <ProgressBar value={foodData.freshState} />
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          align="center"
+          sx={{ marginTop: "10px" }}
+        >
+          {`${foodData.elapsedTime}일 경과`}
+        </Typography>
       </CardContent>
       <CardActions>
         <BasicModal foodData={foodData} />

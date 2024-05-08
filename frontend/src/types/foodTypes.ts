@@ -13,10 +13,14 @@ export interface FoodTypes {
 }
 
 export interface FoodData {
+  id: number;
   name: string;
   expirationDate: string;
   regDttm: string;
   elapsedTime: number;
+  ftype: string;
   refresh: string;
-  freshState: number; 
+  freshState: number;
+  temperature: number | null;
+  humidity: number | null;
 }
