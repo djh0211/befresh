@@ -215,6 +215,7 @@ public class FoodServiceImpl implements FoodService {
     private double calculateFreshState(Ftype ftype, LocalDateTime registrationDateTime,
         LocalDate exprationDate) {
 
+        if(exprationDate == null) return 100;
 
         // TODO: 용기는 나중에 다르게 설정
         int totalDays = Period.between(registrationDateTime.toLocalDate(), exprationDate).getDays();
