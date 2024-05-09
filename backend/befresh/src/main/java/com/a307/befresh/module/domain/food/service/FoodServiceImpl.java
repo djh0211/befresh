@@ -21,9 +21,17 @@ import com.a307.befresh.module.domain.refresh.repository.RefreshRepository;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
 import com.a307.befresh.module.domain.refrigerator.repository.RefrigeratorRepository;
 import jakarta.transaction.Transactional;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +46,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class FoodServiceImpl implements FoodService {
+
+    @Value("${X-Naver-Client-Id}")
+    private String clientId;
+
+    @Value("${X-Naver-Client-Secret}")
+    private String clientSecret;
 
     private final FoodRepository foodRepository;
     private final RefrigeratorRepository refrigeratorRepository;
@@ -75,6 +89,9 @@ public class FoodServiceImpl implements FoodService {
             }
         }
 
+        String image = extractImageLink(name);
+        log.info("[FoodServiceImpl] image search api: {}", image);
+
         if (ftype.getId() == 1) {
 
             Food existFood = containerRepository.findByQrId(foodRegisterReq.qrId());
@@ -86,7 +103,7 @@ public class FoodServiceImpl implements FoodService {
             // 신선도 로직
             Refresh refresh = refreshRepository.findById(4L).orElse(new Refresh(4L, "측정전"));
 
-            Container container = Container.createContainer(name, null, expirationDate, refresh,
+            Container container = Container.createContainer(name, image, expirationDate, refresh,
                 ftype, refrigerator, missRegistered, null, null, null, foodRegisterReq.qrId());
 
             containerRepository.save(container);
@@ -96,7 +113,7 @@ public class FoodServiceImpl implements FoodService {
 
             Refresh refresh = refreshRepository.findById(1L).orElse(new Refresh(1L, "신선"));
 
-            Food food = Food.createFood(name, null, expirationDate, refresh,
+            Food food = Food.createFood(name, image, expirationDate, refresh,
                 ftype, refrigerator, missRegistered);
 
             foodRepository.save(food);
@@ -105,9 +122,7 @@ public class FoodServiceImpl implements FoodService {
         }
     }
 
-
     @Override
-//    @KafkaListener(topics = "food-regist-topic", groupId = "group_01")
     @Async("virtualExecutor")
     public void registerFood(FoodRegisterReqList foodRegisterReqList) {
         Optional<Refrigerator> refrigerator = refrigeratorRepository.findById(
@@ -177,7 +192,11 @@ public class FoodServiceImpl implements FoodService {
     @Transactional
     public void updateFood(FoodUpdateReq foodUpdateReq) {
         Food food = foodRepository.findById(foodUpdateReq.foodId()).orElseThrow();
+
+        String image = extractImageLink(foodUpdateReq.name());
+
         food.setName(foodUpdateReq.name());
+        food.setImage(image);
         food.setExpirationDate(foodUpdateReq.expirationDate());
         foodRepository.save(food);
     }
@@ -255,5 +274,78 @@ public class FoodServiceImpl implements FoodService {
             return top;
         }
         return null;
+    }
+
+    private static String get(String apiUrl, Map<String, String> requestHeaders) {
+        HttpURLConnection con = connect(apiUrl);
+        try {
+            con.setRequestMethod("GET");
+            for (Map.Entry<String, String> header : requestHeaders.entrySet()) {
+                con.setRequestProperty(header.getKey(), header.getValue());
+            }
+
+            int responseCode = con.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) { // 정상 호출
+                return readBody(con.getInputStream());
+            } else { // 오류 발생
+                return readBody(con.getErrorStream());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("API 요청과 응답 실패", e);
+        } finally {
+            con.disconnect();
+        }
+    }
+
+
+    private static HttpURLConnection connect(String apiUrl) {
+        try {
+            URL url = new URL(apiUrl);
+            return (HttpURLConnection) url.openConnection();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("API URL이 잘못되었습니다. : " + apiUrl, e);
+        } catch (IOException e) {
+            throw new RuntimeException("연결이 실패했습니다. : " + apiUrl, e);
+        }
+    }
+
+
+    private static String readBody(InputStream body) {
+        InputStreamReader streamReader = new InputStreamReader(body);
+
+        try (BufferedReader lineReader = new BufferedReader(streamReader)) {
+            StringBuilder responseBody = new StringBuilder();
+
+            String line;
+            while ((line = lineReader.readLine()) != null) {
+                responseBody.append(line);
+            }
+
+            return responseBody.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("API 응답을 읽는 데 실패했습니다.", e);
+        }
+    }
+
+    private String extractImageLink(String name) {
+        //이미지 검색 관련
+        String text = URLEncoder.encode(name, StandardCharsets.UTF_8);
+
+        String apiURL = "https://openapi.naver.com/v1/search/image?query=" + text
+            + "&display=1&start=1&sort=sim";
+
+        Map<String, String> requestHeaders = new HashMap<>();
+        requestHeaders.put("X-Naver-Client-Id", clientId);
+        requestHeaders.put("X-Naver-Client-Secret", clientSecret);
+        String responseBody = get(apiURL, requestHeaders);
+
+        String image = null;
+        int startIndex = responseBody.indexOf("\"link\":") + "\"link\":".length();
+        int endIndex = responseBody.indexOf("\",", startIndex);
+
+        if (endIndex != -1) {
+            image = responseBody.substring(startIndex, endIndex);
+        }
+        return image;
     }
 }
