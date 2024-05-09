@@ -48,6 +48,10 @@ public class Food extends BaseEntity {
     @JoinColumn(name = "refrigerator_id", nullable = false)
     private Refrigerator refrigerator;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prev_refresh")
+    private Refresh prevRefresh;
+
     public static Food createFood(String name, String image, LocalDate expirationDate, Refresh refresh,
         Ftype ftype, Refrigerator refrigerator, boolean missRegistered) {
         Food food = new Food();
