@@ -7,15 +7,8 @@ import java.time.LocalDate;
 @Builder
 public record FoodRegisterReq(
     String name,
-
-    String image,
     LocalDate expirationDate,
     long ftypeId,
-
-    Double temperature,
-
-    Double humidity,
-    Double zCoordinate,
 
     String qrId
 

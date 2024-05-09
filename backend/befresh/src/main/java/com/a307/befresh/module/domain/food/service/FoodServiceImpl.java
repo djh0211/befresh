@@ -26,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -77,27 +78,6 @@ public class FoodServiceImpl implements FoodService {
         LocalDate expirationDate = foodRegisterReq.expirationDate();
         boolean missRegistered = ftype.getId() == 2;
 
-        //이미지 검색 관련
-        String text = null;
-        try {
-            text = URLEncoder.encode(name, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("검색어 인코딩 실패",e);
-        }
-
-        String apiURL = "https://openapi.naver.com/v1/search/image?query=" + text + "&display=1&start=1&sort=sim";
-
-        Map<String, String> requestHeaders = new HashMap<>();
-        requestHeaders.put("X-Naver-Client-Id", clientId);
-        requestHeaders.put("X-Naver-Client-Secret", clientSecret);
-        String responseBody = get(apiURL,requestHeaders);
-        String image = extractImageLink(responseBody);
-
-        System.out.println("이미지 링크: " + image);
-
-        log.info("[FoodServiceImpl] image search api ResponseBody", responseBody, image);
-
-
         // elastic search를 통한 음식 검색
         if (ftype.getId() != 2) {
             ElasticDocument elasticDocument = searchElasticSearch(foodRegisterReq.name());
@@ -109,21 +89,22 @@ public class FoodServiceImpl implements FoodService {
             }
         }
 
+        String image = extractImageLink(name);
+        log.info("[FoodServiceImpl] image search api: {}", image);
+
         if (ftype.getId() == 1) {
 
             Food existFood = containerRepository.findByQrId(foodRegisterReq.qrId());
 
-            if(existFood != null) {
+            if (existFood != null) {
                 foodRepository.delete(existFood);
             }
 
             // 신선도 로직
             Refresh refresh = refreshRepository.findById(4L).orElse(new Refresh(4L, "측정전"));
 
-            Container container = Container.createContainer(name, foodRegisterReq.image(),
-                expirationDate, refresh, ftype, refrigerator, missRegistered,
-                foodRegisterReq.temperature(), foodRegisterReq.humidity(),
-                foodRegisterReq.zCoordinate(), foodRegisterReq.qrId());
+            Container container = Container.createContainer(name, image, expirationDate, refresh,
+                ftype, refrigerator, missRegistered, null, null, null, foodRegisterReq.qrId());
 
             containerRepository.save(container);
 
@@ -132,7 +113,7 @@ public class FoodServiceImpl implements FoodService {
 
             Refresh refresh = refreshRepository.findById(1L).orElse(new Refresh(1L, "신선"));
 
-            Food food = Food.createFood(name, foodRegisterReq.image(), expirationDate, refresh,
+            Food food = Food.createFood(name, image, expirationDate, refresh,
                 ftype, refrigerator, missRegistered);
 
             foodRepository.save(food);
@@ -211,7 +192,11 @@ public class FoodServiceImpl implements FoodService {
     @Transactional
     public void updateFood(FoodUpdateReq foodUpdateReq) {
         Food food = foodRepository.findById(foodUpdateReq.foodId()).orElseThrow();
+
+        String image = extractImageLink(foodUpdateReq.name());
+
         food.setName(foodUpdateReq.name());
+        food.setImage(image);
         food.setExpirationDate(foodUpdateReq.expirationDate());
         foodRepository.save(food);
     }
@@ -249,7 +234,9 @@ public class FoodServiceImpl implements FoodService {
     private double calculateFreshState(Ftype ftype, LocalDateTime registrationDateTime,
         LocalDate exprationDate) {
 
-        if(exprationDate == null) return 100;
+        if (exprationDate == null) {
+            return 100;
+        }
 
         // TODO: 용기는 나중에 다르게 설정
         int totalDays = Period.between(registrationDateTime.toLocalDate(), exprationDate).getDays();
@@ -289,14 +276,13 @@ public class FoodServiceImpl implements FoodService {
         return null;
     }
 
-    private static String get(String apiUrl, Map<String, String> requestHeaders){
+    private static String get(String apiUrl, Map<String, String> requestHeaders) {
         HttpURLConnection con = connect(apiUrl);
         try {
             con.setRequestMethod("GET");
-            for(Map.Entry<String, String> header :requestHeaders.entrySet()) {
+            for (Map.Entry<String, String> header : requestHeaders.entrySet()) {
                 con.setRequestProperty(header.getKey(), header.getValue());
             }
-
 
             int responseCode = con.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) { // 정상 호출
@@ -312,10 +298,10 @@ public class FoodServiceImpl implements FoodService {
     }
 
 
-    private static HttpURLConnection connect(String apiUrl){
+    private static HttpURLConnection connect(String apiUrl) {
         try {
             URL url = new URL(apiUrl);
-            return (HttpURLConnection)url.openConnection();
+            return (HttpURLConnection) url.openConnection();
         } catch (MalformedURLException e) {
             throw new RuntimeException("API URL이 잘못되었습니다. : " + apiUrl, e);
         } catch (IOException e) {
@@ -324,19 +310,16 @@ public class FoodServiceImpl implements FoodService {
     }
 
 
-    private static String readBody(InputStream body){
+    private static String readBody(InputStream body) {
         InputStreamReader streamReader = new InputStreamReader(body);
-
 
         try (BufferedReader lineReader = new BufferedReader(streamReader)) {
             StringBuilder responseBody = new StringBuilder();
-
 
             String line;
             while ((line = lineReader.readLine()) != null) {
                 responseBody.append(line);
             }
-
 
             return responseBody.toString();
         } catch (IOException e) {
@@ -344,15 +327,28 @@ public class FoodServiceImpl implements FoodService {
         }
     }
 
-    private static String extractImageLink(String responseBody) {
+    private String extractImageLink(String name) {
+        //이미지 검색 관련
+        String text = URLEncoder.encode(name, StandardCharsets.UTF_8);
+
+        String apiURL = "https://openapi.naver.com/v1/search/image?query=" + text
+            + "&display=1&start=1&sort=sim";
+
+        Map<String, String> requestHeaders = new HashMap<>();
+        requestHeaders.put("X-Naver-Client-Id", clientId);
+        requestHeaders.put("X-Naver-Client-Secret", clientSecret);
+        String responseBody = get(apiURL, requestHeaders);
+
         String image = null;
-        if (responseBody != null) {
-            int startIndex = responseBody.indexOf("\"link\":") + "\"link\":".length();
-            int endIndex = responseBody.indexOf("\",", startIndex);
-            if (startIndex != -1 && endIndex != -1) {
-                image = responseBody.substring(startIndex, endIndex);
-            }
+        int startIndex = responseBody.indexOf("\"link\":") + "\"link\":".length();
+        int endIndex = responseBody.indexOf("\",", startIndex);
+
+        if (endIndex != -1) {
+            image = responseBody.substring(startIndex, endIndex);
         }
+        assert image != null;
+        image = image.replaceAll("^\"|\"$", "");
+
         return image;
     }
 }
