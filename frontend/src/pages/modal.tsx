@@ -21,6 +21,12 @@ const DetailList = styled.p`
   text-align: center;
 `;
 
+const DetailInfo = styled.p`
+  width: 150px;
+  text-align: right;
+
+`
+
 const EditIcon = styled.span`
   cursor: pointer;
 `;
@@ -119,7 +125,7 @@ const BasicModal: React.FC<ModalProps> = ({
           }}
         >
           <ModalClose variant="plain" sx={{ m: 1 }} />
-          {foodDetail?.image && <img src={newimage} alt="음식 이미지" style={{ width: '30%', maxWidth: '30%' }} />}
+          {foodDetail?.image && <img src={newimage} alt="음식 이미지" style={{ width: '150px', maxHeight:'150px', maxWidth: '150px', objectFit: 'cover', height: 'auto' }} />}
           <Typography
             component="h2"
             id="modal-title"
@@ -138,17 +144,17 @@ const BasicModal: React.FC<ModalProps> = ({
             <FoodModalDetail>
               <DetailList>들어온시간</DetailList>
               <p>:</p>
-              <p>{formatDate(foodDetail?.regDttm??'')}</p>
+              <DetailInfo>{formatDate(foodDetail?.regDttm??'')}</DetailInfo>
             </FoodModalDetail>
             <FoodModalDetail>
               <DetailList>경과시간</DetailList>
               <p>:</p>
-              <p>{foodDetail?.elapsedTime}</p>
+              <DetailInfo>{foodDetail?.elapsedTime} 일</DetailInfo>
             </FoodModalDetail>
             <FoodModalDetail>
               <DetailList>유통기한</DetailList>
               <p>:</p>
-              <p>{formatDate(foodDetail?.expirationDate??'')}</p>
+              <DetailInfo>{formatDate(foodDetail?.expirationDate??'')}</DetailInfo>
               {/* <p>
                 <EditIcon onClick={() => setOpenDatePicker(!openDatePicker)}>✏️</EditIcon>
               </p> */}
@@ -156,19 +162,19 @@ const BasicModal: React.FC<ModalProps> = ({
             <FoodModalDetail>
               <DetailList>상태</DetailList>
               <p>:</p>
-              <p>{foodDetail?.refresh}</p>
+              <DetailInfo>{foodDetail?.refresh}</DetailInfo>
             </FoodModalDetail>
             {foodData.ftype === "용기" && (
               <React.Fragment>
                 <FoodModalDetail>
                   <DetailList>온도</DetailList>
                   <p>:</p>
-                  <p>{foodDetail?.temperature}</p>
+                  <DetailInfo>{foodDetail?.temperature}</DetailInfo>
                 </FoodModalDetail>
                 <FoodModalDetail>
                   <DetailList>습도</DetailList>
                   <p>:</p>
-                  <p>{foodDetail?.humidity}</p>
+                  <DetailInfo>{foodDetail?.humidity}</DetailInfo>
                 </FoodModalDetail>
                 <Button onClick={() => navigate("/info")}>세부 기록</Button>
               </React.Fragment>
