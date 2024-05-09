@@ -32,6 +32,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -124,13 +125,14 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     @Async("virtualExecutor")
+    @KafkaListener(topics = "food-regist", groupId = "group_regist")
     public void registerFood(FoodRegisterReqList foodRegisterReqList) {
         Optional<Refrigerator> refrigerator = refrigeratorRepository.findById(
             foodRegisterReqList.refrigeratorId());
         log.debug("registerFood method start : {} ", Thread.currentThread().toString());
 
         if (refrigerator.isEmpty()) {
-            log.error("registerFood method refirgerator: {}이 없습니다.",
+            log.error("registerFood method refrigerator: {}이 없습니다.",
                 foodRegisterReqList.refrigeratorId());
             throw new BaseExceptionHandler(ErrorCode.NOT_FOUND_REFRIGERATOR_EXCEPTION);
         }
