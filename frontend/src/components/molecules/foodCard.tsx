@@ -14,12 +14,14 @@ interface CardFormProps {
   setData: React.Dispatch<React.SetStateAction<FoodTypes[]>>
 }
 
+
 export default function ImgMediaCard({
   foodData, setData, cardApiData
 }: Readonly<CardFormProps>) {
-  const { name, elapsedTime } = foodData;
-  console.log("내려옴?", foodData)
+  const { name, elapsedTime, image } = foodData;
+  console.log("내려옴?", foodData.image)
 
+  const newimage = image != null ? image.replace(/\\/g, "") : sampleimg;
   // 등록일시를 Date 객체로 변환합니다.
   const regDttmDate = new Date(foodData.regDttm);
   // 원하는 형식으로 날짜를 변환합니다.
@@ -31,7 +33,7 @@ export default function ImgMediaCard({
         component="img"
         alt={name}
         height="140"
-        image={sampleimg} // sampleimg 대신에 실제 이미지 URL 사용하셔야 합니다.
+        image={newimage ?? sampleimg}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">

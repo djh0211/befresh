@@ -16,6 +16,7 @@ export interface FoodData {
   id: number;
   name: string;
   expirationDate: string;
+  image: string | null;
   regDttm: string;
   elapsedTime: number;
   ftype: string;
