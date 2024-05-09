@@ -23,6 +23,7 @@ import com.a307.befresh.module.domain.refrigerator.repository.RefrigeratorReposi
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +60,6 @@ public class FoodServiceImpl implements FoodService {
         Ftype ftype = ftypeRepository.findById(foodRegisterReq.ftypeId())
             .orElse(new Ftype(3L, "기타"));
 
-
         String name = foodRegisterReq.name();
         LocalDate expirationDate = foodRegisterReq.expirationDate();
         boolean missRegistered = ftype.getId() == 2;
@@ -79,17 +79,15 @@ public class FoodServiceImpl implements FoodService {
 
             Food existFood = containerRepository.findByQrId(foodRegisterReq.qrId());
 
-            if(existFood != null) {
+            if (existFood != null) {
                 foodRepository.delete(existFood);
             }
 
             // 신선도 로직
             Refresh refresh = refreshRepository.findById(4L).orElse(new Refresh(4L, "측정전"));
 
-            Container container = Container.createContainer(name, foodRegisterReq.image(),
-                expirationDate, refresh, ftype, refrigerator, missRegistered,
-                foodRegisterReq.temperature(), foodRegisterReq.humidity(),
-                foodRegisterReq.zCoordinate(), foodRegisterReq.qrId());
+            Container container = Container.createContainer(name, null, expirationDate, refresh,
+                ftype, refrigerator, missRegistered, null, null, null, foodRegisterReq.qrId());
 
             containerRepository.save(container);
 
@@ -98,7 +96,7 @@ public class FoodServiceImpl implements FoodService {
 
             Refresh refresh = refreshRepository.findById(1L).orElse(new Refresh(1L, "신선"));
 
-            Food food = Food.createFood(name, foodRegisterReq.image(), expirationDate, refresh,
+            Food food = Food.createFood(name, null, expirationDate, refresh,
                 ftype, refrigerator, missRegistered);
 
             foodRepository.save(food);
@@ -107,7 +105,9 @@ public class FoodServiceImpl implements FoodService {
         }
     }
 
+
     @Override
+//    @KafkaListener(topics = "food-regist-topic", groupId = "group_01")
     @Async("virtualExecutor")
     public void registerFood(FoodRegisterReqList foodRegisterReqList) {
         Optional<Refrigerator> refrigerator = refrigeratorRepository.findById(
@@ -215,7 +215,9 @@ public class FoodServiceImpl implements FoodService {
     private double calculateFreshState(Ftype ftype, LocalDateTime registrationDateTime,
         LocalDate exprationDate) {
 
-        if(exprationDate == null) return 100;
+        if (exprationDate == null) {
+            return 100;
+        }
 
         // TODO: 용기는 나중에 다르게 설정
         int totalDays = Period.between(registrationDateTime.toLocalDate(), exprationDate).getDays();
