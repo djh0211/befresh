@@ -13,6 +13,7 @@ const Main = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-bottom: 60px;
 `
 
 const NavBlockWrapper = styled.div`
