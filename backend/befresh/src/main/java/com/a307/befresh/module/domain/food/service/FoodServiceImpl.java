@@ -125,7 +125,7 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     @Async("virtualExecutor")
-    @KafkaListener(topics = "food-regist", groupId = "group_regist")
+    @KafkaListener(topics = "${kafka.topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void registerFood(FoodRegisterReqList foodRegisterReqList) {
         Optional<Refrigerator> refrigerator = refrigeratorRepository.findById(
             foodRegisterReqList.refrigeratorId());
