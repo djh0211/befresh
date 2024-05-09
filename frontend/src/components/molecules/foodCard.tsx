@@ -32,7 +32,7 @@ export default function ImgMediaCard({
       <CardMedia
         component="img"
         alt={name}
-        height="140"
+        height="200"
         image={newimage ?? sampleimg}
       />
       <CardContent>
