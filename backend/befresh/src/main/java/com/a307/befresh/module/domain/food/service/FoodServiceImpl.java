@@ -346,6 +346,9 @@ public class FoodServiceImpl implements FoodService {
         if (endIndex != -1) {
             image = responseBody.substring(startIndex, endIndex);
         }
+        assert image != null;
+        image = image.replaceAll("^\"|\"$", "");
+
         return image;
     }
 }
