@@ -1,5 +1,5 @@
 import axiosInstance from '../../utils/axiosConfig';
-// import axios from 'axios';
+
 
 // 음식 상세 정보를 가져오는 함수
 export async function modalFoodDetail(foodId: number): Promise<any> {

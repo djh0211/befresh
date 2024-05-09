@@ -17,15 +17,14 @@ const FoodModalDetail = styled.div`
   justify-content: space-between;
 `;
 const DetailList = styled.p`
-  width: 120px;
+  width: 150px;
   text-align: center;
 `;
 
 const DetailInfo = styled.p`
-  width: 150px;
+  width: 180px;
   text-align: right;
-
-`
+`;
 
 const EditIcon = styled.span`
   cursor: pointer;
@@ -49,7 +48,10 @@ const BasicModal: React.FC<ModalProps> = ({
     React.useState<string>(formatDate(foodData.expirationDate)); // 편집된 유통기한을 담을 상태 변수
   const [openDatePicker, setOpenDatePicker] = React.useState<boolean>(false);
   const navigate = useNavigate();
-  const newimage = foodDetail?.image != null ? foodDetail?.image.replace(/\\/g, "") : sampleimg;
+  const newimage =
+    foodDetail?.image != null
+      ? foodDetail?.image.replace(/\\/g, "")
+      : sampleimg;
 
   // 모달 열기
   const handleOpen = async () => {
@@ -72,7 +74,7 @@ const BasicModal: React.FC<ModalProps> = ({
   // 음식 정보 업데이트
   const handleUpdateFoodDetail = async () => {
     try {
-      console.log(foodDetail,'유통유통')
+      console.log(foodDetail, "유통유통");
       // 수정된 이름과 유통기한을 포함하여 API로 요청을 보냄
       await updateFoodDetail({
         foodId: foodData.id,
@@ -118,33 +120,62 @@ const BasicModal: React.FC<ModalProps> = ({
           variant="outlined"
           color="success"
           sx={{
-            maxWidth: 500,
+            padding: "40vw",
+            minWidth: "50vw",
+            minHeight: "50vh",
             borderRadius: "md",
-            p: 3,
+            p: 5,
             boxShadow: "lg",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-around",
           }}
         >
           <ModalClose variant="plain" sx={{ m: 1 }} />
-          {foodDetail?.image && <img src={newimage} alt="음식 이미지" style={{ width: '150px', maxHeight:'150px', maxWidth: '150px', objectFit: 'cover', height: 'auto' }} />}
+          {foodDetail?.image && (
+            <img
+              src={newimage}
+              alt="음식 이미지"
+              style={{
+                width: "200px",
+                height: "auto",
+                maxHeight: "200px",
+                maxWidth: "200px",
+                objectFit: "cover",
+              }}
+            />
+          )}
           <Typography
             component="h2"
             id="modal-title"
             level="h4"
             textColor="inherit"
             fontWeight="lg"
-            mb={1}
+            mb={2}
+            sx={{ fontSize: "1.5rem" }}
           >
             <input
               type="text"
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
+              style={{
+                fontSize: "2rem",
+                border: "none",
+                borderBottom: "1px solid black",
+                width: "40%",
+                padding: "10px",
+              }}
             />
           </Typography>
-          <Typography id="modal-desc" textColor="text.tertiary">
+          <Typography
+            id="modal-desc"
+            textColor="text.tertiary"
+            sx={{ fontSize: "1.2rem" }}
+          >
             <FoodModalDetail>
               <DetailList>들어온시간</DetailList>
               <p>:</p>
-              <DetailInfo>{formatDate(foodDetail?.regDttm??'')}</DetailInfo>
+              <DetailInfo>{formatDate(foodDetail?.regDttm ?? "")}</DetailInfo>
             </FoodModalDetail>
             <FoodModalDetail>
               <DetailList>경과시간</DetailList>
@@ -154,7 +185,9 @@ const BasicModal: React.FC<ModalProps> = ({
             <FoodModalDetail>
               <DetailList>유통기한</DetailList>
               <p>:</p>
-              <DetailInfo>{formatDate(foodDetail?.expirationDate??'')}</DetailInfo>
+              <DetailInfo>
+                {formatDate(foodDetail?.expirationDate ?? "")}
+              </DetailInfo>
               {/* <p>
                 <EditIcon onClick={() => setOpenDatePicker(!openDatePicker)}>✏️</EditIcon>
               </p> */}
@@ -176,10 +209,35 @@ const BasicModal: React.FC<ModalProps> = ({
                   <p>:</p>
                   <DetailInfo>{foodDetail?.humidity}</DetailInfo>
                 </FoodModalDetail>
-                <Button onClick={() => navigate("/info")}>세부 기록</Button>
+                <div
+                style={{
+                  display: "flex",
+                  marginTop: "10px",
+                  justifyContent: "flex-end",
+                  marginRight: "10px",
+                }}>
+                <Button 
+                onClick={() => navigate("/info")}
+                sx={{ width: "12vw", height: "3vh", fontSize: "1rem" }}
+                >세부 기록</Button>
+                </div>
               </React.Fragment>
             )}
-            <Button onClick={handleUpdateFoodDetail}>저장</Button>
+            <div
+              style={{
+                display: "flex",
+                marginTop: "10px",
+                justifyContent: "flex-end",
+                marginRight: "10px",
+              }}
+            >
+              <Button
+                onClick={handleUpdateFoodDetail}
+                sx={{ width: "12vw", height: "3vh", fontSize: "1rem" }}
+              >
+                저장
+              </Button>
+            </div>
           </Typography>
         </Sheet>
       </Modal>

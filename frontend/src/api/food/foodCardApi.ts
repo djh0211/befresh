@@ -1,6 +1,5 @@
 import axiosInstance from '../../utils/axiosConfig';
-// import axios from 'axios';
-// import { getAccessToken } from '../../utils/tokenUtils';
+
 
 // 음식 데이터 가져오기
 export async function getFoods() {
