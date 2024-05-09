@@ -69,7 +69,8 @@ public class SecurityConfig {
         configuration.setAllowedHeaders(Arrays.asList(      // 요청 헤더 중 허용할 헤더 설정
             "Authorization",
             "Cache-Control",
-            "Content-Type"
+            "Content-Type",
+            "Authorization-refresh"
         ));
         configuration.setAllowCredentials(true);    // 인증 정보(cookies, headers) 등을 포함한 요청을 허용하도록 설정
         configuration.setExposedHeaders(Arrays.asList(

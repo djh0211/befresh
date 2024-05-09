@@ -32,11 +32,12 @@ const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use(
   async (config) => {
     console.log('헤더에 토큰 넣기전');
+
     if (!isTokenExpired()) { // 토큰이 만료되지 않았다면
       const accessToken = getAccessToken();
       config.headers['Authorization'] = `Bearer ${accessToken}`;
       console.log('헤더에 토큰 넣음');
-    }
+    } 
     return config;
   },
   (error) => {
@@ -58,16 +59,24 @@ axiosInstance.interceptors.response.use(
         try {
           console.log('새 토큰 내놔');
           // 리프레시 토큰으로 새로운 액세스 토큰 요청
-          const response = await axios.post('https://be-fresh.site/api/refresh-token', { refreshToken });
-          const newAccessToken = response.data.accessToken;
+          const refreshRequest = {
+            url: originalRequest.url,
+            method: originalRequest.method,
+            headers: {
+              'Authorization-refresh': `Bearer ${refreshToken}`
+            }
+          };
+        
+          const response = await axios(refreshRequest);
+
+          // const response = await axios.post('https://be-fresh.site/api/refresh-token', { refreshToken });
+          const newAccessToken = response.headers.get('Authorization');
           // 새로운 액세스 토큰 로컬 스토리지에 저장
           saveTokens(newAccessToken, refreshToken);
           // 새로운 액세스 토큰으로 원래 요청 재시도
           originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
           return axiosInstance(originalRequest);
         } catch (refreshError) {
-          // 리프레시 토큰 갱신에 실패한 경우 로그아웃 또는 다른 처리
-          // 로그아웃 처리
           logout();
         }
       }
