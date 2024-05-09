@@ -1,30 +1,6 @@
 import axios from 'axios';
 import { getAccessToken, getRefreshToken, removeTokens, saveTokens } from './tokenUtils';
 
-// JWT 토큰을 해독하여 페이로드 반환하는 함수
-const decodeToken = (token: string) => {
-  const [headerEncoded, payloadEncoded] = token.split('.');
-
-  // base64 디코딩
-  const decodeBase64 = (str: string) => {
-    return decodeURIComponent(atob(str).split('').map(function(c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-  };
-
-  const header = JSON.parse(decodeBase64(headerEncoded));
-  const payload = JSON.parse(decodeBase64(payloadEncoded));
-
-  return { ...header, ...payload };
-};
-
-// 토큰 만료 여부 확인 함수
-const isTokenExpired = () => {
-  const accessToken = getAccessToken();
-  if (!accessToken) return true; // 액세스 토큰이 없으면 만료된 것으로 간주
-  const decodedToken = decodeToken(accessToken);
-  return decodedToken.exp < Date.now() / 1000; // 토큰 만료 시간이 현재 시간보다 작으면 만료된 것으로 간주
-};
 
 const axiosInstance = axios.create();
 
@@ -33,8 +9,8 @@ axiosInstance.interceptors.request.use(
   async (config) => {
     console.log('헤더에 토큰 넣기전');
 
-    if (!isTokenExpired()) { // 토큰이 만료되지 않았다면
-      const accessToken = getAccessToken();
+    const accessToken = getAccessToken();
+    if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
       console.log('헤더에 토큰 넣음');
     } 
@@ -70,13 +46,10 @@ axiosInstance.interceptors.response.use(
           const response = await axios(refreshRequest);
           console.log('res', response)
           // const response = await axios.post('https://be-fresh.site/api/refresh-token', { refreshToken });
-          if (response.headers) {
-            console.log('헤더', response.headers)
-            console.log('토', response.headers['Authorization'])
-            
-            const newAccessToken = response.headers['Authorization']
+          if (response.headers) {            
+            const newAccessToken = response.headers['authorization']
             saveTokens(newAccessToken, refreshToken);
-            originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+            originalRequest.headers['authorization'] = `Bearer ${newAccessToken}`;
             return axiosInstance(originalRequest);
           }
           // 새로운 액세스 토큰 로컬 스토리지에 저장
