@@ -14,6 +14,7 @@ const AlarmMain = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-bottom: 60px;
 `
 const AlarmTitle = styled.div`
   text-align: center;
