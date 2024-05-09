@@ -58,6 +58,35 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    public void sendRegisterNotification(long refrigeratorId) {
+        List<Member> memberList = memberRepository.findByRefrigerator_Id(refrigeratorId);
+
+        for (Member member : memberList) {
+            Set<MemberToken> memberTokenSet = member.getMemberTokenSet();
+            for (MemberToken memberToken : memberTokenSet) {
+                Message message = Message.builder()
+                        .setToken(memberToken.getToken())
+                        .setNotification(Notification.builder()
+                                .setTitle("음식 등록 성공")
+                                .setBody("새로운 음식이 등록되었습니다!")
+                                .build()
+                        )
+                        .putData("category", "register")  // 카테고리 정보를 추가
+                        .build();
+
+                log.info("message = " + message);
+
+                try {
+                    String response = FirebaseMessaging.getInstance().send(message);
+                    log.info("[FCM send] " + response);
+                } catch (FirebaseMessagingException e) {
+                    log.info("[FCM except]" + e.getMessage());
+                }
+            }
+        }
+    }
+
+    @Override
     public void sentTempNotification1(String fcmToken) {
         Message message = Message.builder()
                 .setToken(fcmToken)

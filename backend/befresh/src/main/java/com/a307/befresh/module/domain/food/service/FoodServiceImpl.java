@@ -16,6 +16,7 @@ import com.a307.befresh.module.domain.food.dto.response.FoodDetailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodFailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodListDetailRes;
 import com.a307.befresh.module.domain.food.repository.FoodRepository;
+import com.a307.befresh.module.domain.notification.service.NotificationService;
 import com.a307.befresh.module.domain.refresh.Refresh;
 import com.a307.befresh.module.domain.refresh.repository.RefreshRepository;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
@@ -60,6 +61,7 @@ public class FoodServiceImpl implements FoodService {
     private final FtypeRepository ftypeRepository;
     private final ContainerRepository containerRepository;
     private final ElasticRepository elasticRepository;
+    private final NotificationService notificationService;
 
     @Override
     public void blocking() throws InterruptedException {
@@ -141,7 +143,7 @@ public class FoodServiceImpl implements FoodService {
             asyncRegisterFood(refrigerator.get(), foodRegisterReq);
         }
 
-        // TODO: 완료되면 알림처리
+        notificationService.sendRegisterNotification(refrigerator.get().getId());   // 등록 알림 전송
         log.debug("registerFood method success : {} ", Thread.currentThread().toString());
     }
 
