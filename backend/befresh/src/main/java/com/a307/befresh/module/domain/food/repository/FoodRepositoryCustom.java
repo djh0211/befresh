@@ -8,5 +8,5 @@ import java.util.List;
 public interface FoodRepositoryCustom {
     List<Food> findFailFood(long refrigeratorId);
 
-    List<Food> findExpireFood(long refrigeratorId, LocalDate targetDate);
+    List<Food> findExpireFood();
 }

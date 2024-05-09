@@ -8,7 +8,7 @@ import com.a307.befresh.module.domain.notification.dto.response.NotificationDeta
 import java.util.List;
 
 public interface NotificationService {
-    void sendExpireNotification(long refrigeratorId, List<Food> foodList, int daysBefore);
+    void sendExpireNotification(List<Food> foodList);
 
     void sentTempNotification1(String fcmToken);
 

@@ -1,12 +1,13 @@
 package com.a307.befresh.module.domain.refrigerator;
 
 import com.a307.befresh.module.domain.BaseEntity;
+import com.a307.befresh.module.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,4 +19,7 @@ public class Refrigerator extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "refrigerator_seq")
     @Column(name = "refrigerator_id", nullable = false)
     private Long id;
+
+    @OneToMany(mappedBy = "refrigerator")
+    private Set<Member> memberSet = new HashSet<>();
 }

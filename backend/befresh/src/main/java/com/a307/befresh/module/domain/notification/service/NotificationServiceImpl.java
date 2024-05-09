@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
 
@@ -26,32 +28,16 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
 
     @Override
-    public void sendExpireNotification(long refrigeratorId, List<Food> foodList, int daysBefore) {
-        List<Member> memberList = memberRepository.findByRefrigerator_Id(refrigeratorId);
-        log.info("memberList = " + memberList);
+    public void sendExpireNotification(List<Food> foodList) {
+        for (Food food : foodList) {
+            for (Member member : food.getRefrigerator().getMemberSet()) {
+                for (MemberToken memberToken : member.getMemberTokenSet()) {
+                    String title = food.getName() + "이 " + food.getRefresh().getName() + " 상태가 되었어요!";
+                    String body = food.getName() + " 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
+                            "\n유통 기한을 확인해주세요!";
+                    String category = "expire";
 
-        for (Member member : memberList) {
-            Set<MemberToken> memberTokenSet = member.getMemberTokenSet();
-            log.info("memberTokenSet = " + memberTokenSet);
-            for (MemberToken memberToken : memberTokenSet) {
-                for (Food food : foodList) {
-                    Message message = Message.builder()
-                            .setToken(memberToken.getToken())
-                            .setNotification(Notification.builder()
-                                    .setTitle("유통기한 알림")
-                                    .setBody(food.getName() + "의 유통기한이 " + daysBefore + "일 남았습니다!")
-                                    .build()
-                            )
-                            .build();
-
-                    log.info("message = " + message);
-
-                    try {
-                        String response = FirebaseMessaging.getInstance().send(message);
-                        log.info("[FCM send] " + response);
-                    } catch (FirebaseMessagingException e) {
-                        log.info("[FCM except]" + e.getMessage());
-                    }
+                    sendMessage(memberToken, title, body, category);
                 }
             }
         }
@@ -131,6 +117,24 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
 
+    private static void sendMessage(MemberToken memberToken, String title, String body, String category) {
+        Message message = Message.builder()
+                .setToken(memberToken.getToken())
+                .setNotification(Notification.builder()
+                        .setTitle(title)
+                        .setBody(body)
+                        .build()
+                )
+                .putData("category", category)
+                .build();
+
+        try {
+            String response = FirebaseMessaging.getInstance().send(message);
+            log.info("[FCM send] " + response);
+        } catch (FirebaseMessagingException e) {
+            log.info("[FCM except]" + e.getMessage());
+        }
+    }
     @Override
     public List<NotificationDetailRes> getNotificationList(long refrigeratorId) {
         return notificationRepository.findNotificationList(refrigeratorId).stream()

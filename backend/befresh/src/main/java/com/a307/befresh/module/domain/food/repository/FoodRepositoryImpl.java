@@ -5,10 +5,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static com.a307.befresh.module.domain.food.QFood.food;
+import static com.a307.befresh.module.domain.member.QMember.member;
+import static com.a307.befresh.module.domain.memberToken.QMemberToken.memberToken;
+import static com.a307.befresh.module.domain.refresh.QRefresh.refresh;
+import static com.a307.befresh.module.domain.refrigerator.QRefrigerator.refrigerator;
 
 @Service
 public class FoodRepositoryImpl implements FoodRepositoryCustom {
@@ -28,13 +31,17 @@ public class FoodRepositoryImpl implements FoodRepositoryCustom {
     }
 
     @Override
-    public List<Food> findExpireFood(long refrigeratorId, LocalDate targetDate){
+    public List<Food> findExpireFood(){
         return queryFactroy
                 .selectFrom(food)
-                .where(food.refrigerator.id.eq(refrigeratorId),
-                        food.expirationDate.year().eq(targetDate.getYear()),
-                        food.expirationDate.month().eq(targetDate.getMonthValue()),
-                        food.expirationDate.dayOfMonth().eq(targetDate.getDayOfMonth()))
+                .where(food.ftype.id.gt(1),
+                        food.refresh.id.gt(food.prevRefresh.id),
+                        food.refresh.id.between(2, 3)
+                )
+                .join(food.refresh, refresh).fetchJoin()
+                .join(food.refrigerator, refrigerator).fetchJoin()
+                .join(refrigerator.memberSet, member).fetchJoin()
+                .join(member.memberTokenSet, memberToken).fetchJoin()
                 .fetch();
     }
 }
