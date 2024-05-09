@@ -30,10 +30,6 @@ public class Container extends Food {
     @Column(name = "qr_id")
     private String qrId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prev_refresh")
-    private Refresh prevRefresh;
-
     public static Container createContainer(String name, String image, LocalDate expirationDate,
         Refresh refresh, Ftype ftype, Refrigerator refrigerator, boolean missRegistered,
         Double temperature,
