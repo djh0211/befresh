@@ -68,14 +68,20 @@ axiosInstance.interceptors.response.use(
           };
         
           const response = await axios(refreshRequest);
-
+          console.log('res', response)
           // const response = await axios.post('https://be-fresh.site/api/refresh-token', { refreshToken });
-          const newAccessToken = response.headers.get('Authorization');
+          if (response.headers) {
+            console.log('헤더', response.headers)
+            console.log('토', response.headers['Authorization'])
+            
+            const newAccessToken = response.headers['Authorization']
+            saveTokens(newAccessToken, refreshToken);
+            originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+            return axiosInstance(originalRequest);
+          }
           // 새로운 액세스 토큰 로컬 스토리지에 저장
-          saveTokens(newAccessToken, refreshToken);
+          
           // 새로운 액세스 토큰으로 원래 요청 재시도
-          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-          return axiosInstance(originalRequest);
         } catch (refreshError) {
           logout();
         }

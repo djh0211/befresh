@@ -19,7 +19,7 @@ const NavBlockWrapper = styled.div`
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: #e9ffe6; 
+  background-color: #ffffff; 
   z-index: 999; 
 `;
 

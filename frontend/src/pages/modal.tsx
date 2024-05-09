@@ -10,6 +10,7 @@ import { FoodData, FoodTypes } from "../types/foodTypes"; // FoodData 타입을 
 import { modalFoodDetail, updateFoodDetail } from "../api/food/foodModalApi"; // API 호출 함수를 import합니다.
 import { formatDate } from "../utils/dateUtils"; // formatDate 함수를 import합니다.
 import DatePicker from "@mui/lab/DatePicker";
+import sampleimg from "../../src/assets/sampleimg.png";
 
 const FoodModalDetail = styled.div`
   display: flex;
@@ -42,6 +43,7 @@ const BasicModal: React.FC<ModalProps> = ({
     React.useState<string>(formatDate(foodData.expirationDate)); // 편집된 유통기한을 담을 상태 변수
   const [openDatePicker, setOpenDatePicker] = React.useState<boolean>(false);
   const navigate = useNavigate();
+  const newimage = foodDetail?.image != null ? foodDetail?.image.replace(/\\/g, "") : sampleimg;
 
   // 모달 열기
   const handleOpen = async () => {
@@ -49,8 +51,8 @@ const BasicModal: React.FC<ModalProps> = ({
     try {
       // 상세 정보를 가져옴
       const detail = await modalFoodDetail(foodData.id);
-      setFoodDetail(detail);
-      console.log(detail, "상세정보 불러온후 제대로 나오나?");
+      console.log(detail, "상세정보 불러온후 디테일제대로 나오나?");
+      setFoodDetail(detail.result);
     } catch (error) {
       console.error("상세 정보를 가져오는 중에 오류:", error);
     }
@@ -64,6 +66,7 @@ const BasicModal: React.FC<ModalProps> = ({
   // 음식 정보 업데이트
   const handleUpdateFoodDetail = async () => {
     try {
+      console.log(foodDetail,'유통유통')
       // 수정된 이름과 유통기한을 포함하여 API로 요청을 보냄
       await updateFoodDetail({
         foodId: foodData.id,
@@ -116,7 +119,7 @@ const BasicModal: React.FC<ModalProps> = ({
           }}
         >
           <ModalClose variant="plain" sx={{ m: 1 }} />
-          <img src="../../../public/sampleimg.png" alt="img" />
+          {foodDetail?.image && <img src={newimage} alt="음식 이미지" style={{ width: '30%', maxWidth: '30%' }} />}
           <Typography
             component="h2"
             id="modal-title"
@@ -135,34 +138,25 @@ const BasicModal: React.FC<ModalProps> = ({
             <FoodModalDetail>
               <DetailList>들어온시간</DetailList>
               <p>:</p>
-              <p>{formatDate(foodData.regDttm)}</p>
+              <p>{formatDate(foodDetail?.regDttm??'')}</p>
             </FoodModalDetail>
             <FoodModalDetail>
               <DetailList>경과시간</DetailList>
               <p>:</p>
-              <p>{foodData.elapsedTime}</p>
+              <p>{foodDetail?.elapsedTime}</p>
             </FoodModalDetail>
             <FoodModalDetail>
               <DetailList>유통기한</DetailList>
               <p>:</p>
-              <p>
-                <DatePicker
-                  open={openDatePicker}
-                  value={editedExpirationDate}
-                  onChange={(newValue: any) =>
-                    setEditedExpirationDate(formatDate(newValue))
-                  }
-                  renderInput={(params: any) => (
-                    <input {...params.inputProps} />
-                  )}
-                />
+              <p>{formatDate(foodDetail?.expirationDate??'')}</p>
+              {/* <p>
                 <EditIcon onClick={() => setOpenDatePicker(!openDatePicker)}>✏️</EditIcon>
-              </p>
+              </p> */}
             </FoodModalDetail>
             <FoodModalDetail>
               <DetailList>상태</DetailList>
               <p>:</p>
-              <p>{foodData.refresh}</p>
+              <p>{foodDetail?.refresh}</p>
             </FoodModalDetail>
             {foodData.ftype === "용기" && (
               <React.Fragment>
