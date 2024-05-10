@@ -109,6 +109,14 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.save(notification);
     }
 
+    @Override
+    public int deleteAllNotidication(long refrigeratorId) {
+        List<com.a307.befresh.module.domain.notification.Notification> notificationList = notificationRepository.findAllByRefrigerator_Id(refrigeratorId);
+        notificationRepository.deleteAll(notificationList);
+
+        return notificationList.size();
+    }
+
     private static void sendMessage(MemberToken memberToken, String title, String body, String category) {
         Message message = Message.builder()
                 .setToken(memberToken.getToken())
