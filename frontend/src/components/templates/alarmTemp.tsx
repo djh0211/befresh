@@ -13,12 +13,10 @@ const AlarmMain = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 60px;
 `
 const AlarmTitle = styled.div`
   text-align: center;
-  margin: 5vh 0 0 0;
+  margin: 5vh 0 3vh 0;
   font-size: 4rem;
   font-weight: 900;
 `
@@ -26,7 +24,7 @@ const NavBlockWrapper = styled.div`
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: #e9ffe6; 
+  background-color: #ffffff; 
   z-index: 999; 
 `;
 
