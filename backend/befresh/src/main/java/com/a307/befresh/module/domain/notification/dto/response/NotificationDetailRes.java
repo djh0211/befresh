@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Builder
 public record NotificationDetailRes(
+        Long notificationId,
         String category,
         String message,
         LocalDateTime dateTime

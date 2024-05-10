@@ -1,6 +1,5 @@
 package com.a307.befresh.global.config.batch;
 
-import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.food.repository.FoodRepository;
 import com.a307.befresh.module.domain.notification.service.NotificationService;
 import com.a307.befresh.module.domain.refresh.repository.RefreshRepository;
@@ -22,13 +21,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.util.List;
-
 @Slf4j
 @Configuration
 @EnableScheduling
 @RequiredArgsConstructor
-public class NotificationBatchConfig {
+public class FoodExpireBatchConfig {
     private final JobLauncher jobLauncher;
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
@@ -38,23 +35,23 @@ public class NotificationBatchConfig {
     private final RefreshRepository refreshRepository;
 
     @Bean
-    public Job sendNotificationJob() {
-        return new JobBuilder("sendNotificationJob", jobRepository)
-                .start(updateRefreshStep())
-                .next(expireNotificationStep())
+    public Job processExpiredFoodJob() {
+        return new JobBuilder("processExpiredFoodJob", jobRepository)
+                .start(findExpireFoodStep())
+//                .next(updateFoodRefreshStep())
+//                .next(sendNotificationStep())
                 .build();
     }
 
     @Bean
-    public Step updateRefreshStep() {
-        return new StepBuilder("updateRefreshStep", jobRepository)
+    public Step findExpireFoodStep() {
+        return new StepBuilder("findExpireFoodStep", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    log.info("[updateRefreshStep] update data");
-
-                    Food food = foodRepository.findById(38705L).get();
-                    food.setRefresh(refreshRepository.findById(3L).get());
-                    food.setPrevRefresh(refreshRepository.findById(1L).get());
-                    foodRepository.save(food);
+//                    List<Food> warnFoodList = foodRepository.findDangerChangedFood(0.5);  // TODO : 신선 -> 주의 QueryDsl 작성 필요
+//                    List<Long> dangerFoodIdList = foodRepository.findDangerChangedFood();
+//
+//                    ExecutionContext jobExecutionContext = chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
+//                    jobExecutionContext.put("dangerFoodList", dangerFoodList);
 
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
@@ -62,27 +59,50 @@ public class NotificationBatchConfig {
     }
 
     @Bean
-    public Step expireNotificationStep() {
-        return new StepBuilder("expireNotificationStep", jobRepository)
+    public Step updateFoodRefreshStep() {
+        return new StepBuilder("updateFoodRefreshStep", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    log.info("[expireNotificationStep] notification");
 
-                    List<Food> foodList = foodRepository.findExpireFood();
+//                    ExecutionContext stepContext = contribution.getStepExecution().getExecutionContext();
+//                    List<Food> dangerFoodList = (List<Food>) stepContext.get("dangerFoodList");
+//                    Refresh dangerRefresh = refreshRepository.findById(3L).get();
+//
+//                    if (dangerFoodList != null) {
+//                        for (Food food : dangerFoodList) {
+//                            food.setPrevRefresh(food.getRefresh());
+//                            food.setRefresh(dangerRefresh);
+//                            foodRepository.save(food);
+//                        }
+//                    }
 
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
 
-//    @Scheduled(cron = "0 0 9 * * ?") // 매일 오전 9시에 알림 전송
-    @Scheduled(fixedRate = 60000)
+    @Bean
+    public Step sendNotificationStep() {
+        return new StepBuilder("sendNotificationStep", jobRepository)
+                .tasklet((contribution, chunkContext) -> {
+//                    ExecutionContext stepContext = contribution.getStepExecution().getExecutionContext();
+//
+//                    List<Food> dangerFoodList = (List<Food>) stepContext.get("dangerFoodList");
+//                    notificationService.sendExpireNotification(dangerFoodList, "danger");
+
+                    return RepeatStatus.FINISHED;
+                }, transactionManager)
+                .build();
+    }
+
+    @Scheduled(cron = "0 0 9 * * ?") // 매일 오전 9시에 알림 전송
+//    @Scheduled(fixedRate = 60000)
     public void runJob() {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())
                 .toJobParameters();
 
         try {
-            jobLauncher.run(sendNotificationJob(), jobParameters);
+            jobLauncher.run(processExpiredFoodJob(), jobParameters);
             log.info("Job was successfully executed.");
         } catch (Exception e) {
             log.error("Error running job", e);

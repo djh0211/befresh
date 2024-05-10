@@ -3,7 +3,6 @@ package com.a307.befresh.module.domain.notification.controller;
 import com.a307.befresh.global.api.response.BaseResponse;
 import com.a307.befresh.global.exception.code.SuccessCode;
 import com.a307.befresh.global.security.domain.UserDetailsImpl;
-import com.a307.befresh.module.domain.member.dto.request.MemberTokenReq;
 import com.a307.befresh.module.domain.notification.dto.response.NotificationDetailRes;
 import com.a307.befresh.module.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -32,21 +31,21 @@ public class NotificationController {
         return BaseResponse.success(SuccessCode.SELECT_SUCCESS, notificationList);
     }
 
-    @GetMapping("/1")
-    public ResponseEntity<BaseResponse<String>> getTmpNotification1(
-            @RequestBody MemberTokenReq memberTokenReq) {
+    @DeleteMapping
+    public ResponseEntity<BaseResponse<Long>> deleteNotification(
+            @RequestParam Long notificationId) {
 
-        notificationService.sentTempNotification1(memberTokenReq.fcmToken());
+        notificationService.deleteNotidication(notificationId);
 
-        return BaseResponse.success(SuccessCode.SELECT_SUCCESS, memberTokenReq.fcmToken());
+        return BaseResponse.success(SuccessCode.DELETE_SUCCESS, notificationId);
     }
 
-    @GetMapping("/2")
-    public ResponseEntity<BaseResponse<String>> getTmpNotification2(
-            @RequestBody MemberTokenReq memberTokenReq) {
+    @GetMapping("/tmp")
+    public ResponseEntity<BaseResponse<String>> getTmpNotification1(
+            @RequestParam String category, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        notificationService.sentTempNotification2(memberTokenReq.fcmToken());
+        notificationService.sendTmpNotification(category, userDetails.getRefrigeratorId());
 
-        return BaseResponse.success(SuccessCode.SELECT_SUCCESS, memberTokenReq.fcmToken());
+        return BaseResponse.success(SuccessCode.INSERT_SUCCESS, category);
     }
 }

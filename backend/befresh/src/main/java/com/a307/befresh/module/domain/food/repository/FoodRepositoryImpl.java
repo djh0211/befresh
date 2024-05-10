@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.a307.befresh.module.domain.food.QFood.food;
@@ -31,29 +32,15 @@ public class FoodRepositoryImpl implements FoodRepositoryCustom {
     }
 
     @Override
-    public List<Food> findExpireChangedFood(){
+    public List<Long> findDangerChangedFood(){
         return queryFactroy
-                .selectFrom(food)
-                .where(food.ftype.id.gt(1),
-                        food.refresh.id.gt(food.prevRefresh.id),
-                        food.refresh.id.between(2, 3)
-                )
+                .select(food.foodId)
+                .from(food)
+                .where((food.expirationDate.before(LocalDate.now())))
                 .join(food.refresh, refresh).fetchJoin()
                 .join(food.refrigerator, refrigerator).fetchJoin()
                 .join(refrigerator.memberSet, member).fetchJoin()
                 .join(member.memberTokenSet, memberToken).fetchJoin()
                 .fetch();
     }
-
-//    public List<Food> findExpireWarnFood(double warn, double danger){
-//        return queryFactroy
-//                .selectFrom(food)
-//                .where(food.expirationDate
-//                )
-//                .join(food.refresh, refresh).fetchJoin()
-//                .join(food.refrigerator, refrigerator).fetchJoin()
-//                .join(refrigerator.memberSet, member).fetchJoin()
-//                .join(member.memberTokenSet, memberToken).fetchJoin()
-//                .fetch();
-//    }
 }

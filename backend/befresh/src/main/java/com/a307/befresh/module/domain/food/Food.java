@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "food_seq", sequenceName = "food_seq", allocationSize = 50, initialValue = 1)
-public class Food extends BaseEntity {
+public class Food extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "food_seq")
@@ -53,7 +54,7 @@ public class Food extends BaseEntity {
     private Refresh prevRefresh;
 
     public static Food createFood(String name, String image, LocalDate expirationDate, Refresh refresh,
-        Ftype ftype, Refrigerator refrigerator, boolean missRegistered) {
+                                  Ftype ftype, Refrigerator refrigerator, boolean missRegistered) {
         Food food = new Food();
 
         food.setName(name);
