@@ -1,9 +1,8 @@
+import InfoTemp from "../components/templates/infoTemp";
+
 function InfoPage() {
   return (
-    <div>
-      <h1>정보
-      </h1>
-    </div>
+    <InfoTemp/>
   );
 }
 

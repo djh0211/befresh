@@ -3,7 +3,6 @@ import StartPage from '../pages/StartPage';
 import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage';
 import MainPage from '../pages/MainPage';
-import RegisterPage from '../pages/RegisterPage';
 import InfoPage from '../pages/InfoPage';
 import AlarmPage from '../pages/AlarmPage';
 
@@ -16,7 +15,6 @@ const AppRoutes = () => {
         {/* <Route path="/signup" element={<SignupPage />} /> */}
         {/* <Route path="/signup/:refId" element={<SignupPage />} /> */}
         <Route path="/signup/*" element={<SignupPage />} />
-        <Route path="/register" element={<RegisterPage />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/info" element={<InfoPage />} />
         <Route path="/alarm" element={<AlarmPage />} />
