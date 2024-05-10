@@ -4,7 +4,9 @@ import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.member.Member;
 import com.a307.befresh.module.domain.member.repository.MemberRepository;
 import com.a307.befresh.module.domain.memberToken.MemberToken;
+import com.a307.befresh.module.domain.notification.dto.response.NotificationDetailRes;
 import com.a307.befresh.module.domain.notification.dto.response.NotificationRegisterRes;
+import com.a307.befresh.module.domain.notification.repository.NotificationRepository;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -21,6 +23,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
     private final MemberRepository memberRepository;
+    private final NotificationRepository notificationRepository;
 
     @Override
     public void sendExpireNotification(long refrigeratorId, List<Food> foodList, int daysBefore) {
@@ -97,6 +100,17 @@ public class NotificationServiceImpl implements NotificationService {
         } catch (FirebaseMessagingException e) {
             log.info("[FCM exception] " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<NotificationDetailRes> getNotificationList(long refrigeratorId) {
+        return notificationRepository.findNotificationList(refrigeratorId).stream()
+                .map((notification -> NotificationDetailRes.builder()
+                        .message(notification.getMessage())
+                        .category(notification.getCategory())
+                        .dateTime(notification.getRegDttm())
+                        .build()))
+                .toList();
     }
 
 }
