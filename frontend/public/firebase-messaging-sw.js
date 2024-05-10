@@ -17,11 +17,10 @@ const firebaseApp = firebase.initializeApp(config)
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  console.log('메세지 수신', payload)
-	const notificationMessage = payload.data.message
-	self.registration.showNotification(notificationMessage);
-  // if (payload.data.message) {
-  //   const notificationMessage = payload.data.message
-  //   self.registration.showNotification(notificationMessage);
-  // }
+  console.log('백그라운드 메세지 수신', payload.notification)
+	const notificationTitle = payload.notification.title
+	const notificationOptions = {
+		body: payload.notification.body
+	}
+	self.registration.showNotification(notificationTitle, notificationOptions);
 });
