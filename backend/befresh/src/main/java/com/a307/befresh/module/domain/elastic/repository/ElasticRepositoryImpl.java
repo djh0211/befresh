@@ -21,9 +21,9 @@ public class ElasticRepositoryImpl implements ElasticCustomRepository {
     @Override
     public List<ElasticDocument> searchBefreshByName(String name) {
 
-        Query stand = MatchQuery.of(t -> t.field("name").query(name).boost(2f))._toQuery();
-        Query nori = MatchQuery.of(t -> t.field("name.nori").query(name))._toQuery();
-        Query ngram = MatchQuery.of(t -> t.field("name.ngram").query(name))._toQuery();
+        Query stand = MatchQuery.of(t -> t.field("name").query(name).boost(3f))._toQuery();
+        Query nori = MatchQuery.of(t -> t.field("name.nori").query(name).boost(2f))._toQuery();
+        Query ngram = MatchQuery.of(t -> t.field("name.ngram").query(name).boost(1f))._toQuery();
 
         NativeQuery query = NativeQuery.builder()
             .withQuery(Query.of(qb ->
@@ -38,7 +38,7 @@ public class ElasticRepositoryImpl implements ElasticCustomRepository {
         List<ElasticDocument> resultList = new ArrayList<>();
 
         for (SearchHit<ElasticDocument> hit : searchHits) {
-            if (hit.getScore() <= 4) {
+            if (hit.getScore() <= 6.1) {
                 continue;
             }
 

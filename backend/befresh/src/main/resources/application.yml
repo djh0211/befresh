@@ -1,9 +1,9 @@
 spring:
   application:
     name: befresh
-  threads:
-    virtual:
-      enabled: true
+#  threads:
+#    virtual:
+#      enabled: true
 
   config:
     import:
