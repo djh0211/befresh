@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react";
 import Button from "@mui/joy/Button";
 import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
@@ -9,8 +10,12 @@ import { useNavigate } from "react-router-dom";
 import { FoodData, FoodTypes } from "../types/foodTypes"; // FoodData 타입을 import합니다.
 import { modalFoodDetail, updateFoodDetail } from "../api/food/foodModalApi"; // API 호출 함수를 import합니다.
 import { formatDate } from "../utils/dateUtils"; // formatDate 함수를 import합니다.
-import DatePicker from "@mui/lab/DatePicker";
 import sampleimg from "../../src/assets/sampleimg.png";
+import dayjs, { Dayjs } from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const FoodModalDetail = styled.div`
   display: flex;
@@ -22,7 +27,7 @@ const DetailList = styled.p`
 `;
 
 const DetailInfo = styled.p`
-  width: 180px;
+  width: 220px;
   text-align: right;
 `;
 
@@ -103,6 +108,8 @@ const BasicModal: React.FC<ModalProps> = ({
       );
     }
   };
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs(foodDetail?.expirationDate));
+  
 
   return (
     <React.Fragment>
@@ -186,7 +193,14 @@ const BasicModal: React.FC<ModalProps> = ({
               <DetailList>유통기한</DetailList>
               <p>:</p>
               <DetailInfo>
-                {formatDate(foodDetail?.expirationDate ?? "")}
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DatePicker"]}>
+                    <DatePicker
+                      value={dayjs(foodDetail?.expirationDate) ?? null}
+                      onChange={(newValue: any) => setEditedExpirationDate(newValue)}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
               </DetailInfo>
               {/* <p>
                 <EditIcon onClick={() => setOpenDatePicker(!openDatePicker)}>✏️</EditIcon>
@@ -210,16 +224,19 @@ const BasicModal: React.FC<ModalProps> = ({
                   <DetailInfo>{foodDetail?.humidity}</DetailInfo>
                 </FoodModalDetail>
                 <div
-                style={{
-                  display: "flex",
-                  marginTop: "10px",
-                  justifyContent: "flex-end",
-                  marginRight: "10px",
-                }}>
-                <Button 
-                onClick={() => navigate("/info")}
-                sx={{ width: "12vw", height: "3vh", fontSize: "1rem" }}
-                >세부 기록</Button>
+                  style={{
+                    display: "flex",
+                    marginTop: "10px",
+                    justifyContent: "flex-end",
+                    marginRight: "10px",
+                  }}
+                >
+                  <Button
+                    onClick={() => navigate("/info")}
+                    sx={{ width: "12vw", height: "3vh", fontSize: "1rem" }}
+                  >
+                    세부 기록
+                  </Button>
                 </div>
               </React.Fragment>
             )}
