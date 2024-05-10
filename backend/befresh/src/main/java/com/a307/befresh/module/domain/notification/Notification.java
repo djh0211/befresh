@@ -6,8 +6,10 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SequenceGenerator(name = "notification_seq", sequenceName = "notification_seq", allocationSize = 50, initialValue = 1)
@@ -17,6 +19,7 @@ public class Notification extends BaseEntity {
     private Long notificationId;
 
     @Column(nullable = false, length = 10)
+    @Setter
     private String category;
 
     @Column(nullable = false, length = 300)
@@ -25,4 +28,15 @@ public class Notification extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "refrigerator_id", nullable = false)
     private Refrigerator refrigerator;
+
+    public static Notification createNotification(String category, String message, Refrigerator refrigerator) {
+        Notification notification = new Notification();
+        notification.setCategory(category);
+        notification.setMessage(message);
+        notification.setRefrigerator(refrigerator);
+        notification.setRegUserSeq(refrigerator.getId());
+        notification.setModUserSeq(refrigerator.getId());
+
+        return notification;
+    }
 }

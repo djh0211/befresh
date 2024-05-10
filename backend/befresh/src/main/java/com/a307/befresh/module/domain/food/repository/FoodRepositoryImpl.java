@@ -9,6 +9,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.a307.befresh.module.domain.food.QFood.food;
+import static com.a307.befresh.module.domain.member.QMember.member;
+import static com.a307.befresh.module.domain.memberToken.QMemberToken.memberToken;
+import static com.a307.befresh.module.domain.refresh.QRefresh.refresh;
+import static com.a307.befresh.module.domain.refrigerator.QRefrigerator.refrigerator;
 
 @Service
 public class FoodRepositoryImpl implements FoodRepositoryCustom {
@@ -28,13 +32,15 @@ public class FoodRepositoryImpl implements FoodRepositoryCustom {
     }
 
     @Override
-    public List<Food> findExpireFood(long refrigeratorId, LocalDate targetDate){
+    public List<Long> findDangerChangedFood(){
         return queryFactroy
-                .selectFrom(food)
-                .where(food.refrigerator.id.eq(refrigeratorId),
-                        food.expirationDate.year().eq(targetDate.getYear()),
-                        food.expirationDate.month().eq(targetDate.getMonthValue()),
-                        food.expirationDate.dayOfMonth().eq(targetDate.getDayOfMonth()))
+                .select(food.foodId)
+                .from(food)
+                .where((food.expirationDate.before(LocalDate.now())))
+                .join(food.refresh, refresh).fetchJoin()
+                .join(food.refrigerator, refrigerator).fetchJoin()
+                .join(refrigerator.memberSet, member).fetchJoin()
+                .join(member.memberTokenSet, memberToken).fetchJoin()
                 .fetch();
     }
 }
