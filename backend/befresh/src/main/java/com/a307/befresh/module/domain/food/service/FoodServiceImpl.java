@@ -342,7 +342,7 @@ public class FoodServiceImpl implements FoodService {
         String responseBody = get(apiURL, requestHeaders);
 
         String image = null;
-        int startIndex = responseBody.indexOf("\"link\":") + "\"link\":".length();
+        int startIndex = responseBody.indexOf("\"thumbnail\":") + "\"thumbnail\":".length();
         int endIndex = responseBody.indexOf("\",", startIndex);
 
         if (endIndex != -1) {
