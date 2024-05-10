@@ -143,7 +143,7 @@ public class FoodServiceImpl implements FoodService {
             asyncRegisterFood(refrigerator.get(), foodRegisterReq);
         }
 
-        notificationService.sendRegisterNotification(refrigerator.get().getId());   // 등록 알림 전송
+        notificationService.sendRegisterNotification(refrigerator.get());   // 등록 알림 전송
         log.debug("registerFood method success : {} ", Thread.currentThread().toString());
     }
 

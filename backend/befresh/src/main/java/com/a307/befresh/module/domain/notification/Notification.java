@@ -34,6 +34,8 @@ public class Notification extends BaseEntity {
         notification.setCategory(category);
         notification.setMessage(message);
         notification.setRefrigerator(refrigerator);
+        notification.setRegUserSeq(refrigerator.getId());
+        notification.setModUserSeq(refrigerator.getId());
 
         return notification;
     }
