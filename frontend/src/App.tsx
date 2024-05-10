@@ -24,6 +24,7 @@ const vapidKey = 'BJF1SSaQl6V23ngpxir8HC3FdZbu19PlMNbCgwram2XDFvF7az_V-cCUZ4LInD
 
 
 const App = () => {
+  
   // if('serviceWorker' in navigator) {
   //   navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).then(function(registration) {
   //     console.log('ServiceWorker registration successful with scope: ', registration.active);
