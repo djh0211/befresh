@@ -40,6 +40,15 @@ public class NotificationController {
         return BaseResponse.success(SuccessCode.DELETE_SUCCESS, notificationId);
     }
 
+    @DeleteMapping("/all")
+    public ResponseEntity<BaseResponse<Integer>> deleteAllNotification(
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        int i = notificationService.deleteAllNotidication(userDetails.getRefrigeratorId());
+
+        return BaseResponse.success(SuccessCode.DELETE_SUCCESS, i);
+    }
+
     @GetMapping("/tmp")
     public ResponseEntity<BaseResponse<String>> getTmpNotification1(
             @RequestParam String category, @AuthenticationPrincipal UserDetailsImpl userDetails) {
