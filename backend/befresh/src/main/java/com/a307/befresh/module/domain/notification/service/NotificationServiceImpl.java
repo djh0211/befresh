@@ -4,7 +4,10 @@ import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.member.Member;
 import com.a307.befresh.module.domain.member.repository.MemberRepository;
 import com.a307.befresh.module.domain.memberToken.MemberToken;
-import com.a307.befresh.module.domain.notification.dto.response.NotificationRegisterRes;
+import com.a307.befresh.module.domain.notification.dto.response.NotificationDetailRes;
+import com.a307.befresh.module.domain.notification.repository.NotificationRepository;
+import com.a307.befresh.module.domain.refrigerator.Refrigerator;
+import com.a307.befresh.module.domain.refrigerator.repository.RefrigeratorRepository;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -13,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
 
@@ -21,51 +26,99 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
     private final MemberRepository memberRepository;
+    private final NotificationRepository notificationRepository;
+    private final RefrigeratorRepository refrigeratorRepository;
 
     @Override
-    public void sendExpireNotification(long refrigeratorId, List<Food> foodList, int daysBefore) {
-        List<Member> memberList = memberRepository.findByRefrigerator_Id(refrigeratorId);
-        log.info("memberList = " + memberList);
+    public List<NotificationDetailRes> getNotificationList(long refrigeratorId) {
+        return notificationRepository.findNotificationList(refrigeratorId).stream()
+                .map((notification -> NotificationDetailRes.builder()
+                        .notificationId(notification.getNotificationId())
+                        .message(notification.getMessage())
+                        .category(notification.getCategory())
+                        .dateTime(notification.getRegDttm())
+                        .build()))
+                .toList();
+    }
 
-        for (Member member : memberList) {
-            Set<MemberToken> memberTokenSet = member.getMemberTokenSet();
-            log.info("memberTokenSet = " + memberTokenSet);
-            for (MemberToken memberToken : memberTokenSet) {
-                for (Food food : foodList) {
-                    Message message = Message.builder()
-                            .setToken(memberToken.getToken())
-                            .setNotification(Notification.builder()
-                                    .setTitle("유통기한 알림")
-                                    .setBody(food.getName() + "의 유통기한이 " + daysBefore + "일 남았습니다!")
-                                    .build()
-                            )
-                            .build();
+    @Override
+    public void deleteNotidication(Long notificationId) {
+        notificationRepository.delete(notificationRepository.findById(notificationId).orElseThrow());
+    }
 
-                    log.info("message = " + message);
+    @Override
+    public void sendExpireNotification(List<Food> foodList, String category) {
+        for (Food food : foodList) {
+            for (Member member : food.getRefrigerator().getMemberSet()) {
+                for (MemberToken memberToken : member.getMemberTokenSet()) {
+                    String title = food.getName() + "이 " + food.getRefresh().getName() + " 상태가 되었어요!";
+                    String body = food.getName() + " 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
+                            "\n유통 기한을 확인해주세요!";
 
-                    try {
-                        String response = FirebaseMessaging.getInstance().send(message);
-                        log.info("[FCM send] " + response);
-                    } catch (FirebaseMessagingException e) {
-                        log.info("[FCM except]" + e.getMessage());
-                    }
+                    sendMessage(memberToken, title, body, category);
                 }
             }
         }
     }
 
     @Override
-    public void sentTempNotification1(String fcmToken) {
+    public void sendRegisterNotification(Refrigerator refrigerator) {
+        String title = "음식 등록 성공!";
+        String body = "새로운 음식이 등록되었습니다.";
+        String category = "register";
+
+        com.a307.befresh.module.domain.notification.Notification notification = com.a307.befresh.module.domain.notification.Notification.createNotification(category, body, refrigerator);
+        notificationRepository.save(notification);
+
+        List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
+
+        for (Member member : memberList) {
+            Set<MemberToken> memberTokenSet = member.getMemberTokenSet();
+            for (MemberToken memberToken : memberTokenSet) {
+                sendMessage(memberToken, title, body, category);
+            }
+        }
+    }
+
+    @Override
+    public void sendTmpNotification(String category, Long refrigeratorId) {
+        Refrigerator refrigerator = refrigeratorRepository.findById(refrigeratorId).orElseThrow();
+        List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
+        String title = "";
+        String body = "";
+
+        for (Member member : memberList) {
+            for (MemberToken memberToken : member.getMemberTokenSet()) {
+                if (category.equals("register")) {
+                    title = "음식 등록 성공!";
+                    body = "새로운 음식이 등록되었습니다.";
+                    sendMessage(memberToken, title, body, category);
+                } else if (category.equals("refresh")) {
+                    title = "임시 음식이 주의 상태가 되었어요!";
+                    body = "임시 음식의 신선도를 확인해주세요!";
+                    sendMessage(memberToken, title, body, category);
+                } else if (category.equals("expire")) {
+                    title = "임시 음식이 주의 상태가 되었어요!";
+                    body = "임시 음식 유통 기한 D-3\n유통 기한을 확인해주세요!";
+                    sendMessage(memberToken, title, body, category);
+                }
+            }
+        }
+
+        com.a307.befresh.module.domain.notification.Notification notification = com.a307.befresh.module.domain.notification.Notification.createNotification(category, body, refrigerator);
+        notificationRepository.save(notification);
+    }
+
+    private static void sendMessage(MemberToken memberToken, String title, String body, String category) {
         Message message = Message.builder()
-                .setToken(fcmToken)
+                .setToken(memberToken.getToken())
                 .setNotification(Notification.builder()
-                        .setTitle("유통기한 알림")
-                        .setBody("샘플 유통기한입니다.")
+                        .setTitle(title)
+                        .setBody(body)
                         .build()
                 )
+                .putData("category", category)
                 .build();
-
-        log.info("message = " + message);
 
         try {
             String response = FirebaseMessaging.getInstance().send(message);
@@ -74,29 +127,4 @@ public class NotificationServiceImpl implements NotificationService {
             log.info("[FCM except]" + e.getMessage());
         }
     }
-
-    @Override
-    public void sentTempNotification2(String fcmToken) {
-        // 메시지에 Notification 객체와 Data 객체를 함께 포함
-        Message message = Message.builder()
-                .setToken(fcmToken)
-                .setNotification(Notification.builder()
-                        .setTitle("유통기한 알림")
-                        .setBody("샘플 유통기한입니다.\n 이 알림은 expire 카테고리에 해당하는 알림입니다.")
-                        .build()
-                )
-                .putData("category", "expire")  // 카테고리 정보를 추가
-                .build();
-
-        log.info("message = " + message);
-
-        try {
-            // 메시지 전송
-            String response = FirebaseMessaging.getInstance().send(message);
-            log.info("[FCM send] " + response);
-        } catch (FirebaseMessagingException e) {
-            log.info("[FCM exception] " + e.getMessage());
-        }
-    }
-
 }
