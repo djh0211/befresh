@@ -82,11 +82,12 @@ const App = () => {
   initializeApp(config)
   const messaging = getMessaging()
 
+  // fcmToken이 없다면 가져오기
   useEffect(()=> {
     if (!fcmToken) {
       requestPermission(userToken, messaging)
-    } 
-  })
+    }
+  }, [])
 
   // 메세지 받기
   onMessage(messaging, (payload) => {
@@ -98,6 +99,7 @@ const App = () => {
       console.log('메세지 타입을 확인해주세요')
     }
   })
+
   return <AppRoutes />;
 };
 

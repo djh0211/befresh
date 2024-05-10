@@ -18,7 +18,7 @@ const AlarmMain = styled.div`
 `
 const AlarmTitle = styled.div`
   text-align: center;
-  margin: 5vh 0 0 0;
+  margin: 5vh 0 3vh 0;
   font-size: 4rem;
   font-weight: 900;
 `
@@ -26,7 +26,7 @@ const NavBlockWrapper = styled.div`
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: #e9ffe6; 
+  background-color: #ffffff; 
   z-index: 999; 
 `;
 
