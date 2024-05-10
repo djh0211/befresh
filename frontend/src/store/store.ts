@@ -1,5 +1,4 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-// import refReducer from './features/refIdSlice'
 import storageSession from 'redux-persist/lib/storage/session'
 import { alarmSlice } from './features/alarmSlice'
 import { persistStore, persistReducer } from 'redux-persist'

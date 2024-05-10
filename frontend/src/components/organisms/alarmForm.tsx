@@ -33,7 +33,7 @@ export default function AlarmForm({alarms, deleteAlarms, deleteOne}: propsType) 
           variant='outlined' 
           color='error'
           onClick={deleteAlarms}
-          sx={{height:'50px', marginRight:'5%', fontSize:'1.4rem'}}
+          sx={{height:'70px', marginRight:'5%', fontSize:'1.7rem'}}
         >
           일괄 삭제
         </Button>
