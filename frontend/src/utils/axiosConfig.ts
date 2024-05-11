@@ -56,11 +56,7 @@ axiosInstance.interceptors.response.use(
           
           // 새로운 액세스 토큰으로 원래 요청 재시도
         } catch (refreshError) {
-<<<<<<< HEAD
-          console.log(refreshError)
-=======
           console.log('refreshError', refreshError)
->>>>>>> develop
           logout();
         }
       }
