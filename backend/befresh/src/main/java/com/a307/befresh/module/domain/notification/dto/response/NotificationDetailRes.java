@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 @Builder
 public record NotificationDetailRes(
-        Long notificationId,
         DataDto data,
         NotificationDto notification,
         LocalDateTime dateTime
@@ -19,6 +18,7 @@ public record NotificationDetailRes(
 
     @Builder
     public static record DataDto(
-            String category
+            String category,
+            String notificationId
     ){}
 }

@@ -33,9 +33,9 @@ public class NotificationServiceImpl implements NotificationService {
     public List<NotificationDetailRes> getNotificationList(long refrigeratorId) {
         return notificationRepository.findNotificationList(refrigeratorId).stream()
                 .map((notification -> NotificationDetailRes.builder()
-                        .notificationId(notification.getNotificationId())
                         .data(NotificationDetailRes.DataDto.builder()
                                 .category(notification.getCategory())
+                                .notificationId(String.valueOf(notification.getNotificationId()))
                                 .build())
                         .notification(NotificationDetailRes.NotificationDto.builder()
                                 .title(notification.getTitle())
@@ -54,13 +54,15 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void sendExpireNotification(List<Food> foodList, String category) {
         for (Food food : foodList) {
+            String title = food.getName() + "이 " + food.getRefresh().getName() + " 상태가 되었어요!";
+            String body = food.getName() + " 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
+                    "\n유통 기한을 확인해주세요!";
+
+            long notificationId = saveMessage(food.getRefrigerator(), category, title, body);
+
             for (Member member : food.getRefrigerator().getMemberSet()) {
                 for (MemberToken memberToken : member.getMemberTokenSet()) {
-                    String title = food.getName() + "이 " + food.getRefresh().getName() + " 상태가 되었어요!";
-                    String body = food.getName() + " 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
-                            "\n유통 기한을 확인해주세요!";
-
-                    sendMessage(memberToken, title, body, category);
+                    sendMessage(memberToken, title, body, category, notificationId);
                 }
             }
         }
@@ -72,15 +74,14 @@ public class NotificationServiceImpl implements NotificationService {
         String body = "새로운 음식이 등록되었습니다.";
         String category = "register";
 
-        com.a307.befresh.module.domain.notification.Notification notification = com.a307.befresh.module.domain.notification.Notification.createNotification(category, title, body, refrigerator);
-        notificationRepository.save(notification);
+        long notificationId = saveMessage(refrigerator, category, title, body);
 
         List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
 
         for (Member member : memberList) {
             Set<MemberToken> memberTokenSet = member.getMemberTokenSet();
             for (MemberToken memberToken : memberTokenSet) {
-                sendMessage(memberToken, title, body, category);
+                sendMessage(memberToken, title, body, category, notificationId);
             }
         }
     }
@@ -89,40 +90,43 @@ public class NotificationServiceImpl implements NotificationService {
     public void sendTmpNotification(String category, Long refrigeratorId) {
         Refrigerator refrigerator = refrigeratorRepository.findById(refrigeratorId).orElseThrow();
         List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
-        String title = "";
+        String title = "category wrong";
         String body = "";
+
+        if (category.equals("register")) {
+            title = "음식 등록 성공!";
+            body = "새로운 음식이 등록되었습니다.";
+        } else if (category.equals("refresh")) {
+            title = "임시 음식이 주의 상태가 되었어요!";
+            body = "임시 음식의 신선도를 확인해주세요!";
+        } else if (category.equals("expire")) {
+            title = "임시 음식이 주의 상태가 되었어요!";
+            body = "임시 음식 유통 기한 D-3\n유통 기한을 확인해주세요!";
+        }
+
+        long notificationId = saveMessage(refrigerator, category, title, body);
 
         for (Member member : memberList) {
             for (MemberToken memberToken : member.getMemberTokenSet()) {
-                if (category.equals("register")) {
-                    title = "음식 등록 성공!";
-                    body = "새로운 음식이 등록되었습니다.";
-                    sendMessage(memberToken, title, body, category);
-                } else if (category.equals("refresh")) {
-                    title = "임시 음식이 주의 상태가 되었어요!";
-                    body = "임시 음식의 신선도를 확인해주세요!";
-                    sendMessage(memberToken, title, body, category);
-                } else if (category.equals("expire")) {
-                    title = "임시 음식이 주의 상태가 되었어요!";
-                    body = "임시 음식 유통 기한 D-3\n유통 기한을 확인해주세요!";
-                    sendMessage(memberToken, title, body, category);
-                }
+                sendMessage(memberToken, title, body, category, notificationId);
             }
         }
-
-        com.a307.befresh.module.domain.notification.Notification notification = com.a307.befresh.module.domain.notification.Notification.createNotification(category, title, body, refrigerator);
-        notificationRepository.save(notification);
     }
 
     @Override
-    public int deleteAllNotidication(long refrigeratorId) {
+    public int deleteAllNotification(long refrigeratorId) {
         List<com.a307.befresh.module.domain.notification.Notification> notificationList = notificationRepository.findAllByRefrigerator_Id(refrigeratorId);
         notificationRepository.deleteAll(notificationList);
 
         return notificationList.size();
     }
 
-    private static void sendMessage(MemberToken memberToken, String title, String body, String category) {
+    private long saveMessage(Refrigerator refrigerator, String category, String title, String body) {
+        com.a307.befresh.module.domain.notification.Notification notification = com.a307.befresh.module.domain.notification.Notification.createNotification(category, title, body, refrigerator);
+        return notificationRepository.save(notification).getNotificationId();
+    }
+
+    private void sendMessage(MemberToken memberToken, String title, String body, String category, long notificationId) {
         Message message = Message.builder()
                 .setToken(memberToken.getToken())
                 .setNotification(Notification.builder()
@@ -131,6 +135,7 @@ public class NotificationServiceImpl implements NotificationService {
                         .build()
                 )
                 .putData("category", category)
+                .putData("notificationId", String.valueOf(notificationId))
                 .build();
 
         try {
