@@ -22,7 +22,7 @@ public class Notification extends BaseEntity {
     @Setter
     private String category;
 
-    @Column(nullable = false, length = 300)
+    @Column(length = 300)
     private String title;
 
     @Column(nullable = false, length = 300)
