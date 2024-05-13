@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import NavBlock from '../molecules/navBlock';
 import AlarmForm from '../organisms/alarmForm';
 import { alarmType } from '../../types/alarmTypes';
+import AlarmModalForm from '../organisms/alarmModalForm';
 // 알람 페이지 템플릿
 
 // 알람 타이틀
@@ -10,7 +11,8 @@ import { alarmType } from '../../types/alarmTypes';
 // navbar
 
 const AlarmMain = styled.div`
-  height: 100vh;
+  position: relative;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -39,6 +41,7 @@ type propsType ={
 export default function AlarmTemplate({alarms, deleteAlarms, deleteOne}: propsType) {
   return (
     <AlarmMain>
+      <AlarmModalForm/>
       <AlarmTitle>알림</AlarmTitle>
       <AlarmForm alarms={alarms} deleteAlarms={deleteAlarms} deleteOne={deleteOne}/>
       <NavBlockWrapper>
