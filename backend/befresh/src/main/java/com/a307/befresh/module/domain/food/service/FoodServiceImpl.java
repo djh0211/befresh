@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -205,6 +206,33 @@ public class FoodServiceImpl implements FoodService {
         foodRepository.save(food);
     }
 
+    @Override
+    public long calculateRefresh(Food food) {
+        if (food.getExpirationDate() == null) {
+            if(food.getFtype().getId() == 1)
+                return 4L;
+            else
+                return 5L;
+        }
+
+        long remain = food.getRegDttm().toLocalDate().until(LocalDate.now(), ChronoUnit.DAYS);
+        long tot = food.getRegDttm().toLocalDate().until(food.getExpirationDate(), ChronoUnit.DAYS);
+        double ratio;
+
+        if(tot <= 0)
+            ratio = 1;
+        else
+            ratio = (double) remain / tot;
+
+        if (ratio < 0.5) {
+            return 1L;
+        } else if (ratio < 1) {
+            return 2L;
+        } else {
+            return 3L;
+        }
+    }
+
     private FoodDetailRes createFoodDetailFromContainer(Container container) {
         int elapsedTime = calculateElapsedTime(container.getRegDttm());
 
@@ -355,4 +383,6 @@ public class FoodServiceImpl implements FoodService {
 
         return image;
     }
+
+
 }

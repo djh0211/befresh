@@ -2,6 +2,7 @@ package com.a307.befresh.global.config.batch;
 
 import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.food.repository.FoodRepository;
+import com.a307.befresh.module.domain.food.service.FoodService;
 import com.a307.befresh.module.domain.notification.service.NotificationService;
 import com.a307.befresh.module.domain.refresh.Refresh;
 import com.a307.befresh.module.domain.refresh.repository.RefreshRepository;
@@ -40,6 +41,7 @@ public class FoodExpireBatchConfig {
     private final FoodRepository foodRepository;
     private final NotificationService notificationService;
     private final RefreshRepository refreshRepository;
+    private final FoodService foodService;
 
     @Bean
     public Job processExpiredFoodJob() {
@@ -61,10 +63,10 @@ public class FoodExpireBatchConfig {
                     List<Long> dangerFoodIdList = foodRepository.findDangerFood();
 
                     List<Long> warnFoodIdList = warnFoodList.stream()
-                            .filter(food -> isWarn(food))
+                            .filter(food -> foodService.calculateRefresh(food) == 2)
                             .map(food -> food.getFoodId())
                             .toList();
-//
+
                     jobExecutionContext.put("warnFoodIdList", warnFoodIdList);
                     jobExecutionContext.put("dangerFoodIdList", dangerFoodIdList);
 
@@ -76,7 +78,6 @@ public class FoodExpireBatchConfig {
     }
 
     @Bean
-//    @Transactional
     public Step updateFoodRefreshStep() {
         return new StepBuilder("updateFoodRefreshStep", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
@@ -138,21 +139,6 @@ public class FoodExpireBatchConfig {
         } catch (Exception e) {
             log.error("Error running job", e);
         }
-    }
-
-    private boolean isWarn(Food food) {
-        long remain = food.getRegDttm().toLocalDate().until(LocalDate.now(), ChronoUnit.DAYS);
-        long tot = food.getRegDttm().toLocalDate().until(food.getExpirationDate(), ChronoUnit.DAYS);
-        double ratio;
-
-        if(tot == 0)
-            ratio = 1;
-        else
-            ratio = (double) remain / tot;
-
-        System.out.println("remain = " + remain + "\ttot = " + tot + "\tratio = " + ratio);
-
-        return (ratio >= 0.5);
     }
 }
 
