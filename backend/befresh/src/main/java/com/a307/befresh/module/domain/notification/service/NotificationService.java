@@ -13,9 +13,9 @@ public interface NotificationService {
 
     void deleteNotidication(Long notificationId);
 
-    void sendExpireNotification(List<Food> foodList, String category);
+    void sendNotification(List<Food> foodList, String category);
 
     void sendTmpNotification(String category, Long refrigeratorId);
 
-    int deleteAllNotidication(long refrigeratorId);
+    int deleteAllNotification(long refrigeratorId);
 }

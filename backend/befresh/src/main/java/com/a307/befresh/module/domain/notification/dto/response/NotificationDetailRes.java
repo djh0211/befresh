@@ -6,9 +6,19 @@ import java.time.LocalDateTime;
 
 @Builder
 public record NotificationDetailRes(
-        Long notificationId,
-        String category,
-        String message,
+        DataDto data,
+        NotificationDto notification,
         LocalDateTime dateTime
 ) {
+    @Builder
+    public static record NotificationDto(
+            String title,
+            String body
+    ){}
+
+    @Builder
+    public static record DataDto(
+            String category,
+            String notificationId
+    ){}
 }
