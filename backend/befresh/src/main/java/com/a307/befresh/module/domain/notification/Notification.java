@@ -23,15 +23,19 @@ public class Notification extends BaseEntity {
     private String category;
 
     @Column(nullable = false, length = 300)
+    private String title;
+
+    @Column(nullable = false, length = 300)
     private String message;
 
     @ManyToOne
     @JoinColumn(name = "refrigerator_id", nullable = false)
     private Refrigerator refrigerator;
 
-    public static Notification createNotification(String category, String message, Refrigerator refrigerator) {
+    public static Notification createNotification(String category, String title, String message, Refrigerator refrigerator) {
         Notification notification = new Notification();
         notification.setCategory(category);
+        notification.setTitle(title);
         notification.setMessage(message);
         notification.setRefrigerator(refrigerator);
         notification.setRegUserSeq(refrigerator.getId());
