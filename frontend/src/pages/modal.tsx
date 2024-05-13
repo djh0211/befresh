@@ -215,13 +215,13 @@ const BasicModal: React.FC<ModalProps> = ({
                 <FoodModalDetail>
                   <DetailList>온도</DetailList>
                   <p>:</p>
-                  <DetailInfo>{foodDetail?.temperature}</DetailInfo>
+                  <DetailInfo>{foodDetail?.temperature} °C</DetailInfo>
                 </FoodModalDetail>
                 <FoodModalDetail>
                   <DetailList>습도</DetailList>
                   <p>:</p>
-                  <DetailInfo>{foodDetail?.humidity}</DetailInfo>
-                </FoodModalDetail>
+                  <DetailInfo>{foodDetail?.humidity} %</DetailInfo>
+                </FoodModalDetail> 
                 <div
                   style={{
                     display: "flex",
