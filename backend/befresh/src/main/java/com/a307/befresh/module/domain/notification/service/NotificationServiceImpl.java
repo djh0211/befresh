@@ -52,11 +52,16 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendExpireNotification(List<Food> foodList, String category) {
+    public void sendNotification(List<Food> foodList, String category) {
+        String title = "";
+        String body = "";
+
         for (Food food : foodList) {
-            String title = food.getName() + "이 " + food.getRefresh().getName() + " 상태가 되었어요!";
-            String body = food.getName() + " 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
-                    "\n유통 기한을 확인해주세요!";
+            if (category.equals("expire")) {
+                title = food.getName() + "이 " + food.getRefresh().getName() + " 상태가 되었어요!";
+                body = food.getName() + " 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
+                        "\n유통 기한을 확인해주세요!";
+            }
 
             long notificationId = saveMessage(food.getRefrigerator(), category, title, body);
 
