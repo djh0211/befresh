@@ -7,6 +7,7 @@ const InfoMain = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
+  margin-bottom: 80px;
 `
 
 const InfoTitle = styled.div`
