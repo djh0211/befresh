@@ -7,5 +7,10 @@ import java.util.List;
 public interface FoodRepositoryCustom {
     List<Food> findFailFood(long refrigeratorId);
 
-    List<Long> findDangerChangedFood();
+    List<Food> findWarnFood();
+    List<Long> findDangerFood();
+
+    List<Food> findUpdateFood(List<Long> foodIdList);
+
+    List<Food> findNotiFood(List<Long> foodIdList);
 }
