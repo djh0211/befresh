@@ -126,8 +126,8 @@ public class FoodExpireBatchConfig {
                 .build();
     }
 
-    //    @Scheduled(cron = "0 0 9 * * ?") // 매일 오전 9시에 알림 전송
-    @Scheduled(fixedRate = 600000)
+    @Scheduled(cron = "0 0 9 * * ?") // 매일 오전 9시에 알림 전송
+//    @Scheduled(fixedRate = 600000)
     public void runJob() {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())
