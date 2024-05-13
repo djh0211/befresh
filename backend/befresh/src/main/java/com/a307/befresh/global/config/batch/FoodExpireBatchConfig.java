@@ -24,6 +24,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Slf4j
@@ -55,12 +57,18 @@ public class FoodExpireBatchConfig {
                     log.info("dangerFoodIdList");
                     ExecutionContext jobExecutionContext = chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
 
-//                    List<Food> warnFoodList = foodRepository.findDangerChangedFood(0.5);  // TODO : 신선 -> 주의 QueryDsl 작성 필요
+                    List<Food> warnFoodList = foodRepository.findWarnFood();
                     List<Long> dangerFoodIdList = foodRepository.findDangerFood();
 
+                    List<Long> warnFoodIdList = warnFoodList.stream()
+                            .filter(food -> isWarn(food))
+                            .map(food -> food.getFoodId())
+                            .toList();
+//
+                    jobExecutionContext.put("warnFoodIdList", warnFoodIdList);
                     jobExecutionContext.put("dangerFoodIdList", dangerFoodIdList);
 
-                    System.out.println(dangerFoodIdList);
+                    System.out.println(warnFoodIdList);
 
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
@@ -74,11 +82,20 @@ public class FoodExpireBatchConfig {
                 .tasklet((contribution, chunkContext) -> {
                     ExecutionContext jobExecutionContext = chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
 
+                    List<Long> warnFoodIdList = (List<Long>) jobExecutionContext.get("warnFoodIdList");
                     List<Long> dangerFoodIdList = (List<Long>) jobExecutionContext.get("dangerFoodIdList");
+
+                    Refresh warnRefresh = refreshRepository.findById(2L).get();
                     Refresh dangerRefresh = refreshRepository.findById(3L).get();
 
-                    List<Food> foodList = foodRepository.findUpdateFood(dangerFoodIdList);
-                    for (Food food : foodList) {
+                    List<Food> warnFoodList = foodRepository.findUpdateFood(warnFoodIdList);
+                    for (Food food : warnFoodList) {
+                        food.setPrevRefresh(food.getRefresh());
+                        food.setRefresh(warnRefresh);
+                    }
+
+                    List<Food> dangerFoodList = foodRepository.findUpdateFood(dangerFoodIdList);
+                    for (Food food : dangerFoodList) {
                         food.setPrevRefresh(food.getRefresh());
                         food.setRefresh(dangerRefresh);
                     }
@@ -94,9 +111,13 @@ public class FoodExpireBatchConfig {
                 .tasklet((contribution, chunkContext) -> {
                     ExecutionContext jobExecutionContext = chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
 //
+                    List<Long> warnFoodIdList = (List<Long>) jobExecutionContext.get("warnFoodIdList");
                     List<Long> dangerFoodIdList = (List<Long>) jobExecutionContext.get("dangerFoodIdList");
 
+                    List<Food> warnFoodList = foodRepository.findNotiFood(warnFoodIdList);
                     List<Food> dangerFoodList = foodRepository.findNotiFood(dangerFoodIdList);
+
+                    notificationService.sendNotification(warnFoodList, "expire");
                     notificationService.sendNotification(dangerFoodList, "expire");
 
                     return RepeatStatus.FINISHED;
@@ -105,7 +126,7 @@ public class FoodExpireBatchConfig {
     }
 
     //    @Scheduled(cron = "0 0 9 * * ?") // 매일 오전 9시에 알림 전송
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 600000)
     public void runJob() {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())
@@ -117,6 +138,21 @@ public class FoodExpireBatchConfig {
         } catch (Exception e) {
             log.error("Error running job", e);
         }
+    }
+
+    private boolean isWarn(Food food) {
+        long remain = food.getRegDttm().toLocalDate().until(LocalDate.now(), ChronoUnit.DAYS);
+        long tot = food.getRegDttm().toLocalDate().until(food.getExpirationDate(), ChronoUnit.DAYS);
+        double ratio;
+
+        if(tot == 0)
+            ratio = 1;
+        else
+            ratio = (double) remain / tot;
+
+        System.out.println("remain = " + remain + "\ttot = " + tot + "\tratio = " + ratio);
+
+        return (ratio >= 0.5);
     }
 }
 

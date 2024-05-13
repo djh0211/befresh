@@ -32,6 +32,16 @@ public class FoodRepositoryImpl implements FoodRepositoryCustom {
     }
 
     @Override
+    public List<Food> findWarnFood(){
+        return queryFactroy
+                .select(food)
+                .from(food)
+                .where(food.refresh.id.eq(1L),
+                        food.expirationDate.isNotNull())
+                .fetch();
+    }
+
+    @Override
     public List<Long> findDangerFood(){
         return queryFactroy
                 .select(food.foodId)
@@ -47,9 +57,6 @@ public class FoodRepositoryImpl implements FoodRepositoryCustom {
                 .selectFrom(food)
                 .where(food.foodId.in(foodIdList))
                 .join(food.refresh, refresh).fetchJoin()
-//                .join(food.refrigerator, refrigerator).fetchJoin()
-//                .join(refrigerator.memberSet, member).fetchJoin()
-//                .join(member.memberTokenSet, memberToken).fetchJoin()
                 .fetch();
     }
 
