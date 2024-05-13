@@ -34,8 +34,13 @@ public class NotificationServiceImpl implements NotificationService {
         return notificationRepository.findNotificationList(refrigeratorId).stream()
                 .map((notification -> NotificationDetailRes.builder()
                         .notificationId(notification.getNotificationId())
-                        .message(notification.getMessage())
-                        .category(notification.getCategory())
+                        .data(NotificationDetailRes.DataDto.builder()
+                                .category(notification.getCategory())
+                                .build())
+                        .notification(NotificationDetailRes.NotificationDto.builder()
+                                .title(notification.getTitle())
+                                .body(notification.getMessage())
+                                .build())
                         .dateTime(notification.getRegDttm())
                         .build()))
                 .toList();
@@ -67,7 +72,7 @@ public class NotificationServiceImpl implements NotificationService {
         String body = "새로운 음식이 등록되었습니다.";
         String category = "register";
 
-        com.a307.befresh.module.domain.notification.Notification notification = com.a307.befresh.module.domain.notification.Notification.createNotification(category, body, refrigerator);
+        com.a307.befresh.module.domain.notification.Notification notification = com.a307.befresh.module.domain.notification.Notification.createNotification(category, title, body, refrigerator);
         notificationRepository.save(notification);
 
         List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
@@ -105,7 +110,7 @@ public class NotificationServiceImpl implements NotificationService {
             }
         }
 
-        com.a307.befresh.module.domain.notification.Notification notification = com.a307.befresh.module.domain.notification.Notification.createNotification(category, body, refrigerator);
+        com.a307.befresh.module.domain.notification.Notification notification = com.a307.befresh.module.domain.notification.Notification.createNotification(category, title, body, refrigerator);
         notificationRepository.save(notification);
     }
 
