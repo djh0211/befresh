@@ -37,6 +37,7 @@ public class InfluxContainerRepositoryImpl implements InfluxContainerRepository{
 
         String flux = String.format("from(bucket: \"befresh\")"
             + "|> range(start: 0, stop: now())"
+            + "|> timeShift(duration: 9h)"
             + "|> filter(fn: (r) => r[\"_field\"] == \"humidity\" or r[\"_field\"] == \"temperature\" or r[\"_field\"] == \"nh3\")"
             + "|> filter(fn: (r) => r[\"qr_id\"] == \"%s\")"
             + "|> aggregateWindow(every: 10m, fn: mean, createEmpty: false)"
