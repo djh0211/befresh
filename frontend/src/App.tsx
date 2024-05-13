@@ -24,13 +24,6 @@ const vapidKey = 'BJF1SSaQl6V23ngpxir8HC3FdZbu19PlMNbCgwram2XDFvF7az_V-cCUZ4LInD
 
 
 const App = () => {
-  
-  // if('serviceWorker' in navigator) {
-  //   navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).then(function(registration) {
-  //     console.log('ServiceWorker registration successful with scope: ', registration.active);
-  //   });
-  // };
-
     // 서비스 워커 등록
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -94,13 +87,16 @@ const App = () => {
   onMessage(messaging, (payload) => {
     if (isAlarmType(payload)) {
       console.log('메세지 도착')
-      dispatch(addAlarm(payload))
-      dispatch(alertOn())
+      // 알람 페이지에 있을 때에만 추가해주자
+      if (window.location.href.includes('alarm')) {
+        dispatch(addAlarm(payload))
+      } else {
+        dispatch(alertOn())
+      }
     } else {
       console.log('메세지 타입을 확인해주세요')
     }
   })
-
   return <AppRoutes />;
 };
 
