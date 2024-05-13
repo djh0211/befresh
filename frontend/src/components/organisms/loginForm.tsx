@@ -3,6 +3,7 @@ import styled from "styled-components";
 import LoginBlock from "../molecules/loginInputBlock";
 import MemberButton from "../atoms/Button";
 import LogoComponent from "../atoms/LogoComponent";
+import { handleEnterKeyPress } from "../../utils/buttonUtils";
 
 const LoginPageContainer = styled.div`
   display: flex;
@@ -16,18 +17,17 @@ interface LoginFormData {
   password: string;
 }
 
+function LoginForm({
+  onLogIn,
+}: Readonly<{ onLogIn: (formData: LoginFormData) => void }>) {
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
 
-function LoginForm({ onLogIn }: Readonly<{ onLogIn: (formData: LoginFormData) => void}>) {
-  
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
-  
   const handleLogIn = () => {
-
-    const formData: LoginFormData ={
+    const formData: LoginFormData = {
       id: id,
       password: password,
-    }
+    };
     onLogIn(formData);
   };
   return (
@@ -35,10 +35,19 @@ function LoginForm({ onLogIn }: Readonly<{ onLogIn: (formData: LoginFormData) =>
       <LoginPageContainer>
         <LogoComponent />
         <LoginBlock
-        onIdChange={(event: React.ChangeEvent<HTMLInputElement>) => setId(event.target.value)}
-        onPasswordChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
+          onIdChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setId(event.target.value)
+          }
+          onPasswordChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setPassword(event.target.value)
+          }
         />
-        <MemberButton onClick={handleLogIn}>로그인</MemberButton>
+        <MemberButton
+          onClick={handleLogIn}
+          onKeyDown={(event) => handleEnterKeyPress(event, handleLogIn)}
+        >
+          로그인
+        </MemberButton>
       </LoginPageContainer>
     </div>
   );

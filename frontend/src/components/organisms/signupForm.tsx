@@ -6,6 +6,7 @@ import LogoComponent from "../atoms/LogoComponent";
 import Swal from 'sweetalert2';
 import { QrReader } from 'react-qr-reader';
 import { Dialog, DialogContent } from '@mui/material';
+import { handleEnterKeyPress } from "../../utils/buttonUtils";
 
 const SignUpContainer = styled.div`
   display: flex;
@@ -75,7 +76,7 @@ function SignUpForm({ onSignUp, refId, getRefId }: Readonly<{ onSignUp: (formDat
           refId == null ? (
             <MemberButton onClick={openScanner}>냉장고 등록</MemberButton>
           ) : (
-            <MemberButton onClick={handleSignUp}>회원가입</MemberButton>
+            <MemberButton onClick={handleSignUp} onKeyDown={(event) => handleEnterKeyPress(event, handleSignUp)}>회원가입</MemberButton>
           )
         }
       </SignUpContainer>

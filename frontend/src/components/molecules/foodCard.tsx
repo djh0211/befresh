@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import ProgressBar from "../atoms/progerssBar";
-import BasicModal from "../../pages/modal";
+import FoodModal from "../../pages/modal";
 import sampleimg from "../../assets/sampleimg.png";
 import { FoodData, FoodTypes } from "../../types/foodTypes";
 import { deleteFood } from "../../api/food/foodCardApi";
@@ -70,7 +70,7 @@ export default function ImgMediaCard({
         </Typography>
       </CardContent>
       <CardActions sx={{ justifyContent: "space-between" }}>
-        <BasicModal
+        <FoodModal
           foodData={foodData}
           cardApiData={cardApiData}
           setData={setData}
