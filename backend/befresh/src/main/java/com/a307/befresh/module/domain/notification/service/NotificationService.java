@@ -17,5 +17,5 @@ public interface NotificationService {
 
     void sendTmpNotification(String category, Long refrigeratorId);
 
-    int deleteAllNotidication(long refrigeratorId);
+    int deleteAllNotification(long refrigeratorId);
 }

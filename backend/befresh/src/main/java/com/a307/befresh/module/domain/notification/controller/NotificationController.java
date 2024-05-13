@@ -44,7 +44,7 @@ public class NotificationController {
     public ResponseEntity<BaseResponse<Integer>> deleteAllNotification(
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        int i = notificationService.deleteAllNotidication(userDetails.getRefrigeratorId());
+        int i = notificationService.deleteAllNotification(userDetails.getRefrigeratorId());
 
         return BaseResponse.success(SuccessCode.DELETE_SUCCESS, i);
     }
