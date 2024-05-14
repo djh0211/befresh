@@ -11,6 +11,8 @@ public interface NotificationService {
 
     void sendRegisterNotification(Refrigerator refrigerator);
 
+    void sendRegisterErrorNotification(Refrigerator refrigerator);
+
     void deleteNotidication(Long notificationId);
 
     void sendNotification(List<Food> foodList, String category);

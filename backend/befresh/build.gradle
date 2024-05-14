@@ -62,6 +62,9 @@ dependencies {
 
 	//influxDB
 	implementation "com.influxdb:influxdb-client-java:6.6.0"
+
+	//  Spring Retry
+	implementation 'org.springframework.retry:spring-retry'
 }
 
 tasks.named('test') {

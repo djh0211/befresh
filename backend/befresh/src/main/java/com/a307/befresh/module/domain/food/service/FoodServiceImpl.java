@@ -35,6 +35,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -128,8 +131,10 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     @Async("virtualExecutor")
+    @Retryable(retryFor = RuntimeException.class, maxAttempts = 3, backoff = @Backoff(delay = 2000))
     @KafkaListener(topics = "${kafka.topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void registerFood(FoodRegisterReqList foodRegisterReqList) {
+
         Optional<Refrigerator> refrigerator = refrigeratorRepository.findById(
             foodRegisterReqList.refrigeratorId());
         log.debug("registerFood method start : {} ", Thread.currentThread().toString());
@@ -146,6 +151,17 @@ public class FoodServiceImpl implements FoodService {
 
         notificationService.sendRegisterNotification(refrigerator.get());   // 등록 알림 전송
         log.debug("registerFood method success : {} ", Thread.currentThread().toString());
+    }
+
+    @Recover
+    public void recoverFood(RuntimeException exception, FoodRegisterReqList foodRegisterReqList) {
+        log.error(
+            "[registerFood method] Recover method called after all retry attempt and still getting error");
+        log.error("[{}] Error Message: {}", foodRegisterReqList.refrigeratorId(),
+            exception.getMessage());
+
+        notificationService.sendRegisterErrorNotification(refrigeratorRepository.findById(
+            foodRegisterReqList.refrigeratorId()).orElseThrow());
     }
 
     public List<FoodListDetailRes> getFoodList(Long refrigeratorId) {
@@ -209,20 +225,22 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public long calculateRefresh(Food food) {
         if (food.getExpirationDate() == null) {
-            if(food.getFtype().getId() == 1)
+            if (food.getFtype().getId() == 1) {
                 return 4L;
-            else
+            } else {
                 return 5L;
+            }
         }
 
         long remain = food.getRegDttm().toLocalDate().until(LocalDate.now(), ChronoUnit.DAYS);
         long tot = food.getRegDttm().toLocalDate().until(food.getExpirationDate(), ChronoUnit.DAYS);
         double ratio;
 
-        if(tot <= 0)
+        if (tot <= 0) {
             ratio = 1;
-        else
+        } else {
             ratio = (double) remain / tot;
+        }
 
         if (ratio < 0.5) {
             return 1L;
