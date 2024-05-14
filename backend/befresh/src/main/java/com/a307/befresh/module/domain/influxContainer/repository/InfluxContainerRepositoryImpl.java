@@ -9,6 +9,7 @@ import com.influxdb.client.QueryApi;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -31,20 +32,19 @@ public class InfluxContainerRepositoryImpl implements InfluxContainerRepository{
 
 
     @Override
-    public SensorDataList selectSensorData(String qrId) {
+    public SensorDataList selectSensorData(LocalDateTime regDttm, String qrId) {
 
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create(url, token, org, bucket);
 
         String flux = String.format("from(bucket: \"befresh\")"
-            + "|> range(start: 0, stop: now())"
+            + "|> range(start: %s, stop: now())"
             + "|> timeShift(duration: 9h)"
             + "|> filter(fn: (r) => r[\"_field\"] == \"humidity\" or r[\"_field\"] == \"temperature\" or r[\"_field\"] == \"nh3\")"
             + "|> filter(fn: (r) => r[\"qr_id\"] == \"%s\")"
             + "|> aggregateWindow(every: 10m, fn: mean, createEmpty: false)"
-            + "|> yield(name: \"sensor_data\")", qrId);
+            + "|> yield(name: \"sensor_data\")", regDttm.minusHours(9).toInstant(ZoneOffset.UTC), qrId);
 
         QueryApi queryApi = influxDBClient.getQueryApi();
-
         List<FluxTable> tables = queryApi.query(flux);
 
         List<SensorData> temperature = new ArrayList<>();
