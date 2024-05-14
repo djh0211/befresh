@@ -11,7 +11,7 @@ type informationType = {
   qrId :string,
   regDttm : string,
   elapsedTime: number,
-  expirationDate: string,
+  expirationDate: string | null,
   refresh: string,
   sensorDataList: {
     temperature: sensorDataType[],
@@ -27,7 +27,7 @@ type latestInformationType = {
   // 경과시간
   elapsedTime: number,
   // 유통기한
-  expirationDate: string,
+  expirationDate: string | null,
   // 현재상태
   refresh: string,
   sensorDataList: {
@@ -63,7 +63,7 @@ function isInformationType(payload: any): payload is informationType {
     'elapsedTime' in payload &&
     typeof payload.elapsedTime === 'number' &&
     'expirationDate' in payload &&
-    typeof payload.expirationDate === 'string' &&
+    (typeof payload.expirationDate === 'string' || payload.expirationDate === null) &&
     'refresh' in payload &&
     typeof payload.refresh === 'string' &&
     'sensorDataList' in payload &&
