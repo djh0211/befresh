@@ -25,7 +25,7 @@ public class Container extends Food {
     private Double humidity;
 
     @Column(columnDefinition = "Number(5, 2)")
-    private Double zCoordinate;
+    private Double pH;
 
     @Column(name = "qr_id")
     private String qrId;
@@ -47,7 +47,7 @@ public class Container extends Food {
 
         container.setTemperature(temperature);
         container.setHumidity(humidity);
-        container.setZCoordinate(zCoordinate);
+        container.setPH(zCoordinate);
         container.setQrId(qrId);
 
         container.setRegUserSeq(refrigerator.getId());
