@@ -1,7 +1,9 @@
-export default function SensorData() {
+import { latestInformationType } from "../../types/informationTypes"
+
+export default function SensorData({latestInformation}: {latestInformation:latestInformationType}) {
   return (
     <>
-      <p>센서 정보</p>
+      <p>{latestInformation.sensorDataList.temperature}</p>
     </>
   )
 }
