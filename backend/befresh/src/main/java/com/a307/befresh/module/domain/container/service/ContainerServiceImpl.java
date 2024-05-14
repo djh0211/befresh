@@ -1,27 +1,21 @@
 package com.a307.befresh.module.domain.container.service;
 
-import com.a307.befresh.global.security.domain.UserDetailsImpl;
 import com.a307.befresh.module.domain.container.Container;
 import com.a307.befresh.module.domain.container.dto.request.ContainerUpdateSensorListReq;
 import com.a307.befresh.module.domain.container.repository.ContainerRepository;
 import com.a307.befresh.module.domain.influxContainer.dto.response.ContainerSensor;
-import com.a307.befresh.module.domain.influxContainer.dto.response.SensorData;
 import com.a307.befresh.module.domain.influxContainer.dto.response.SensorDataList;
 import com.a307.befresh.module.domain.influxContainer.repository.InfluxContainerRepository;
 import com.a307.befresh.module.domain.refresh.Refresh;
 import com.a307.befresh.module.domain.refresh.repository.RefreshRepository;
-import com.influxdb.query.FluxRecord;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import javax.swing.text.html.Option;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 @Log4j2
@@ -70,6 +64,7 @@ public class ContainerServiceImpl implements ContainerService {
 
             ContainerSensor containerSensor = ContainerSensor.builder()
                 .qrId(container.getQrId())
+                .name(container.getName())
                 .regDttm(container.getRegDttm())
                 .elapsedTime(elapsedTime)
                 .expirationDate(container.getExpirationDate())

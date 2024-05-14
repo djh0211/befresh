@@ -10,6 +10,8 @@ import lombok.Builder;
 public record ContainerSensor (
 
     String qrId,
+
+    String name,
     LocalDateTime regDttm,
     Integer elapsedTime,
     LocalDate expirationDate,
