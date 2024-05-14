@@ -23,15 +23,17 @@ const CustomTextField = styled(TextField)({
 
 interface IdInputTextFieldsProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-function IdInputTextFields({ onChange }: Readonly<IdInputTextFieldsProps>) {
+function IdInputTextFields({ onChange, onKeyDown }: Readonly<IdInputTextFieldsProps>) {
   return (
     <CustomTextField
       id="standard-basic"
       label="ID"
       variant="standard"
       onChange={onChange}
+      onKeyDown={onKeyDown}
     />
   );
 }

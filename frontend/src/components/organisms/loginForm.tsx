@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import LoginBlock from "../molecules/loginInputBlock";
 import MemberButton from "../atoms/Button";
@@ -30,6 +30,14 @@ function LoginForm({
     };
     onLogIn(formData);
   };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log('엔터..?')
+    if (event.key === "Enter") {
+      handleLogIn();
+    }
+  };
+
   return (
     <div>
       <LoginPageContainer>
@@ -41,13 +49,9 @@ function LoginForm({
           onPasswordChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setPassword(event.target.value)
           }
+          onKeyDown={handleKeyDown}
         />
-        <MemberButton
-          onClick={handleLogIn}
-          onKeyDown={(event) => handleEnterKeyPress(event, handleLogIn)}
-        >
-          로그인
-        </MemberButton>
+        <MemberButton onClick={handleLogIn}>로그인</MemberButton>
       </LoginPageContainer>
     </div>
   );
