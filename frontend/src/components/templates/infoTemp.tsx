@@ -1,6 +1,7 @@
 import NavBlock from "../molecules/navBlock";
 import styled from "styled-components";
 import InfoForm from "../organisms/InfoForm";
+import { informationType } from "../../types/informationTypes";
 
 const InfoMain = styled.div`
   width: 100vw;
@@ -25,15 +26,18 @@ const NavBlockWrapper = styled.div`
   z-index: 999; 
 `;
 
-export default function InfoTemp() {
+export default function InfoTemp({containerInfo} : {containerInfo :informationType[]}) {
   return (
     <InfoMain>
       <InfoTitle>용기 정보</InfoTitle>
       <div>
-        <InfoForm/>
-        <InfoForm/>
-        <InfoForm/>
-        <InfoForm/>
+        {
+          containerInfo.map((info, idx) => {
+            return (
+              <InfoForm key={idx} infomation={info}/>
+            )
+          })
+        }
       </div>
       
       <NavBlockWrapper>

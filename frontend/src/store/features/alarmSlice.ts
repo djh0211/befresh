@@ -4,13 +4,13 @@ import { alarmType } from '../../types/alarmTypes'
 type alarmsType = {
   alarms: alarmType[],
   alert : boolean,
-  categories: ('expire'|'refresh'|'register')[] 
+  categories: ('danger'|'warn'|'register'|'error'|'noUpdate'|'reUpdate')[] 
 }
 
 const initialAlarm: alarmsType = {
   alarms: [],
   alert: false,
-  categories: ['expire', 'refresh', 'register']
+  categories: ['danger', 'warn', 'register', 'error', 'noUpdate','reUpdate']
 }
 
 const alarmSlice = createSlice({
@@ -44,7 +44,7 @@ const alarmSlice = createSlice({
       state.alert = false
     },
     // 보려는 카테고리 설정
-    setCategories(state, action:PayloadAction<('expire'|'refresh'|'register')[] >) {
+    setCategories(state, action:PayloadAction<('danger'|'warn'|'register'|'error'|'noUpdate'|'reUpdate')[] >) {
       state.categories = [...action.payload]
     }
   }
