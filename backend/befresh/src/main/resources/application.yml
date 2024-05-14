@@ -1,6 +1,18 @@
 spring:
   application:
     name: befresh
+#  jpa:
+#    properties:
+#      hibernate:
+#        format_sql: true
+  batch:
+    job:
+      name: processExpiredFoodJob
+#    jdbc:
+#      initialize-schema: always
+#  threads:
+#    virtual:
+#      enabled: true
 #  threads:
 #    virtual:
 #      enabled: true
