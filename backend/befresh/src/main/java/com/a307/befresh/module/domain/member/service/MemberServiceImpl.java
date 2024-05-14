@@ -64,7 +64,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public Long registerFcmToken(MemberTokenReq memberTokenReq, Member member) {
         String fcmToken = memberTokenReq.fcmToken();
-        Optional<MemberToken> token = memberTokenRepository.findByToken(fcmToken);
+        Optional<MemberToken> token = memberTokenRepository.findByTokenAndMember_Id(fcmToken, member.getId());
 
         if(token.isEmpty()){
             Member member1 = memberRepository.findById(member.getId()).orElseThrow();
