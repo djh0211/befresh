@@ -17,6 +17,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -54,16 +55,34 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendNotification(List<Food> foodList, String category) {
+    public void sendExpireNotification(List<Food> foodList, String category) {
         String title = "";
         String body = "";
 
         for (Food food : foodList) {
-            if (category.equals("expire")) {
-                title = food.getName() + "이 " + food.getRefresh().getName() + " 상태가 되었어요!";
-                body = food.getName() + " 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
-                        "\n유통 기한을 확인해주세요!";
+            title = food.getName() + "이 " + food.getRefresh().getName() + " 상태가 되었어요!";
+            body = food.getName() + " 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
+                    "\n유통 기한을 확인해주세요!";
+
+            long notificationId = saveMessage(food.getRefrigerator(), category, title, body);
+
+            for (Member member : food.getRefrigerator().getMemberSet()) {
+                for (MemberToken memberToken : member.getMemberTokenSet()) {
+                    sendMessage(memberToken, title, body, category, notificationId);
+                }
             }
+        }
+    }
+
+    @Override
+    public void sendContainerNotification(List<Food> foodList, String category) {
+        String title = "";
+        String body = "";
+
+        for (Food food : foodList) {
+            title = food.getName() + "이 " + food.getRefresh().getName() + " 상태가 되었어요!";
+            body = food.getName() + " 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
+                    "\n유통 기한을 확인해주세요!";
 
             long notificationId = saveMessage(food.getRefrigerator(), category, title, body);
 
