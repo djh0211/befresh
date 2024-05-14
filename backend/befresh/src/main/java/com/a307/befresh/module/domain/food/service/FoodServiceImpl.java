@@ -232,14 +232,14 @@ public class FoodServiceImpl implements FoodService {
             }
         }
 
-        long remain = food.getRegDttm().toLocalDate().until(LocalDate.now(), ChronoUnit.DAYS);
+        long passed = food.getRegDttm().toLocalDate().until(LocalDate.now(), ChronoUnit.DAYS);
         long tot = food.getRegDttm().toLocalDate().until(food.getExpirationDate(), ChronoUnit.DAYS);
         double ratio;
 
         if (tot <= 0) {
             ratio = 1;
         } else {
-            ratio = (double) remain / tot;
+            ratio = (double) passed / tot;
         }
 
         if (ratio < 0.5) {
