@@ -1,6 +1,5 @@
 package com.a307.befresh.global.config.batch;
 
-import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.food.repository.FoodRepository;
 import com.a307.befresh.module.domain.food.service.FoodService;
 import com.a307.befresh.module.domain.notification.service.NotificationService;
@@ -18,8 +17,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
-
-import java.util.List;
 
 @Slf4j
 @Configuration
@@ -63,8 +60,8 @@ public class FoodSensorBatchConfig {
     }
 
     @Bean
-    public Step sendNotificationStep() {
-        return new StepBuilder("sendNotificationStep", jobRepository)
+    public Step sendContainerNotificationStep() {
+        return new StepBuilder("sendContainerNotificationStep", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
                     ExecutionContext jobExecutionContext = chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
 //

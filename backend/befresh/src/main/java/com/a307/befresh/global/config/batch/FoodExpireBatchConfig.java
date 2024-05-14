@@ -39,7 +39,7 @@ public class FoodExpireBatchConfig {
         return new JobBuilder("processExpiredFoodJob", jobRepository)
                 .start(findExpireFoodStep())
                 .next(updateFoodRefreshStep())
-                .next(sendNotificationStep())
+                .next(sendExpireNotificationStep())
                 .build();
     }
 
@@ -98,8 +98,8 @@ public class FoodExpireBatchConfig {
     }
 
     @Bean
-    public Step sendNotificationStep() {
-        return new StepBuilder("sendNotificationStep", jobRepository)
+    public Step sendExpireNotificationStep() {
+        return new StepBuilder("sendExpireNotificationStep", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
                     ExecutionContext jobExecutionContext = chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
 //
