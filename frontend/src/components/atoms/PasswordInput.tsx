@@ -27,10 +27,11 @@ const CustomTextField = styled(TextField)({
 interface PasswordInputTextFieldsProps {
   label: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   helperText?: string;
 }
 
-function PasswordInputTextFields({ label, onChange, helperText }: Readonly<PasswordInputTextFieldsProps>) {
+function PasswordInputTextFields({ label, onChange, onKeyDown, helperText }: Readonly<PasswordInputTextFieldsProps>) {
   return (
     <Box
       component="form"
@@ -44,6 +45,7 @@ function PasswordInputTextFields({ label, onChange, helperText }: Readonly<Passw
           autoComplete="current-password"
           variant="standard"
           onChange={onChange}
+          onKeyDown={onKeyDown}
           error={!!helperText}
           helperText={helperText}
         />

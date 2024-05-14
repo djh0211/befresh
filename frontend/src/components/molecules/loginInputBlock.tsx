@@ -14,12 +14,13 @@ const InputContainer = styled.div`
 interface LogInInputBlockProps {
   onIdChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onPasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-function LoginInputBlock( {onIdChange, onPasswordChange}: Readonly<LogInInputBlockProps>) {
+function LoginInputBlock( {onIdChange, onPasswordChange, onKeyDown}: Readonly<LogInInputBlockProps>) { // 수정
   const [_id, setId] = useState(''); 
   const [_password, setPassword] = useState(''); 
-
+  
   const handleIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setId(event.target.value);
     onIdChange(event);
@@ -30,11 +31,17 @@ function LoginInputBlock( {onIdChange, onPasswordChange}: Readonly<LogInInputBlo
     onPasswordChange(event);
   };
 
+  const onCheckEnter = (event: React.KeyboardEvent<HTMLInputElement>) => { // 수정
+    if(event.key === 'Enter') {
+      onKeyDown(event); // 추가
+    }
+  };
+
   return (
     <div>
       <InputContainer>
-        <IdInputTextFields onChange={handleIdChange} />
-        <PasswordInputTextFields label="Password" onChange={handlePasswordChange} />
+        <IdInputTextFields onChange={handleIdChange} onKeyDown={onCheckEnter} />
+        <PasswordInputTextFields label="Password" onChange={handlePasswordChange} onKeyDown={onCheckEnter} />
       </InputContainer>
     </div>
   );
