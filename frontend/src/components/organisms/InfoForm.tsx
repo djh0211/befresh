@@ -40,29 +40,29 @@ const ChartBox = styled.div`
   border-radius: 10px;
   padding: 10px;
 `
-export default function InfoForm({infomation} :{infomation:informationType}) {
+export default function InfoForm({information} :{information:informationType}) {
 
   const latestInformation:latestInformationType =  {
-    regDttm: infomation.regDttm,
-    elapsedTime: infomation.elapsedTime,
-    expirationDate: infomation.expirationDate,
-    refresh: infomation.refresh,
+    regDttm: information.regDttm,
+    elapsedTime: information.elapsedTime,
+    expirationDate: information.expirationDate,
+    refresh: information.refresh,
     sensorDataList: {
-      temperature: infomation.sensorDataList.temperature.length != 0 ? infomation.sensorDataList.temperature[infomation.sensorDataList.temperature.length - 1].value : null,
-      humidity: infomation.sensorDataList.humidity.length != 0 ? infomation.sensorDataList.humidity[infomation.sensorDataList.humidity.length - 1].value : null,
-      nh3: infomation.sensorDataList.nh3.length != 0 ? infomation.sensorDataList.nh3[infomation.sensorDataList.nh3.length - 1].value : null
+      temperature: information.sensorDataList.temperature.length != 0 ? information.sensorDataList.temperature[information.sensorDataList.temperature.length - 1].value : null,
+      humidity: information.sensorDataList.humidity.length != 0 ? information.sensorDataList.humidity[information.sensorDataList.humidity.length - 1].value : null,
+      nh3: information.sensorDataList.nh3.length != 0 ? information.sensorDataList.nh3[information.sensorDataList.nh3.length - 1].value : null
     }
   }
 
   return (
     <Paper elevation={4} sx={InfoBoxStyle}>
-      <InfoTitle>{infomation.name}</InfoTitle>
+      <InfoTitle>{information.name}</InfoTitle>
       <InfoContent>
         <InfoContentBox>
           <SensorData latestInformation={latestInformation}/>
         </InfoContentBox>
         <ChartBox>
-          <DetailChart/>
+          <DetailChart information={information}/>
         </ChartBox>
       </InfoContent>
     </Paper>

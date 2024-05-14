@@ -7,8 +7,8 @@ import { getAccessToken, saveFcmTokens, getFcmToken } from "./utils/tokenUtils";
 import { sendFcmToken } from "./api/alarm/alarmApi";
 import { isAlarmType } from "./types/alarmTypes";
 import { useDispatch } from "react-redux";
-import { addAlarm, alertOn } from "./store/features/alarmSlice";
-
+import { alertOn } from "./store/features/alarmSlice";
+import Swal from "sweetalert2";
 
 // fcm 정보
 const config = {
@@ -88,6 +88,16 @@ const App = () => {
     if (isAlarmType(payload)) {
       console.log('메세지 도착')
       // 알람 페이지에 있을 때에만 추가해주자
+      console.log(payload)
+      const Toast = Swal.mixin({
+        toast:true,
+        position: 'top',
+        timer: 3000,
+        showConfirmButton: false,
+      })
+      Toast.fire({
+        title: payload.notification.title
+      })
       dispatch(alertOn())
     } else {
       console.log('메세지 타입을 확인해주세요')

@@ -11,7 +11,7 @@ async function getInfo(token: string): Promise<informationType[] | null> {
     });
     
     const temp = response.data.result;
-    console.log(isInformationType(temp[1]))
+    // console.log(temp)
     if (Array.isArray(temp) && temp.every(isInformationType)) {
       console.log(temp); // 여기서 값이 잘 나옴
       return temp;
