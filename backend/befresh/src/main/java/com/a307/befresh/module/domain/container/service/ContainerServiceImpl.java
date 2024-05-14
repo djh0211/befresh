@@ -63,17 +63,19 @@ public class ContainerServiceImpl implements ContainerService {
 
         for (Container container : containerList) {
 
-            SensorDataList sensorDataList = influxContainerRepository.selectSensorData(container.getQrId());
+            int elapsedTime = calculateElapsedTime(container.getRegDttm());
+
+            SensorDataList sensorDataList = influxContainerRepository.selectSensorData(
+                container.getRegDttm(), container.getQrId());
 
             ContainerSensor containerSensor = ContainerSensor.builder()
                 .qrId(container.getQrId())
                 .regDttm(container.getRegDttm())
-                .elapsedTime(calculateElapsedTime(container.getRegDttm()))
+                .elapsedTime(elapsedTime)
                 .expirationDate(container.getExpirationDate())
                 .refresh(container.getRefresh().getName())
                 .sensorDataList(sensorDataList)
                 .build();
-
 
             containerSensorList.add(containerSensor);
 

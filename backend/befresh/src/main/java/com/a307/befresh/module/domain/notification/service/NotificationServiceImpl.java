@@ -12,6 +12,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -74,10 +75,30 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    @Transactional
     public void sendRegisterNotification(Refrigerator refrigerator) {
         String title = "음식 등록 성공!";
         String body = "새로운 음식이 등록되었습니다.";
         String category = "register";
+
+        long notificationId = saveMessage(refrigerator, category, title, body);
+
+        List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
+
+        for (Member member : memberList) {
+            Set<MemberToken> memberTokenSet = member.getMemberTokenSet();
+            for (MemberToken memberToken : memberTokenSet) {
+                sendMessage(memberToken, title, body, category, notificationId);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void sendRegisterErrorNotification(Refrigerator refrigerator) {
+        String title = "음식 등록 실패";
+        String body = "일시적인 오류로 음식 등록에 실패하였습니다.";
+        String category = "error";
 
         long notificationId = saveMessage(refrigerator, category, title, body);
 
