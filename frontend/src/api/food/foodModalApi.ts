@@ -16,6 +16,7 @@ export async function modalFoodDetail(foodId: number): Promise<any> {
 export async function updateFoodDetail( updatedData: { foodId?: number, name?: string, expirationDate?: string }): Promise<void> {
   try {
     await axiosInstance.put(`https://be-fresh.site/api/foods`, updatedData);
+    console.log('수정됨?')
   } catch (error) {
     console.log('음식 정보 수정 오류 :', error);
   }
