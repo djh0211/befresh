@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react"; // import를 수정
+import { useState } from "react";
 import Button from "@mui/joy/Button";
 import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { FoodData, FoodTypes } from "../types/foodTypes";
 import { modalFoodDetail, updateFoodDetail } from "../api/food/foodModalApi";
 import { formatDate } from "../utils/dateUtils";
-import sampleimg from "../../src/assets/sampleimg.png";
+import sampleimg from "../assets/sampleimg.png"
 import dayjs, { Dayjs } from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -49,9 +49,8 @@ const BasicModal: React.FC<ModalProps> = ({
   const [open, setOpen] = useState<boolean>(false); // useState로 변경
   const [foodDetail, setFoodDetail] = useState<FoodData | null>(null);
   const [editedName, setEditedName] = useState<string>(foodData.name);
-  const [editedExpirationDate, setEditedExpirationDate] = useState<Dayjs | null>( // Dayjs | null 타입으로 변경
-    dayjs(foodData.expirationDate)
-  );
+  const [editedExpirationDate, setEditedExpirationDate] =
+    useState<Dayjs | null>(dayjs(foodData.expirationDate)); // Dayjs | null 타입으로 변경
   const [openDatePicker, setOpenDatePicker] = useState<boolean>(false);
   const navigate = useNavigate();
   const newimage =
@@ -110,6 +109,13 @@ const BasicModal: React.FC<ModalProps> = ({
     }
   };
 
+  const default_img = sampleimg
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    console.log("에러이미지")
+    e.currentTarget.src = default_img;
+  }
+
   return (
     <React.Fragment>
       <Button variant="outlined" color="success" onClick={handleOpen}>
@@ -140,16 +146,17 @@ const BasicModal: React.FC<ModalProps> = ({
           <ModalClose variant="plain" sx={{ m: 1 }} />
           {foodDetail?.image && (
             <img
-              src={newimage}
-              alt="음식 이미지"
-              style={{
-                width: "200px",
-                height: "auto",
-                maxHeight: "200px",
-                maxWidth: "200px",
-                objectFit: "cover",
-              }}
-            />
+            src={newimage}
+            alt="음식 이미지"
+            onError={handleImageError} // 이미지 로딩에 실패한 경우 호출
+            style={{
+              width: "200px",
+              height: "auto",
+              maxHeight: "200px",
+              maxWidth: "200px",
+              objectFit: "cover",
+            }}
+          />
           )}
           <Typography
             component="h2"
@@ -196,7 +203,11 @@ const BasicModal: React.FC<ModalProps> = ({
                   <DemoContainer components={["DatePicker"]}>
                     <DatePicker
                       value={editedExpirationDate ?? null} // 수정
-                      onChange={(newValue: any) => setEditedExpirationDate(newValue ? dayjs(newValue) : null)} // Date 객체를 Dayjs 객체로 변환
+                      onChange={(newValue: any) =>
+                        setEditedExpirationDate(
+                          newValue ? dayjs(newValue) : null
+                        )
+                      } // Date 객체를 Dayjs 객체로 변환
                     />
                   </DemoContainer>
                 </LocalizationProvider>
@@ -221,7 +232,7 @@ const BasicModal: React.FC<ModalProps> = ({
                   <DetailList>습도</DetailList>
                   <p>:</p>
                   <DetailInfo>{foodDetail?.humidity} %</DetailInfo>
-                </FoodModalDetail> 
+                </FoodModalDetail>
                 <div
                   style={{
                     display: "flex",

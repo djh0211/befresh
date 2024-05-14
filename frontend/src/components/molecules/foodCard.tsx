@@ -40,6 +40,10 @@ export default function ImgMediaCard({
       console.error("음식 삭제 중 오류 발생:", error);
     }
   };
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    console.log("에러이미지")
+    e.currentTarget.src = sampleimg;
+  }
 
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -48,6 +52,7 @@ export default function ImgMediaCard({
         alt={name}
         height="200"
         image={newimage ?? sampleimg}
+        onError={handleImageError}
         sx={{
           filter: freshState === 0 ? "brightness(70%) opacity(.7) drop-shadow(0 0 0 red)" : "none",
         }}
