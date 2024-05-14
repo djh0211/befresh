@@ -5,7 +5,7 @@ import { informationType } from "../../types/informationTypes";
 
 const InfoMain = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 92vh;
   display: flex;
   flex-direction: column;
   margin-bottom: 80px;
@@ -34,7 +34,7 @@ export default function InfoTemp({containerInfo} : {containerInfo :informationTy
         {
           containerInfo.map((info, idx) => {
             return (
-              <InfoForm key={idx} infomation={info}/>
+              <InfoForm key={idx} information={info}/>
             )
           })
         }
