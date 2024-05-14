@@ -174,7 +174,7 @@ public class FoodServiceImpl implements FoodService {
         for (Food food : foodList) {
 
             int elapsedTime = calculateElapsedTime(food.getRegDttm());
-            double freshState = calculateFreshState(food.getFtype(), food.getRegDttm(),
+            double freshState = calculateFreshState(food.getRegDttm(),
                 food.getExpirationDate());
 
             foodListDetailResList.add(
@@ -254,8 +254,8 @@ public class FoodServiceImpl implements FoodService {
     private FoodDetailRes createFoodDetailFromContainer(Container container) {
         int elapsedTime = calculateElapsedTime(container.getRegDttm());
 
-        double freshState = calculateFreshState(container.getFtype(), container.getRegDttm(),
-            container.getExpirationDate()); // 추후 계산 로직 추가
+        double freshState = calculateFreshState(container.getRegDttm(),
+            container.getExpirationDate());
 
         return FoodDetailRes.builder().id(container.getFoodId()).name(container.getName())
             .image(container.getImage()).expirationDate(container.getExpirationDate())
@@ -268,8 +268,8 @@ public class FoodServiceImpl implements FoodService {
         Food food = foodRepository.findById(foodId).orElseThrow();
         int elapsedTime = calculateElapsedTime(food.getRegDttm());
 
-        double freshState = calculateFreshState(food.getFtype(), food.getRegDttm(),
-            food.getExpirationDate()); // TODO : 추후 계산 로직 추가
+        double freshState = calculateFreshState(food.getRegDttm(),
+            food.getExpirationDate());
 
         return FoodDetailRes.builder().id(food.getFoodId()).name(food.getName())
             .image(food.getImage()).expirationDate(food.getExpirationDate())
@@ -281,14 +281,13 @@ public class FoodServiceImpl implements FoodService {
         return Period.between(registrationDateTime.toLocalDate(), LocalDate.now()).getDays();
     }
 
-    private double calculateFreshState(Ftype ftype, LocalDateTime registrationDateTime,
+    private double calculateFreshState(LocalDateTime registrationDateTime,
         LocalDate exprationDate) {
 
         if (exprationDate == null) {
             return 100;
         }
 
-        // TODO: 용기는 나중에 다르게 설정
         int totalDays = Period.between(registrationDateTime.toLocalDate(), exprationDate).getDays();
         int remindDays = Period.between(LocalDate.now(), exprationDate).getDays();
 
