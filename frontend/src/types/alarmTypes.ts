@@ -1,6 +1,6 @@
 type alarmType = {
   data: {
-    category :'expire'|'refresh'|'register',
+    category :'danger'|'warn'|'register'|'error'|'noUpdate'|'reUpdate',
     notificationId: string
   },
   notification: {
@@ -17,7 +17,7 @@ function isAlarmType(payload: any): payload is alarmType {
     'data' in payload &&
     typeof payload.data === 'object' &&
     'category' in payload.data &&
-    (payload.data.category === 'expire'|| 'refresh' || 'register' )&&
+    (payload.data.category === 'danger'|| 'warn' || 'register'||'error'||'noUpdate'||'reUpdate')&&
     'notificationId' in payload.data &&
     typeof payload.data.notificationId === 'string' &&
     'notification' in payload &&

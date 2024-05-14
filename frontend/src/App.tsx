@@ -88,11 +88,7 @@ const App = () => {
     if (isAlarmType(payload)) {
       console.log('메세지 도착')
       // 알람 페이지에 있을 때에만 추가해주자
-      if (window.location.href.includes('alarm')) {
-        dispatch(addAlarm(payload))
-      } else {
-        dispatch(alertOn())
-      }
+      dispatch(alertOn())
     } else {
       console.log('메세지 타입을 확인해주세요')
     }
