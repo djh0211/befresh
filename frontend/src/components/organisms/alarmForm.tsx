@@ -17,6 +17,7 @@ const AlarmList = styled.div`
   padding: 2vh 0;
   border-radius: 10px;
   height: 65vh;
+  overflow: scroll;
 `
 
 type propsType ={ 
@@ -44,7 +45,7 @@ export default function AlarmForm({alarms, deleteAlarms, deleteOne}: propsType) 
             return(
               <AlarmBlock 
                 key={idx} 
-                id={alarm.messageId} 
+                id={alarm.data.notificationId} 
                 type={alarm.data.category} 
                 title={alarm.notification.title}
                 content={alarm.notification.body} 
