@@ -8,9 +8,11 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.Optional;
+import org.springframework.retry.annotation.EnableRetry;
 
 @SpringBootApplication
 @EnableJpaAuditing
+@EnableRetry
 public class BefreshApplication {
 
 	public static void main(String[] args) {
