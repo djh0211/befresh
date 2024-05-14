@@ -53,7 +53,9 @@ function SignupInputBlock({ onIdChange, onPasswordChange, onConfirmPasswordChang
 
   return (
     <InputContainer>
-      <IdInputTextFields onChange={handleIdChange} /> {/* 아이디 입력 필드 */}
+      <IdInputTextFields onChange={handleIdChange} onKeyDown={function (): void {
+        throw new Error('Function not implemented.');
+      } } /> {/* 아이디 입력 필드 */}
       <PasswordInputTextFields
         label="비밀번호"
         onChange={handlePasswordChange} // 비밀번호 입력 값 변경 시 호출되는 핸들러
