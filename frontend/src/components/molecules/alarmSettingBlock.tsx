@@ -47,7 +47,7 @@ export default function AlarmSettingBlock({close}:{close :() => void}) {
 
   return(
     <>
-      <p style={{fontSize:'2rem', textAlign:'center', margin:'3vh 0'}}>알림 수신 설정</p>
+      <p style={{fontSize:'2rem', textAlign:'center', margin:'2vh 0'}}>알림 수신 설정</p>
       <FormGroup sx={{marginLeft: '20px'}}>
         <FormControlLabel control={<Checkbox checked={dangerCheck} onChange={handleDanger}/>} label="상한 음식"/>
         <FormControlLabel control={<Checkbox checked={warnCheck} onChange={handleWarn}/>} label="유통기한 경고" />
@@ -57,7 +57,7 @@ export default function AlarmSettingBlock({close}:{close :() => void}) {
         variant="outlined" 
         size="large" 
         onClick={settingCategory}
-        sx={{width:'25%', marginLeft:'75%'}}>
+        sx={{marginLeft:'70%'}}>
         설정 완료
       </Button>
     </>
