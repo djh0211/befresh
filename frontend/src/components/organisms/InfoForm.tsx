@@ -50,6 +50,7 @@ const LastMeasurementTime = styled.div`
 
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
+  date.setHours(date.getHours() - 9)
   const hours = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
   return `${date.toLocaleDateString()} ${hours}:${minutes}`;
@@ -67,17 +68,26 @@ export default function InfoForm({ information }: { information: informationType
       nh3: information.sensorDataList.nh3.length != 0 ? information.sensorDataList.nh3[information.sensorDataList.nh3.length - 1].value : null
     }
   };
+  const lastTime: string | null = information.sensorDataList.temperature.length != 0 ? information.sensorDataList.temperature[information.sensorDataList.temperature.length - 1].time : null
 
   return (
     <Paper elevation={4} sx={InfoBoxStyle}>
       <InfoTitle>{information.name}</InfoTitle>
       <InfoContent>
         <InfoContentBox>
-          <SensorData latestInformation={latestInformation}/>
+          <SensorData latestInformation={latestInformation} />
         </InfoContentBox>
         <ChartBox>
-          <DetailChart information={information}/>
-          <LastMeasurementTime>최종 측정 시간: {formatDate(latestInformation.regDttm)}</LastMeasurementTime>
+          {
+            information.sensorDataList.temperature.length === 0 ? (
+              <p style={{marginTop: '45%', textAlign: 'center'}}>아직 데이터를 측정하기 전입니다.</p>
+            ) : (
+              <>
+                <DetailChart information={information} />
+                <LastMeasurementTime>{lastTime ? `마지막 측정 시간: ${formatDate(lastTime)}` : null}</LastMeasurementTime>
+              </>
+            )
+          }
         </ChartBox>
       </InfoContent>
     </Paper>
