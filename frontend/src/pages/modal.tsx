@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Button from "@mui/joy/Button";
 import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
@@ -12,6 +12,8 @@ import { modalFoodDetail, updateFoodDetail } from "../api/food/foodModalApi";
 import { formatDate } from "../utils/dateUtils";
 import sampleimg from "../assets/sampleimg.png"
 import dayjs, { Dayjs } from "dayjs";
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -46,11 +48,11 @@ const BasicModal: React.FC<ModalProps> = ({
   cardApiData,
   setData,
 }) => {
-  const [open, setOpen] = useState<boolean>(false); // useState로 변경
+  const [open, setOpen] = useState<boolean>(false);
   const [foodDetail, setFoodDetail] = useState<FoodData | null>(null);
   const [editedName, setEditedName] = useState<string>(foodData.name);
   const [editedExpirationDate, setEditedExpirationDate] =
-    useState<Dayjs | null>(dayjs(foodData.expirationDate)); // Dayjs | null 타입으로 변경
+    useState<Dayjs | null>(foodDetail?.expirationDate?dayjs(foodDetail.expirationDate):null);
   const [openDatePicker, setOpenDatePicker] = useState<boolean>(false);
   const navigate = useNavigate();
   const newimage =
@@ -60,12 +62,12 @@ const BasicModal: React.FC<ModalProps> = ({
 
   // 모달 열기
   const handleOpen = async () => {
-    setOpen(true);
     try {
       // 상세 정보를 가져옴
       const detail = await modalFoodDetail(foodData.id);
       console.log(detail, "상세정보 불러온후 디테일제대로 나오나?");
       setFoodDetail(detail.result);
+      setOpen(true);
     } catch (error) {
       console.error("상세 정보를 가져오는 중에 오류:", error);
     }
@@ -76,6 +78,10 @@ const BasicModal: React.FC<ModalProps> = ({
     setOpen(false);
   };
 
+  useEffect(()=> {
+    (foodDetail && setEditedName(foodDetail?.name))
+    console.log(foodDetail?.expirationDate,'gigi')
+  },[foodDetail?.expirationDate])
   // 음식 정보 업데이트
   const handleUpdateFoodDetail = async () => {
     try {
@@ -199,13 +205,13 @@ const BasicModal: React.FC<ModalProps> = ({
               <DetailList>유통기한</DetailList>
               <p>:</p>
               <DetailInfo>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={["DatePicker"]}>
                     <DatePicker
-                      value={editedExpirationDate ?? null} // 수정
+                      value={dayjs(foodDetail?.expirationDate && foodDetail.expirationDate)} 
                       onChange={(newValue: any) =>
                         setEditedExpirationDate(
-                          newValue ? dayjs(newValue) : null
+                          dayjs(newValue)
                         )
                       } // Date 객체를 Dayjs 객체로 변환
                     />
