@@ -5,10 +5,11 @@ import { informationType } from "../../types/informationTypes";
 
 const InfoMain = styled.div`
   width: 100vw;
-  height: 92vh;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   margin-bottom: 80px;
+  overflow: scroll;
 `
 
 const InfoTitle = styled.div`
@@ -26,23 +27,41 @@ const NavBlockWrapper = styled.div`
   z-index: 999; 
 `;
 
-export default function InfoTemp({containerInfo} : {containerInfo :informationType[]}) {
+const MessageDiv = styled.div`
+  width: 90vw;
+  background-color: rgba(161, 193, 167, 0.2);
+  margin: 5%;
+  height: 20vh;
+  text-align: center;
+`
+
+export default function InfoTemp({ containerInfo }: { containerInfo: informationType[] }) {
   return (
-    <InfoMain>
+    <>
       <InfoTitle>용기 정보</InfoTitle>
-      <div>
+      <InfoMain>
         {
-          containerInfo.map((info, idx) => {
-            return (
-              <InfoForm key={idx} information={info}/>
-            )
-          })
+          containerInfo.length == 0 ? (
+            <MessageDiv>
+              <p style={{ marginTop: '10%', fontSize: '1.5rem', color: 'grey' }}>등록된 용기가 없습니다.</p>
+            </MessageDiv>
+          ) : (
+            <div>
+              {
+                containerInfo.map((info, idx) => {
+                  return (
+                    <InfoForm key={idx} information={info} />
+                  )
+                })
+              }
+            </div>
+          )
         }
-      </div>
-      
+      </InfoMain>
       <NavBlockWrapper>
         <NavBlock />
       </NavBlockWrapper>
-    </InfoMain>
+    </>
+
   );
 }

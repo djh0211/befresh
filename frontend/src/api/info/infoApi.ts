@@ -1,10 +1,10 @@
-import axios from "axios";
 import { informationType } from "../../types/informationTypes";
 import { isInformationType } from "../../types/informationTypes";
+import axiosInstance from "../../utils/axiosConfig";
 
 async function getInfo(token: string): Promise<informationType[] | null> {
   try {
-    const response = await axios.get('https://be-fresh.site/api/containers/sensor', {
+    const response = await axiosInstance.get('https://be-fresh.site/api/containers/sensor', {
       headers: {
         'Authorization': `Bearer ${token}`
       }

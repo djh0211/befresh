@@ -1,9 +1,9 @@
-import axios from "axios"
 import { alarmType } from "../../types/alarmTypes"
+import axiosInstance from "../../utils/axiosConfig"
 
 // 회원정보와 fcm토큰 묶어서 보내주는 api
 function sendFcmToken(fcmToken : string, userToken:string) {
-  axios.post('https://be-fresh.site/api/member/fcmToken', {
+  axiosInstance.post('https://be-fresh.site/api/member/fcmToken', {
     'fcmToken': fcmToken
   },{
     headers: {
@@ -17,7 +17,7 @@ function sendFcmToken(fcmToken : string, userToken:string) {
 // 알람 전체 조회
 async function getAlarms(token: string) :Promise<alarmType[]> {
   let tempAlarms:alarmType[] = []
-  await axios.get('https://be-fresh.site/api/notification',{
+  await axiosInstance.get('https://be-fresh.site/api/notification',{
     headers: {
       'Authorization' : `Bearer ${token}`
     }
@@ -35,7 +35,7 @@ async function getAlarms(token: string) :Promise<alarmType[]> {
 
 // 전체 알람 삭제
 function deleteAllAlarmsApi(token:string) {
-  axios.delete('https://be-fresh.site/api/notification/all', {
+  axiosInstance.delete('https://be-fresh.site/api/notification/all', {
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -44,7 +44,7 @@ function deleteAllAlarmsApi(token:string) {
 
 // 특정 알람 삭제
 function deleteOneAlarmsApi(token:string, id:string) {
-  axios.delete(`https://be-fresh.site/api/notification?notificationId=${id}`, {
+  axiosInstance.delete(`https://be-fresh.site/api/notification?notificationId=${id}`, {
     headers: {
       'Authorization': `Bearer ${token}`
     }

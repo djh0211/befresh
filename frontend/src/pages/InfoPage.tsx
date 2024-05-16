@@ -2,7 +2,7 @@ import InfoTemp from "../components/templates/infoTemp";
 import { getInfo } from "../api/info/infoApi";
 import { useEffect, useState } from "react";
 import { getAccessToken } from "../utils/tokenUtils";
-import { sensorDataType, informationType } from "../types/informationTypes";
+import { informationType } from "../types/informationTypes";
 
 function InfoPage() {
   const token = getAccessToken()
