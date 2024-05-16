@@ -201,7 +201,7 @@ const BasicModal: React.FC<ModalProps> = ({
                 onChange={(e) => setEditedName(e.target.value)}
                 style={{
                   fontSize: "2rem",
-                  fontFamily: "TheJamsil5Bold",
+                  fontFamily: "Pretendard-Regular",
                   border: "none",
                   borderBottom: "1px solid black",
                   width: "40%",

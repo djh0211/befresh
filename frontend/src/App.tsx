@@ -20,14 +20,14 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 const materialTheme = materialExtendTheme({
   typography: {
-    fontFamily: 'TheJamsil5Bold'
+    fontFamily: 'Pretendard-Regular'
   },
 });
 
 const customTheme = extendTheme({
   fontFamily: {
-    display: 'TheJamsil5Bold',
-    body: 'TheJamsil5Bold'
+    display: 'Pretendard-Regular',
+    body: 'Pretendard-Regular'
   },
 });
 
