@@ -65,7 +65,6 @@ export default function DetailChart({ information }: { information: informationT
                 <XAxis dataKey="time" />
                 <YAxis />
                 <Tooltip />
-                
                 {
                   selectedInfos.map((info, idx) => {
                     return (
