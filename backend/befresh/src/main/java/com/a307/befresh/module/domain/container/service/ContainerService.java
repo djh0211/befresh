@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ContainerService {
     void updateContainerSensor(ContainerUpdateSensorListReq containerUpdateSensorListReq);
-    List<ContainerSensor> getContainerSensor(Long refrigeratorId);
+    List<ContainerSensor> getContainerSensor(Long foodId, Long refrigeratorId);
 }

@@ -54,28 +54,6 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendNotification(List<Food> foodList, String category) {
-        String title = "";
-        String body = "";
-
-        for (Food food : foodList) {
-            if (category.equals("expire")) {
-                title = food.getName() + "이 " + food.getRefresh().getName() + " 상태가 되었어요!";
-                body = food.getName() + " 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
-                        "\n유통 기한을 확인해주세요!";
-            }
-
-            long notificationId = saveMessage(food.getRefrigerator(), category, title, body);
-
-            for (Member member : food.getRefrigerator().getMemberSet()) {
-                for (MemberToken memberToken : member.getMemberTokenSet()) {
-                    sendMessage(memberToken, title, body, category, notificationId);
-                }
-            }
-        }
-    }
-
-    @Override
     @Transactional
     public void sendRegisterNotification(Refrigerator refrigerator) {
         String title = "음식 등록 성공!";
@@ -114,23 +92,51 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    public void sendExpireNotification(List<Food> foodList, String category) {
+        String title = "";
+        String body = "";
+
+        for (Food food : foodList) {
+            title = "[" + food.getName() + "] " + food.getRefresh().getName() + " 상태가 되었어요!";
+            body = "[" + food.getName() + "] 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
+                    "\n유통 기한을 확인해주세요!";
+
+            long notificationId = saveMessage(food.getRefrigerator(), category, title, body);
+
+            for (Member member : food.getRefrigerator().getMemberSet()) {
+                for (MemberToken memberToken : member.getMemberTokenSet()) {
+                    sendMessage(memberToken, title, body, category, notificationId);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void sendContainerNotification(List<Food> foodList, String category) {
+        String title = "";
+        String body = "";
+
+        for (Food food : foodList) {
+            title = "[" + food.getName() + "] " + food.getRefresh().getName() + " 상태가 되었어요!";
+            body = "[" + food.getName() + "] " + "신선도를 확인해주세요";
+
+            long notificationId = saveMessage(food.getRefrigerator(), category, title, body);
+
+            for (Member member : food.getRefrigerator().getMemberSet()) {
+                for (MemberToken memberToken : member.getMemberTokenSet()) {
+                    sendMessage(memberToken, title, body, category, notificationId);
+                }
+            }
+        }
+    }
+
+    @Override
     public void sendTmpNotification(NotificationTmpReq notificationTmpReq) {
         Refrigerator refrigerator = refrigeratorRepository.findById(notificationTmpReq.refrigeratorId()).orElseThrow();
         List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
         String title = notificationTmpReq.title();
         String body = notificationTmpReq.body();
         String category = notificationTmpReq.category();
-
-//        if (category.equals("register")) {
-//            title = "음식 등록 성공!";
-//            body = "새로운 음식이 등록되었습니다.";
-//        } else if (category.equals("refresh")) {
-//            title = "임시 음식이 주의 상태가 되었어요!";
-//            body = "임시 음식의 신선도를 확인해주세요!";
-//        } else if (category.equals("expire")) {
-//            title = "임시 음식이 주의 상태가 되었어요!";
-//            body = "임시 음식 유통 기한 D-3\n유통 기한을 확인해주세요!";
-//        }
 
         long notificationId = saveMessage(refrigerator, category, title, body);
 

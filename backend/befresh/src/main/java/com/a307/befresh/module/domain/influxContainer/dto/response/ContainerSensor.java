@@ -9,6 +9,8 @@ import lombok.Builder;
 @Builder
 public record ContainerSensor (
 
+
+    Long foodId,
     String qrId,
 
     String name,
