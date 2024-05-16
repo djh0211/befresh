@@ -48,8 +48,8 @@ function SignupPage() {
               }
             }
             
+            navigator('/main')
           }
-          navigator('/main')
         }
       }
     } catch (error) {

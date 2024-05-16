@@ -40,8 +40,8 @@ function LoginPage() {
               sendFcmToken(fcmToken, accessToken)
             }
           }
+          navigator('/main');
         }
-        navigator('/main');
       }
     } catch (error) {
       console.error("실행이 안됨:", error);
