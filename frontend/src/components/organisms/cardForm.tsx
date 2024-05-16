@@ -19,6 +19,11 @@ const StyledCenterContainer = styled.div`
   height: fit-content;
 `;
 
+const StyledEmptyContainer = styled.div`
+  text-align: center;
+  margin-top: 20vh;
+`;
+
 const StyledGridContainer = styled(Grid)`
   && {
     margin-x: auto;
@@ -39,7 +44,7 @@ const emptyimg = imageList[randomIndex]
 export default function CardForm({ cardApiData, setData }: Readonly<CardFormProps>) {
 
   useEffect(() => {
-  }, []); // 컴포넌트가 마운트될 때 한 번만 실행
+  }, []);
 
   const handleDelete = (id: number) => {
     setData(cardApiData.filter(food => food.id !== id));
@@ -48,10 +53,10 @@ export default function CardForm({ cardApiData, setData }: Readonly<CardFormProp
   return (
     <StyledCenterContainer>
       {cardApiData.length === 0 ? (
-        <React.Fragment>
-          <img src={emptyimg} alt="빈 냉장고 이미지" style={{ maxWidth: "20%", maxHeight: "20%" }} />
-          <p>냉장고 안에 아무런 음식이 없어요</p>
-        </React.Fragment>
+        <StyledEmptyContainer>
+        <img src={emptyimg} alt="빈 냉장고 이미지" style={{ maxWidth: "70%", maxHeight: "70%" }} />
+        <p style={{ fontSize: "50px" }}>냉장고 안에 아무런 음식이 없어요</p>
+      </StyledEmptyContainer>
       ) : (
         <StyledGridContainer container spacing={2}>
           {cardApiData.map((foodData, index) => (
