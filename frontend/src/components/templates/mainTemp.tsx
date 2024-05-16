@@ -9,11 +9,11 @@ interface MainPageTemplateProps {
 }
 
 const Main = styled.div`
-  height: 100vh;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-bottom: 600px;
+  overflow-y: scroll;
 `
 
 const NavBlockWrapper = styled.div`
