@@ -33,17 +33,19 @@ const NavBlockWrapper = styled.div`
 `;
 
 type propsType ={ 
+  message :string,
+  changeMessage: (newMessage: string) => void,
   alarms: alarmType[],
   deleteAlarms: () => void,
   deleteOne: (id :string) => void
 }
 
-export default function AlarmTemplate({alarms, deleteAlarms, deleteOne}: propsType) {
+export default function AlarmTemplate({message, changeMessage, alarms, deleteAlarms, deleteOne}: propsType) {
   return (
     <AlarmMain>
       <AlarmModalForm/>
       <AlarmTitle>알림</AlarmTitle>
-      <AlarmForm alarms={alarms} deleteAlarms={deleteAlarms} deleteOne={deleteOne}/>
+      <AlarmForm message={message} changeMessage={changeMessage} alarms={alarms} deleteAlarms={deleteAlarms} deleteOne={deleteOne}/>
       <NavBlockWrapper>
         <NavBlock />
       </NavBlockWrapper>

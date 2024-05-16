@@ -126,7 +126,11 @@ function requestPermission(userToken: string|null, messaging: any) {
         }
       }).catch((err) => console.log(err))
     } else if (permission === 'denied') {
-      console.log('푸시 권한이 차단되어 있음')
+      Swal.fire({
+        icon: 'warning',
+        title: '푸시 알림이 거절되었습니다.',
+        text: '알림이 꺼져있다면, 음식 상태에 따른 알림을 받을 수 없습니다.'
+      })
     }
   })
 }

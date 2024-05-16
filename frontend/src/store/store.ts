@@ -8,7 +8,7 @@ const persistConfig = {
   key: 'root',
   storage: storageSession,
   // 로컬에 저장하고 싶은 애만 빼주기
-  whitelist: ['alarms']
+  whitelist: []
 }
 
 const persistedReducer = persistReducer(

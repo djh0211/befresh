@@ -20,13 +20,41 @@ const AlarmList = styled.div`
   overflow: scroll;
 `
 
+const MessageDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const MessageP = styled.p`
+  text-align: center; 
+  font-size: 2rem;
+  color: grey;
+`
+
 type propsType ={ 
+  message: string,
+  changeMessage: (newMessage:string) => void,
   alarms: alarmType[],
   deleteAlarms: () => void,
   deleteOne: (id :string) => void
 }
 
-export default function AlarmForm({alarms, deleteAlarms, deleteOne}: propsType) {
+export default function AlarmForm({message, changeMessage, alarms, deleteAlarms, deleteOne}: propsType) {
+  const checkPermission = () => {
+    // 알림 권한 요청
+    Notification.requestPermission().then((res) => {
+      // 권한 설정이 되면, 새로고침해서 알림 불러옴
+      if (res == 'granted') {
+        window.location.reload()
+      } else {
+        // 권한을 거절했을 때
+        changeMessage('알림 권한이 없습니다. 설정을 확인해주세요')
+      }
+    }).catch(() => {
+      // 이미 거절된 상태일 때
+      changeMessage('알림 권한이 없습니다. 설정을 확인해주세요')
+    })
+  }
   return (
     <AlarmBox>
       <ButtonContainer>
@@ -41,6 +69,23 @@ export default function AlarmForm({alarms, deleteAlarms, deleteOne}: propsType) 
       </ButtonContainer>
       <AlarmList>
         {
+          alarms.length == 0 ? (
+            <MessageDiv>
+              <MessageP>
+                {message}
+              </MessageP>
+              <Button 
+                onClick={checkPermission}
+                size="large"
+                variant="contained"
+                color="success"
+                sx={{width: '35%', marginX:'auto', fontSize:'1.6rem'}}
+              >
+                알림 권한 확인하기
+              </Button>
+            </MessageDiv>
+            
+          ) :
           alarms.map((alarm, idx) => {
             return(
               <AlarmBlock 
