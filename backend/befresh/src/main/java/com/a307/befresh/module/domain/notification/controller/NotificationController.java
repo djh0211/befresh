@@ -3,6 +3,7 @@ package com.a307.befresh.module.domain.notification.controller;
 import com.a307.befresh.global.api.response.BaseResponse;
 import com.a307.befresh.global.exception.code.SuccessCode;
 import com.a307.befresh.global.security.domain.UserDetailsImpl;
+import com.a307.befresh.module.domain.notification.dto.request.NotificationTmpReq;
 import com.a307.befresh.module.domain.notification.dto.response.NotificationDetailRes;
 import com.a307.befresh.module.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -49,12 +50,12 @@ public class NotificationController {
         return BaseResponse.success(SuccessCode.DELETE_SUCCESS, i);
     }
 
-    @GetMapping("/tmp")
+    @PostMapping("/tmp")
     public ResponseEntity<BaseResponse<String>> getTmpNotification1(
-            @RequestParam String category, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+            @RequestBody NotificationTmpReq notificationTmpReq) {
 
-        notificationService.sendTmpNotification(category, userDetails.getRefrigeratorId());
+        notificationService.sendTmpNotification(notificationTmpReq);
 
-        return BaseResponse.success(SuccessCode.INSERT_SUCCESS, category);
+        return BaseResponse.success(SuccessCode.INSERT_SUCCESS, null);
     }
 }
