@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import Button from "@mui/joy/Button";
 import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
@@ -10,10 +10,10 @@ import { useNavigate } from "react-router-dom";
 import { FoodData, FoodTypes } from "../types/foodTypes";
 import { modalFoodDetail, updateFoodDetail } from "../api/food/foodModalApi";
 import { formatDate } from "../utils/dateUtils";
-import sampleimg from "../assets/sampleimg.png"
+import sampleimg from "../assets/sampleimg.png";
 import dayjs, { Dayjs } from "dayjs";
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -31,6 +31,12 @@ const DetailList = styled.p`
 const DetailInfo = styled.p`
   width: 220px;
   text-align: right;
+`;
+
+const DetailInfoDatePicker = styled.p`
+  width: 220px;
+  text-align: right;
+  margin: 0;
 `;
 
 const EditIcon = styled.span`
@@ -52,7 +58,9 @@ const BasicModal: React.FC<ModalProps> = ({
   const [foodDetail, setFoodDetail] = useState<FoodData | null>(null);
   const [editedName, setEditedName] = useState<string>(foodData.name);
   const [editedExpirationDate, setEditedExpirationDate] =
-    useState<Dayjs | null>(foodDetail?.expirationDate?dayjs(foodDetail.expirationDate):null);
+    useState<Dayjs | null>(
+      foodDetail?.expirationDate ? dayjs(foodDetail.expirationDate) : null
+    );
   const [openDatePicker, setOpenDatePicker] = useState<boolean>(false);
   const navigate = useNavigate();
   const newimage =
@@ -78,10 +86,10 @@ const BasicModal: React.FC<ModalProps> = ({
     setOpen(false);
   };
 
-  useEffect(()=> {
-    (foodDetail && setEditedName(foodDetail?.name))
-    console.log(foodDetail?.expirationDate,'gigi')
-  },[foodDetail?.expirationDate])
+  useEffect(() => {
+    foodDetail && setEditedName(foodDetail?.name);
+    console.log(foodDetail?.expirationDate, "gigi");
+  }, [foodDetail?.expirationDate]);
   // 음식 정보 업데이트
   const handleUpdateFoodDetail = async () => {
     try {
@@ -115,12 +123,14 @@ const BasicModal: React.FC<ModalProps> = ({
     }
   };
 
-  const default_img = sampleimg
+  const default_img = sampleimg;
 
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    console.log("에러이미지")
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>
+  ) => {
+    console.log("에러이미지");
     e.currentTarget.src = default_img;
-  }
+  };
 
   return (
     <React.Fragment>
@@ -150,42 +160,46 @@ const BasicModal: React.FC<ModalProps> = ({
           }}
         >
           <ModalClose variant="plain" sx={{ m: 1 }} />
-          {foodDetail?.image && (
-            <img
-            src={newimage}
-            alt="음식 이미지"
-            onError={handleImageError} // 이미지 로딩에 실패한 경우 호출
-            style={{
-              width: "200px",
-              height: "auto",
-              maxHeight: "200px",
-              maxWidth: "200px",
-              objectFit: "cover",
-            }}
-          />
-          )}
-          <Typography
-            component="h2"
-            id="modal-title"
-            level="h4"
-            textColor="inherit"
-            fontWeight="lg"
-            mb={2}
-            sx={{ fontSize: "1.5rem" }}
-          >
-            <input
-              type="text"
-              value={editedName}
-              onChange={(e) => setEditedName(e.target.value)}
-              style={{
-                fontSize: "2rem",
-                border: "none",
-                borderBottom: "1px solid black",
-                width: "40%",
-                padding: "10px",
-              }}
-            />
-          </Typography>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {foodDetail?.image && (
+              <img
+                src={newimage}
+                alt="음식 이미지"
+                onError={handleImageError} // 이미지 로딩에 실패한 경우 호출
+                style={{
+                  width: "200px",
+                  height: "auto",
+                  maxHeight: "200px",
+                  maxWidth: "200px",
+                  objectFit: "cover",
+                }}
+              />
+            )}
+            <Typography
+              component="h2"
+              id="modal-title"
+              level="h4"
+              textColor="inherit"
+              fontWeight="lg"
+              mb={2}
+              sx={{ fontSize: "1.5rem", display:"flex", justifyContent:"center" }}
+
+            >
+              <input
+                type="text"
+                value={editedName}
+                onChange={(e) => setEditedName(e.target.value)}
+                style={{
+                  fontSize: "2rem",
+                  fontFamily: "TheJamsil5Bold",
+                  border: "none",
+                  borderBottom: "1px solid black",
+                  width: "40%",
+                  padding: "10px",
+                }}
+              />
+            </Typography>
+          </div>
           <Typography
             id="modal-desc"
             textColor="text.tertiary"
@@ -204,20 +218,21 @@ const BasicModal: React.FC<ModalProps> = ({
             <FoodModalDetail>
               <DetailList>유통기한</DetailList>
               <p>:</p>
-              <DetailInfo>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DetailInfoDatePicker>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={["DatePicker"]}>
                     <DatePicker
-                      value={dayjs(foodDetail?.expirationDate && foodDetail.expirationDate)} 
+                      value={dayjs(
+                        foodDetail?.expirationDate && foodDetail.expirationDate
+                      )}
                       onChange={(newValue: any) =>
-                        setEditedExpirationDate(
-                          dayjs(newValue)
-                        )
+                        setEditedExpirationDate(dayjs(newValue))
                       } // Date 객체를 Dayjs 객체로 변환
+                      format="YYYY-MM-DD" // 날짜 표시 형식 설정
                     />
                   </DemoContainer>
                 </LocalizationProvider>
-              </DetailInfo>
+              </DetailInfoDatePicker>
               {/* <p>
                 <EditIcon onClick={() => setOpenDatePicker(!openDatePicker)}>✏️</EditIcon>
               </p> */}
