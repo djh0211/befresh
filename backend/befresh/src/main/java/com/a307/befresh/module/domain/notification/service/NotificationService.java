@@ -1,6 +1,7 @@
 package com.a307.befresh.module.domain.notification.service;
 
 import com.a307.befresh.module.domain.food.Food;
+import com.a307.befresh.module.domain.notification.dto.request.NotificationTmpReq;
 import com.a307.befresh.module.domain.notification.dto.response.NotificationDetailRes;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
 
@@ -17,7 +18,7 @@ public interface NotificationService {
 
     void sendNotification(List<Food> foodList, String category);
 
-    void sendTmpNotification(String category, Long refrigeratorId);
+    void sendTmpNotification(NotificationTmpReq notificationTmpReq);
 
     int deleteAllNotification(long refrigeratorId);
 }
