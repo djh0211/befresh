@@ -147,6 +147,9 @@ const App = () => {
         title: payload.notification.title,
       });
       dispatch(alertOn());
+      if (window.location.href.includes('main')) {
+        window.location.reload()
+      }
     } else {
       console.log("메세지 타입을 확인해주세요");
     }
