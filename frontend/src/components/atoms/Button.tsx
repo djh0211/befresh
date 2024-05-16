@@ -10,7 +10,7 @@ const MyButton = styled.button`
   cursor: pointer;
   width: 100%;
   min-height: 80px;
-  font-family: 'TheJamsil5Bold', sans-serif;
+  font-family: 'Pretendard-Regular', sans-serif;
 
   &:hover {
     background-color: #0f9240;
