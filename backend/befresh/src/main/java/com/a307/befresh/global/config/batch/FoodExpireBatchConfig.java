@@ -84,12 +84,14 @@ public class FoodExpireBatchConfig {
                     for (Food food : warnFoodList) {
                         food.setPrevRefresh(food.getRefresh());
                         food.setRefresh(warnRefresh);
+                        foodRepository.save(food);
                     }
 
                     List<Food> dangerFoodList = foodRepository.findUpdateFood(dangerFoodIdList);
                     for (Food food : dangerFoodList) {
                         food.setPrevRefresh(food.getRefresh());
                         food.setRefresh(dangerRefresh);
+                        foodRepository.save(food);
                     }
 
                     return RepeatStatus.FINISHED;
@@ -109,18 +111,11 @@ public class FoodExpireBatchConfig {
                     List<Food> warnFoodList = foodRepository.findNotiFood(warnFoodIdList);
                     List<Food> dangerFoodList = foodRepository.findNotiFood(dangerFoodIdList);
 
-                    notificationService.sendNotification(warnFoodList, "expire");
-                    notificationService.sendNotification(dangerFoodList, "expire");
+                    notificationService.sendExpireNotification(warnFoodList, "warn");
+                    notificationService.sendExpireNotification(dangerFoodList, "danger");
 
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
 }
-
-
-
-
-
-
-

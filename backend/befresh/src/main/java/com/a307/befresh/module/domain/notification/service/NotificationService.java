@@ -14,9 +14,11 @@ public interface NotificationService {
 
     void sendRegisterErrorNotification(Refrigerator refrigerator);
 
-    void deleteNotidication(Long notificationId);
+    void sendExpireNotification(List<Food> foodList, String category);
 
-    void sendNotification(List<Food> foodList, String category);
+    void sendContainerNotification(List<Food> foodList, String category);
+
+    void deleteNotidication(Long notificationId);
 
     void sendTmpNotification(NotificationTmpReq notificationTmpReq);
 

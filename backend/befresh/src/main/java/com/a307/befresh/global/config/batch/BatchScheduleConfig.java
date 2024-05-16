@@ -36,14 +36,12 @@ public class BatchScheduleConfig {
     private final FoodSensorBatchConfig foodSensorBatchConfig;
     private final FoodExpireBatchConfig foodExpireBatchConfig;
 
-    @Scheduled(cron = "0 0 0/1 * * ?") // 매시간 실행
-//    @Scheduled(fixedRate = 600000)
+//    @Scheduled(cron = "0 0 0/1 * * ?") // 매시간 실행
     public void runSensorJob() {
         runJob(foodSensorBatchConfig.processSensorJob(), "processSensorJob");
     }
 
-    @Scheduled(cron = "0 0 9 * * ?") // 매일 오전 9시에 실행
-//    @Scheduled(fixedRate = 80000)
+//    @Scheduled(cron = "0 0 9 * * ?") // 매일 오전 9시에 실행
     public void runExpiredFoodJob() {
         runJob(foodExpireBatchConfig.processExpiredFoodJob(), "processExpiredFoodJob");
     }
