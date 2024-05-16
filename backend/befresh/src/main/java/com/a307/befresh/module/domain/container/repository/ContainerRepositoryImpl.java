@@ -31,7 +31,7 @@ public class ContainerRepositoryImpl implements ContainerRepositoryCustom {
         return queryFactroy
                 .select(container.foodId)
                 .from(container)
-                .where(container.prevRefresh.id.in(2L, 3L, 4L),
+                .where(container.refresh.id.in(2L, 3L, 4L),
                         container.pH.lt(5.9))
                 .fetch();
     }
@@ -42,7 +42,7 @@ public class ContainerRepositoryImpl implements ContainerRepositoryCustom {
         return queryFactroy
                 .select(container.foodId)
                 .from(container)
-                .where(container.prevRefresh.id.in(1L, 4L),
+                .where(container.refresh.id.in(1L, 4L),
                         container.pH.between(5.9, 6.1))
                 .fetch();
     }
@@ -52,7 +52,7 @@ public class ContainerRepositoryImpl implements ContainerRepositoryCustom {
         return queryFactroy
                 .select(container.foodId)
                 .from(container)
-                .where(container.prevRefresh.id.in(1L, 2L, 4L),
+                .where(container.refresh.id.in(1L, 2L, 4L),
                         container.pH.gt(6.1))
                 .fetch();
     }
@@ -62,7 +62,7 @@ public class ContainerRepositoryImpl implements ContainerRepositoryCustom {
         return queryFactroy
                 .select(container.foodId)
                 .from(container)
-                .where(container.prevRefresh.id.ne(5L),
+                .where(container.refresh.id.ne(5L),
                         container.modDttm.lt(LocalDateTime.now().minusHours(3)))
                 .fetch();
     }
@@ -72,7 +72,7 @@ public class ContainerRepositoryImpl implements ContainerRepositoryCustom {
         return queryFactroy
                 .select(container.foodId)
                 .from(container)
-                .where(container.prevRefresh.id.eq(5L),
+                .where(container.refresh.id.eq(5L),
                         container.modDttm.goe(LocalDateTime.now().minusHours(3)))
                 .fetch();
     }

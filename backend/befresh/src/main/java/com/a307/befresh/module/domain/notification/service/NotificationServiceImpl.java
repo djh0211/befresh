@@ -97,8 +97,8 @@ public class NotificationServiceImpl implements NotificationService {
         String body = "";
 
         for (Food food : foodList) {
-            title = food.getName() + "이 " + food.getRefresh().getName() + " 상태가 되었어요!";
-            body = food.getName() + " 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
+            title = "[" + food.getName() + "] " + food.getRefresh().getName() + " 상태가 되었어요!";
+            body = "[" + food.getName() + "] 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
                     "\n유통 기한을 확인해주세요!";
 
             long notificationId = saveMessage(food.getRefrigerator(), category, title, body);
@@ -117,8 +117,8 @@ public class NotificationServiceImpl implements NotificationService {
         String body = "";
 
         for (Food food : foodList) {
-            title = food.getName() + "이 " + food.getRefresh().getName() + " 상태가 되었어요!";
-            body = food.getName() + "의 신선도를 확인해주세요";
+            title = "[" + food.getName() + "] " + food.getRefresh().getName() + " 상태가 되었어요!";
+            body = "[" + food.getName() + "] " + "신선도를 확인해주세요";
 
             long notificationId = saveMessage(food.getRefrigerator(), category, title, body);
 

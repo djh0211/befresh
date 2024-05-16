@@ -40,6 +40,8 @@ public class FoodSensorBatchConfig {
     public Job processSensorJob() {
         return new JobBuilder("processSensorJob", jobRepository)
                 .start(findContainerStep())
+                .next(updateContainerStep())
+                .next(sendContainerNotificationStep())
                 .build();
     }
 
