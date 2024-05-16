@@ -39,6 +39,7 @@ public class InfluxContainerRepositoryImpl implements InfluxContainerRepository{
         String flux = String.format("from(bucket: \"befresh\")"
             + "|> range(start: %s, stop: now())"
             + "|> timeShift(duration: 9h)"
+            + "|> filter(fn: (r) => r[\"_measurement\"] == \"container\")"
             + "|> filter(fn: (r) => r[\"_field\"] == \"humidity\" or r[\"_field\"] == \"temperature\" or r[\"_field\"] == \"nh3\")"
             + "|> filter(fn: (r) => r[\"qr_id\"] == \"%s\")"
             + "|> aggregateWindow(every: 10m, fn: mean, createEmpty: false)"
@@ -54,7 +55,7 @@ public class InfluxContainerRepositoryImpl implements InfluxContainerRepository{
         for(FluxTable fluxTable: tables) {
             List<FluxRecord> records = fluxTable.getRecords();
             for(FluxRecord fluxRecord : records) {
-
+                System.out.println(fluxRecord.getValues());
                 SensorData sensorData = SensorData.builder()
                     .type(fluxRecord.getField())
                     .time(fluxRecord.getTime())
@@ -63,10 +64,13 @@ public class InfluxContainerRepositoryImpl implements InfluxContainerRepository{
 
                 if(sensorData.type().equals("temperature")) {
                     temperature.add(sensorData);
+                    System.out.println("온도: " + sensorData.value());
                 } else if(sensorData.type().equals("humidity")){
                     humidity.add(sensorData);
+                    System.out.println("습도: " + sensorData.value());
                 } else if(sensorData.type().equals("nh3")) {
                     nh3.add(sensorData);
+                    System.out.println("nh3: " + sensorData.value());
                 }
             }
         }
