@@ -10,6 +10,7 @@ import FoodModal from "../../pages/modal";
 import sampleimg from "../../assets/sampleimg.png";
 import { FoodData, FoodTypes } from "../../types/foodTypes";
 import { deleteFood } from "../../api/food/foodCardApi";
+import styled from "styled-components";
 
 interface CardFormProps {
   foodData: FoodData;
@@ -24,7 +25,7 @@ export default function ImgMediaCard({
   cardApiData,
   onDelete,
 }: Readonly<CardFormProps>) {
-  const { id, name, elapsedTime, image, freshState } = foodData;
+  const { id, name, image, freshState, ftype } = foodData;
 
   const newimage = image != null ? image.replace(/\\/g, "") : sampleimg;
   const regDttmDate = new Date(foodData.regDttm);
@@ -44,6 +45,13 @@ export default function ImgMediaCard({
     console.log("에러이미지")
     e.currentTarget.src = sampleimg;
   }
+  const SensorText = styled.span`
+  color: lime;
+  border: 1px solid lime;
+  padding: 1px 3px;
+  border-radius: 2px;
+  font-size: 0.8rem;
+`;
 
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -60,6 +68,7 @@ export default function ImgMediaCard({
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {name}
+          {ftype === '용기' && <SensorText>측정중</SensorText>}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{fontSize: "smaller"}}>
           {`${formattedRegDttm}부터 보관중`}
