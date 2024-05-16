@@ -55,7 +55,6 @@ public class InfluxContainerRepositoryImpl implements InfluxContainerRepository{
         for(FluxTable fluxTable: tables) {
             List<FluxRecord> records = fluxTable.getRecords();
             for(FluxRecord fluxRecord : records) {
-                System.out.println(fluxRecord.getValues());
                 SensorData sensorData = SensorData.builder()
                     .type(fluxRecord.getField())
                     .time(fluxRecord.getTime())
@@ -64,13 +63,10 @@ public class InfluxContainerRepositoryImpl implements InfluxContainerRepository{
 
                 if(sensorData.type().equals("temperature")) {
                     temperature.add(sensorData);
-                    System.out.println("온도: " + sensorData.value());
                 } else if(sensorData.type().equals("humidity")){
                     humidity.add(sensorData);
-                    System.out.println("습도: " + sensorData.value());
                 } else if(sensorData.type().equals("nh3")) {
                     nh3.add(sensorData);
-                    System.out.println("nh3: " + sensorData.value());
                 }
             }
         }
