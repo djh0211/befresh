@@ -61,12 +61,10 @@ public class InfluxContainerRepositoryImpl implements InfluxContainerRepository{
                     .value((Double) fluxRecord.getValue())
                     .build();
 
-                if(sensorData.type().equals("temperature")) {
-                    temperature.add(sensorData);
-                } else if(sensorData.type().equals("humidity")){
-                    humidity.add(sensorData);
-                } else if(sensorData.type().equals("nh3")) {
-                    nh3.add(sensorData);
+                switch (sensorData.type()) {
+                    case "temperature" -> temperature.add(sensorData);
+                    case "humidity" -> humidity.add(sensorData);
+                    case "nh3" -> nh3.add(sensorData);
                 }
             }
         }
