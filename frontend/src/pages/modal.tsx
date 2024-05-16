@@ -18,6 +18,8 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { addFoodId } from "../store/features/InfoSlice";
+import { useDispatch } from "react-redux";
 
 const FoodModalDetail = styled.div`
   display: flex;
@@ -124,6 +126,14 @@ const BasicModal: React.FC<ModalProps> = ({
   };
 
   const default_img = sampleimg;
+
+
+  // 추가정보를 달라했을 때, 넘기는 함수
+  const dispatch = useDispatch()
+  const handleAdditionalInfo = (foodId:number) => {
+    dispatch(addFoodId(foodId))
+    navigate('/info')
+  }
 
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
@@ -263,7 +273,7 @@ const BasicModal: React.FC<ModalProps> = ({
                   }}
                 >
                   <Button
-                    onClick={() => navigate("/info")}
+                    onClick={() => handleAdditionalInfo(foodData.id)}
                     sx={{ width: "12vw", height: "3vh", fontSize: "1rem" }}
                   >
                     세부 기록
