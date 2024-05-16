@@ -39,6 +39,7 @@ public class InfluxContainerRepositoryImpl implements InfluxContainerRepository{
         String flux = String.format("from(bucket: \"befresh\")"
             + "|> range(start: %s, stop: now())"
             + "|> timeShift(duration: 9h)"
+            + "|> filter(fn: (r) => r[\"_measurement\"] == \"container\")"
             + "|> filter(fn: (r) => r[\"_field\"] == \"humidity\" or r[\"_field\"] == \"temperature\" or r[\"_field\"] == \"nh3\")"
             + "|> filter(fn: (r) => r[\"qr_id\"] == \"%s\")"
             + "|> aggregateWindow(every: 10m, fn: mean, createEmpty: false)"
@@ -54,19 +55,16 @@ public class InfluxContainerRepositoryImpl implements InfluxContainerRepository{
         for(FluxTable fluxTable: tables) {
             List<FluxRecord> records = fluxTable.getRecords();
             for(FluxRecord fluxRecord : records) {
-
                 SensorData sensorData = SensorData.builder()
                     .type(fluxRecord.getField())
                     .time(fluxRecord.getTime())
                     .value((Double) fluxRecord.getValue())
                     .build();
 
-                if(sensorData.type().equals("temperature")) {
-                    temperature.add(sensorData);
-                } else if(sensorData.type().equals("humidity")){
-                    humidity.add(sensorData);
-                } else if(sensorData.type().equals("nh3")) {
-                    nh3.add(sensorData);
+                switch (sensorData.type()) {
+                    case "temperature" -> temperature.add(sensorData);
+                    case "humidity" -> humidity.add(sensorData);
+                    case "nh3" -> nh3.add(sensorData);
                 }
             }
         }
