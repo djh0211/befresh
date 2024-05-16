@@ -4,6 +4,7 @@ import com.a307.befresh.module.domain.food.Food;
 import com.a307.befresh.module.domain.member.Member;
 import com.a307.befresh.module.domain.member.repository.MemberRepository;
 import com.a307.befresh.module.domain.memberToken.MemberToken;
+import com.a307.befresh.module.domain.notification.dto.request.NotificationTmpReq;
 import com.a307.befresh.module.domain.notification.dto.response.NotificationDetailRes;
 import com.a307.befresh.module.domain.notification.repository.NotificationRepository;
 import com.a307.befresh.module.domain.refrigerator.Refrigerator;
@@ -113,22 +114,23 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendTmpNotification(String category, Long refrigeratorId) {
-        Refrigerator refrigerator = refrigeratorRepository.findById(refrigeratorId).orElseThrow();
+    public void sendTmpNotification(NotificationTmpReq notificationTmpReq) {
+        Refrigerator refrigerator = refrigeratorRepository.findById(notificationTmpReq.refrigeratorId()).orElseThrow();
         List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
-        String title = "category wrong";
-        String body = "";
+        String title = notificationTmpReq.title();
+        String body = notificationTmpReq.body();
+        String category = notificationTmpReq.category();
 
-        if (category.equals("register")) {
-            title = "음식 등록 성공!";
-            body = "새로운 음식이 등록되었습니다.";
-        } else if (category.equals("refresh")) {
-            title = "임시 음식이 주의 상태가 되었어요!";
-            body = "임시 음식의 신선도를 확인해주세요!";
-        } else if (category.equals("expire")) {
-            title = "임시 음식이 주의 상태가 되었어요!";
-            body = "임시 음식 유통 기한 D-3\n유통 기한을 확인해주세요!";
-        }
+//        if (category.equals("register")) {
+//            title = "음식 등록 성공!";
+//            body = "새로운 음식이 등록되었습니다.";
+//        } else if (category.equals("refresh")) {
+//            title = "임시 음식이 주의 상태가 되었어요!";
+//            body = "임시 음식의 신선도를 확인해주세요!";
+//        } else if (category.equals("expire")) {
+//            title = "임시 음식이 주의 상태가 되었어요!";
+//            body = "임시 음식 유통 기한 D-3\n유통 기한을 확인해주세요!";
+//        }
 
         long notificationId = saveMessage(refrigerator, category, title, body);
 
