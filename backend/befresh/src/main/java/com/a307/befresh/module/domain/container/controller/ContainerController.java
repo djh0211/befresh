@@ -34,9 +34,9 @@ public class ContainerController {
     }
 
     @GetMapping("/sensor")
-    public ResponseEntity<BaseResponse<List<ContainerSensor>>> getContainerSensor(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<BaseResponse<List<ContainerSensor>>> getContainerSensor(@RequestParam(required = false) Long foodId, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        List<ContainerSensor> containerSensorList = containerService.getContainerSensor(userDetails.getRefrigeratorId());
+        List<ContainerSensor> containerSensorList = containerService.getContainerSensor(foodId, userDetails.getRefrigeratorId());
 
         return BaseResponse.success(SuccessCode.SELECT_SUCCESS, containerSensorList);
     }

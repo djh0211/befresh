@@ -49,10 +49,16 @@ public class ContainerServiceImpl implements ContainerService {
     }
 
     @Override
-    public List<ContainerSensor> getContainerSensor(Long refrigeratorId) {
+    public List<ContainerSensor> getContainerSensor(Long foodId, Long refrigeratorId) {
 
-        List<Container> containerList = containerRepository.findByRefrigerator_Id(refrigeratorId);
+        List<Container> containerList = null;
 
+        if (foodId != null) {
+            containerList = containerRepository.findById(foodId).stream().toList();
+        } else {
+            containerList = containerRepository.findByRefrigerator_Id(
+                refrigeratorId);
+        }
         List<ContainerSensor> containerSensorList = new ArrayList<>();
 
         for (Container container : containerList) {
@@ -63,6 +69,7 @@ public class ContainerServiceImpl implements ContainerService {
                 container.getRegDttm(), container.getQrId());
 
             ContainerSensor containerSensor = ContainerSensor.builder()
+                .foodId(container.getFoodId())
                 .qrId(container.getQrId())
                 .name(container.getName())
                 .regDttm(container.getRegDttm())
