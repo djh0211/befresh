@@ -17,7 +17,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -52,6 +51,44 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void deleteNotidication(Long notificationId) {
         notificationRepository.delete(notificationRepository.findById(notificationId).orElseThrow());
+    }
+
+    @Override
+    @Transactional
+    public void sendRegisterNotification(Refrigerator refrigerator) {
+        String title = "음식 등록 성공!";
+        String body = "새로운 음식이 등록되었습니다.";
+        String category = "register";
+
+        long notificationId = saveMessage(refrigerator, category, title, body);
+
+        List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
+
+        for (Member member : memberList) {
+            Set<MemberToken> memberTokenSet = member.getMemberTokenSet();
+            for (MemberToken memberToken : memberTokenSet) {
+                sendMessage(memberToken, title, body, category, notificationId);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void sendRegisterErrorNotification(Refrigerator refrigerator) {
+        String title = "음식 등록 실패";
+        String body = "일시적인 오류로 음식 등록에 실패하였습니다.";
+        String category = "error";
+
+        long notificationId = saveMessage(refrigerator, category, title, body);
+
+        List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
+
+        for (Member member : memberList) {
+            Set<MemberToken> memberTokenSet = member.getMemberTokenSet();
+            for (MemberToken memberToken : memberTokenSet) {
+                sendMessage(memberToken, title, body, category, notificationId);
+            }
+        }
     }
 
     @Override
@@ -94,61 +131,12 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    @Transactional
-    public void sendRegisterNotification(Refrigerator refrigerator) {
-        String title = "음식 등록 성공!";
-        String body = "새로운 음식이 등록되었습니다.";
-        String category = "register";
-
-        long notificationId = saveMessage(refrigerator, category, title, body);
-
-        List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
-
-        for (Member member : memberList) {
-            Set<MemberToken> memberTokenSet = member.getMemberTokenSet();
-            for (MemberToken memberToken : memberTokenSet) {
-                sendMessage(memberToken, title, body, category, notificationId);
-            }
-        }
-    }
-
-    @Override
-    @Transactional
-    public void sendRegisterErrorNotification(Refrigerator refrigerator) {
-        String title = "음식 등록 실패";
-        String body = "일시적인 오류로 음식 등록에 실패하였습니다.";
-        String category = "error";
-
-        long notificationId = saveMessage(refrigerator, category, title, body);
-
-        List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
-
-        for (Member member : memberList) {
-            Set<MemberToken> memberTokenSet = member.getMemberTokenSet();
-            for (MemberToken memberToken : memberTokenSet) {
-                sendMessage(memberToken, title, body, category, notificationId);
-            }
-        }
-    }
-
-    @Override
     public void sendTmpNotification(NotificationTmpReq notificationTmpReq) {
         Refrigerator refrigerator = refrigeratorRepository.findById(notificationTmpReq.refrigeratorId()).orElseThrow();
         List<Member> memberList = memberRepository.findByRefrigerator(refrigerator);
         String title = notificationTmpReq.title();
         String body = notificationTmpReq.body();
         String category = notificationTmpReq.category();
-
-//        if (category.equals("register")) {
-//            title = "음식 등록 성공!";
-//            body = "새로운 음식이 등록되었습니다.";
-//        } else if (category.equals("refresh")) {
-//            title = "임시 음식이 주의 상태가 되었어요!";
-//            body = "임시 음식의 신선도를 확인해주세요!";
-//        } else if (category.equals("expire")) {
-//            title = "임시 음식이 주의 상태가 되었어요!";
-//            body = "임시 음식 유통 기한 D-3\n유통 기한을 확인해주세요!";
-//        }
 
         long notificationId = saveMessage(refrigerator, category, title, body);
 
