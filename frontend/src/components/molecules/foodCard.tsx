@@ -28,7 +28,7 @@ export default function ImgMediaCard({
 
   const newimage = image != null ? image.replace(/\\/g, "") : sampleimg;
   const regDttmDate = new Date(foodData.regDttm);
-  const formattedRegDttm = `${regDttmDate.getFullYear()}년 ${
+  const formattedRegDttm = `${regDttmDate.getFullYear() % 100}년 ${
     regDttmDate.getMonth() + 1
   }월 ${regDttmDate.getDate()}일`;
 
@@ -61,7 +61,7 @@ export default function ImgMediaCard({
         <Typography gutterBottom variant="h5" component="div">
           {name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" sx={{fontSize: "smaller"}}>
           {`${formattedRegDttm}부터 보관중`}
         </Typography>
         <ProgressBar value={foodData.freshState} />
