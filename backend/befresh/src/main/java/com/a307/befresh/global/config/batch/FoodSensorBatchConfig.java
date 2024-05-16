@@ -117,7 +117,7 @@ public class FoodSensorBatchConfig {
                     List<Food> reUpdateFoodList = foodRepository.findUpdateFood(reUpdateIdList);
                     for (Food food : reUpdateFoodList) {
                         food.setPrevRefresh(food.getRefresh());
-                        food.setRefresh(noUpdateRefresh);
+                        food.setRefresh(reUpdateRefresh);
                         foodRepository.save(food);
                     }
 

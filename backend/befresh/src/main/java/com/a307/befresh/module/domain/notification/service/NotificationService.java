@@ -13,6 +13,8 @@ public interface NotificationService {
 
     void sendRegisterErrorNotification(Refrigerator refrigerator);
 
+    void sendExpireNotification(List<Food> foodList, String category);
+
     void sendContainerNotification(List<Food> foodList, String category);
 
     void deleteNotidication(Long notificationId);
