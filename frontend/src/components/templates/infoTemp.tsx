@@ -12,6 +12,11 @@ const InfoMain = styled.div`
   overflow: scroll;
 `
 
+const Activelen = styled.p`
+  text-align: right;
+  width: 90vw;
+  `
+
 const InfoTitle = styled.div`
   text-align: center;
   margin: 5vh 0 3vh 0;
@@ -35,10 +40,11 @@ const MessageDiv = styled.div`
   text-align: center;
 `
 
-export default function InfoTemp({ containerInfo }: { containerInfo: informationType[] }) {
+export default function InfoTemp({ containerInfo }: Readonly<{ containerInfo: informationType[] }>) {
   return (
     <>
       <InfoTitle>용기 정보</InfoTitle>
+      <Activelen>현재 사용중인 용기 {containerInfo.length}/10</Activelen>
       <InfoMain>
         {
           containerInfo.length == 0 ? (
