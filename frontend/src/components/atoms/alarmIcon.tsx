@@ -9,7 +9,7 @@ export default function AlarmIcon() {
   
   return (
     <Badge badgeContent={alarms.alert ? 1 : 0} color='success' variant="dot">
-      <MailIcon color={location.includes('alarm') ? "success" : "action"} sx={{fontSize:'5rem'}}/>
+      <MailIcon color={location.includes('alarm') ? "success" : "action"} sx={{fontSize:'4rem'}}/>
     </Badge>
   );
 }

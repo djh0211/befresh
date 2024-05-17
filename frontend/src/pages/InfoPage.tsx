@@ -12,9 +12,11 @@ function InfoPage() {
   const token = getAccessToken()
   const [containerInfo, setContainerInfo] = useState<informationType[]>([])
   const foodId = useSelector((state:RootState) => state.foodId.value)
+  const [showBackBtn, setShowBackBtn] = useState<boolean>(false)
 
   const fetchInfo = async (token:string) => {
     if (foodId) {
+      setShowBackBtn(true)
       const oneInfo = await getInfo(token, foodId)
       if (oneInfo) {
         setContainerInfo(oneInfo)
@@ -22,15 +24,14 @@ function InfoPage() {
         dispatch(deleteFoodId())
       }
     } else {
+      setShowBackBtn(false)
       const infos = await getInfo(token, null)
       if (infos) {
         setContainerInfo(infos)
       }
     }
-    
-    
-    
   }
+
   useEffect(() => {
     if (token) {
       fetchInfo(token)
@@ -38,7 +39,7 @@ function InfoPage() {
   }, [])
 
   return (
-    <InfoTemp containerInfo={containerInfo}/>
+    <InfoTemp containerInfo={containerInfo} showBackBtn={showBackBtn}/>
   );
 }
 
