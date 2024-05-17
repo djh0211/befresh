@@ -12,8 +12,12 @@ const CenteredStack = styled(Stack)`
   justify-content: space-around;
   border-top: 1px solid #ccc;
   padding: 10px;
-  height: 8vh;
+  height: 12vh;
+  @media (orientation: portrait) {
+    height: 8vh;
+  }
 `;
+
 
 export default function NavBlock() {
   return (
