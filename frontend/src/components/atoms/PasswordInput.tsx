@@ -5,10 +5,10 @@ import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types'; 
 
 const CustomTextField = styled(TextField)({
-  width:'300px',
-  height:'150px',
+  width:'40vw',
+  height:'15vh',
   '& .MuiInputBase-input': {
-    fontSize: '16px',
+    fontSize: '20px',
     width: '200px',
     height: '50px',
   },

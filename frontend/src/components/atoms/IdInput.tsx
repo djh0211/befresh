@@ -2,10 +2,10 @@ import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 
 const CustomTextField = styled(TextField)({
-  width:'300px',
-  height:'150px',
+  width:'40vw',
+  height:'15vh',
   '& .MuiInputBase-input': {
-    fontSize: '16px',
+    fontSize: '25px',
     width: '250px',
     height: '50px',
   },
