@@ -2,6 +2,7 @@ import NavBlock from "../molecules/navBlock";
 import styled from "styled-components";
 import InfoForm from "../organisms/InfoForm";
 import { informationType } from "../../types/informationTypes";
+import { Button } from "@mui/material";
 
 const InfoMain = styled.div`
   width: 100vw;
@@ -12,10 +13,11 @@ const InfoMain = styled.div`
   overflow: scroll;
 `
 
+
 const Activelen = styled.p`
   text-align: right;
   width: 90vw;
-  `
+`
 
 const InfoTitle = styled.div`
   text-align: center;
@@ -34,17 +36,33 @@ const NavBlockWrapper = styled.div`
 
 const MessageDiv = styled.div`
   width: 90vw;
-  background-color: rgba(161, 193, 167, 0.2);
+  background-color: #dceecd;
   margin: 5%;
   height: 20vh;
   text-align: center;
 `
 
-export default function InfoTemp({ containerInfo }: Readonly<{ containerInfo: informationType[] }>) {
+export default function InfoTemp({ containerInfo, showBackBtn }: Readonly<{ containerInfo: informationType[], showBackBtn: boolean }>) {
   return (
     <>
       <InfoTitle>용기 정보</InfoTitle>
       <Activelen>현재 사용중인 용기 {}/{containerInfo.length}</Activelen>
+      {
+        showBackBtn === true && 
+        <Button 
+          variant="outlined" 
+          size="large" 
+          onClick={() => {window.location.reload()}}
+          sx={{
+            marginLeft:'5%', 
+            fontSize:'1.5rem', 
+            color:'black', 
+            borderColor:'black'
+          }}
+        >
+          전체보기
+        </Button>
+      }
       <InfoMain>
         {
           containerInfo.length == 0 ? (
