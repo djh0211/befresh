@@ -44,7 +44,7 @@ export default function InfoTemp({ containerInfo }: Readonly<{ containerInfo: in
   return (
     <>
       <InfoTitle>용기 정보</InfoTitle>
-      <Activelen>현재 사용중인 용기 {containerInfo.length}/10</Activelen>
+      <Activelen>현재 사용중인 용기 {}/{containerInfo.length}</Activelen>
       <InfoMain>
         {
           containerInfo.length == 0 ? (
