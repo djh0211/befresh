@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import ImgMediaCard from '../molecules/foodCard';
 import Grid from '@mui/material/Grid';
 import styled from 'styled-components';

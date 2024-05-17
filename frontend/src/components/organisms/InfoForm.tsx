@@ -56,7 +56,7 @@ const formatDate = (dateString: string): string => {
   return `${date.toLocaleDateString()} ${hours}:${minutes}`;
 };
 
-export default function InfoForm({ information }: { information: informationType }) {
+export default function InfoForm({ information }: Readonly<{ information: informationType }>) {
   const latestInformation: latestInformationType = {
     regDttm: information.regDttm,
     elapsedTime: information.elapsedTime,
