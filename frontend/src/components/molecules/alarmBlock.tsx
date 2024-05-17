@@ -52,16 +52,16 @@ export default function AlarmBlock({id, type, title, content, deleteOne}:propsTy
   }, [endX])
 
   return (
-    <div style={{display:'flex', height:'20%'}}>
+    <div style={{display:'flex'}}>
       <Item 
         onMouseDown={handleDown}
         onTouchStart={handleDown}
         onMouseUp={handleEnd}
         onTouchEnd={handleEnd}
-        sx={{display:'flex', width:'91%', ml:'3%', mb: 4, p: 2}} 
+        sx={{display:'flex', width:'94%', ml:'3%', mb: 4, p: 4}} 
       >
         <AlarmContentIcon type={type}/>
-        <div style={{width: '80%',marginLeft:'13px', marginRight:'5px', userSelect:'none'}}>
+        <div style={{width: '80%', marginLeft:'13px', marginRight:'5px', userSelect:'none'}}>
           <Typography noWrap sx={{fontSize:'2rem', fontWeight:900}}>{title}</Typography>
           <div>
             <Typography sx={{fontSize:'1.5rem'}}>{content}</Typography>
@@ -76,7 +76,8 @@ export default function AlarmBlock({id, type, title, content, deleteOne}:propsTy
             setOpen(false)
           }}
           sx={{
-            width: '15%', 
+            width: '15%',
+            mr: '3%', 
             mb: 4, 
             backgroundColor:'#fa785e',
             fontSize:'2em',
