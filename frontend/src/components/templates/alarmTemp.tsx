@@ -40,7 +40,7 @@ type propsType ={
   deleteOne: (id :string) => void
 }
 
-export default function AlarmTemplate({message, changeMessage, alarms, deleteAlarms, deleteOne}: propsType) {
+export default function AlarmTemplate({message, changeMessage, alarms, deleteAlarms, deleteOne}: Readonly<propsType>) {
   return (
     <AlarmMain>
       <AlarmModalForm/>
