@@ -15,7 +15,7 @@ type dataType = {
   'nh3': number
 }
 
-export default function DetailChart({ information }: { information: informationType }) {
+export default function DetailChart({ information }: Readonly<{ information: informationType }>) {
   const data: dataType[] = []
   const unit: number = Math.floor(information.sensorDataList.humidity.length / 20) + 1
   information.sensorDataList.temperature.map((c, idx) => {

@@ -45,7 +45,6 @@ axiosInstance.interceptors.response.use(
         
           const response = await axios(refreshRequest);
           console.log('res', response)
-          // const response = await axios.post('https://be-fresh.site/api/refresh-token', { refreshToken });
           if (response.headers) {            
             const newAccessToken = response.headers['authorization']
             saveTokens(newAccessToken, refreshToken);
@@ -69,8 +68,7 @@ axiosInstance.interceptors.response.use(
 const logout = () => {
   // 로컬 스토리지에서 토큰 제거
   removeTokens();
-  // 로그인 페이지로 리다이렉트 또는 다른 처리
-  // 리다이렉트 처리
+  // 로그인 페이지로 리다이렉트
   window.location.href = '/login';
 };
 

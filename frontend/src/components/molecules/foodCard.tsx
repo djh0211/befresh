@@ -53,6 +53,7 @@ export default function ImgMediaCard({
     padding: 1px 3px;
     border-radius: 2px;
     font-size: 0.8rem;
+    margin-Left: 2vw;
   `;
 
   const GoneText = styled.span`
@@ -61,6 +62,7 @@ export default function ImgMediaCard({
     padding: 1px 3px;
     border-radius: 2px;
     font-size: 0.8rem;
+    margin-Left: 2vw;
   `;
 
   return (
