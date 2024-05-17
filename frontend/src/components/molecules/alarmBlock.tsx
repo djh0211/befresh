@@ -19,7 +19,7 @@ const Item = styled(Paper)(() => ({
   alignItems: 'center',
 }));
 
-export default function AlarmBlock({id, type, title, content, deleteOne}:propsType) {
+export default function AlarmBlock({id, type, title, content, deleteOne}:Readonly<propsType>) {
   const [startX, setStartX] = useState<number>(0)
   const [endX, setEndX] = useState<number>(0)
   const [open, setOpen] = useState<boolean>(false)

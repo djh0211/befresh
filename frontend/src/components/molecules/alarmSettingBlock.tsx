@@ -1,14 +1,13 @@
 import { Button, Checkbox, FormControlLabel, FormGroup  } from "@mui/material"
 import { setCategories } from "../../store/features/alarmSlice"
-import { useDispatch } from "react-redux"
+import { useDispatch,useSelector } from "react-redux"
 import { useState } from "react"
-import { useSelector } from "react-redux"
 import { RootState } from "../../store/store"
 
 // 체크박스 받아와서 리덕스로 보내기
 // 처음에 들어올때 체크 된거 가져오기
 
-export default function AlarmSettingBlock({close}:{close :() => void}) {
+export default function AlarmSettingBlock({close}:Readonly<{close :() => void}>) {
   const dispatch = useDispatch()
   let alarms = useSelector((state:RootState) => state.alarms)
   // 각각 체크 된 거 표시, 바꾸기 위한 변수
