@@ -6,22 +6,22 @@ import { informationType, latestInformationType } from "../../types/informationT
 
 const InfoTitle = styled.p`
   text-align: center;
-  font-size: 2.5rem;
-  margin: 0;
+  font-size: 2.7rem;
+  margin: 20px 0 0 0;
+  font-weight: 900;
 `;
 
 const InfoBoxStyle = {
   width: '90vw',
   height: 'auto',
-  backgroundColor: 'rgba(161, 193, 167, 0.2)',
   margin: '4vh auto',
-  padding: '25px 0px'
+  padding: '5px 0px'
 };
 
 const InfoContent = styled.div`
   width: 94%;
   display: flex;
-  margin: 5% 3%;
+  margin: 3%;
   justify-content: space-between;
 `;
 
@@ -34,7 +34,7 @@ const InfoContentBox = styled.div`
 
 const ChartBox = styled.div`
   position: relative;
-  width: 55%;
+  width: 60%;
   background-color: #ffffffFB;
   border-radius: 10px;
   padding: 10px;
@@ -71,7 +71,7 @@ export default function InfoForm({ information }: Readonly<{ information: inform
   const lastTime: string | null = information.sensorDataList.temperature.length != 0 ? information.sensorDataList.temperature[information.sensorDataList.temperature.length - 1].time : null
 
   return (
-    <Paper elevation={4} sx={InfoBoxStyle}>
+    <Paper elevation={4} sx={InfoBoxStyle} style={{backgroundColor: information.refresh == '데이터없음' ?  'grey' : 'rgba(161, 193, 167, 0.2)'}}>
       <InfoTitle>{information.name}</InfoTitle>
       <InfoContent>
         <InfoContentBox>

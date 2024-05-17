@@ -16,7 +16,7 @@ const AlarmList = styled.div`
   margin: 3% auto;
   padding: 2vh 0;
   border-radius: 10px;
-  height: 65vh;
+  height: 70vh;
   overflow: scroll;
 `
 
