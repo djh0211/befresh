@@ -1,7 +1,7 @@
 import { Button, Checkbox, FormControlLabel, FormGroup  } from "@mui/material"
 import { setCategories } from "../../store/features/alarmSlice"
 import { useDispatch } from "react-redux"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useSelector } from "react-redux"
 import { RootState } from "../../store/store"
 
@@ -47,7 +47,7 @@ export default function AlarmSettingBlock({close}:{close :() => void}) {
 
   return(
     <>
-      <p style={{fontSize:'2rem', textAlign:'center', margin:'2vh 0'}}>알림 수신 설정</p>
+      <p style={{fontSize:'2rem', textAlign:'center', margin: '0 0 8 0', fontWeight: 700}}>알림 수신 설정</p>
       <FormGroup sx={{marginLeft: '20px'}}>
         <FormControlLabel control={<Checkbox checked={dangerCheck} onChange={handleDanger}/>} label="상한 음식"/>
         <FormControlLabel control={<Checkbox checked={warnCheck} onChange={handleWarn}/>} label="유통기한 경고" />
@@ -57,7 +57,7 @@ export default function AlarmSettingBlock({close}:{close :() => void}) {
         variant="outlined" 
         size="large" 
         onClick={settingCategory}
-        sx={{marginLeft:'70%'}}>
+        sx={{marginLeft:'73%'}}>
         설정 완료
       </Button>
     </>

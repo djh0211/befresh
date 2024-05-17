@@ -1,12 +1,12 @@
-import { LineChart, Line, XAxis, Label, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { informationType } from '../../types/informationTypes';
 import { useState } from 'react';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import styled from 'styled-components';
 
 const ChartBox = styled.div`
-  width: 90%;
-  height: 80%;
+  width: 95%;
+  height: 90%;
 `
 type dataType = {
   time: string,
@@ -14,6 +14,7 @@ type dataType = {
   '습도': number,
   'nh3': number
 }
+
 export default function DetailChart({ information }: { information: informationType }) {
   const data: dataType[] = []
   const unit: number = Math.floor(information.sensorDataList.humidity.length / 20) + 1
@@ -22,7 +23,7 @@ export default function DetailChart({ information }: { information: informationT
       let tempDate = new Date(c.time)
       tempDate.setHours(tempDate.getHours() - 9)
       let temp: dataType = {
-        time: `${tempDate.getMonth() + 1}/${tempDate.getDate()} ${tempDate.getHours()}시 ${tempDate.getMinutes()}분`,
+        time: `${tempDate.getMonth() + 1}/${tempDate.getDate()} ${tempDate.getHours()}:${tempDate.getMinutes()}`,
         '온도': Math.round(c.value * 10) / 10,
         '습도': Math.round(information.sensorDataList.humidity[idx].value * 10) / 10,
         'nh3': Math.round(information.sensorDataList.nh3[idx].value * 10) / 10
@@ -45,15 +46,14 @@ export default function DetailChart({ information }: { information: informationT
   return (
     <ChartBox>
       <ToggleButtonGroup
-        color="primary"
         value={selectedInfos}
         onChange={handleChangeInfo}
         size='small'
-        sx={{marginLeft:'5%', marginTop:'5%'}}
+        sx={{height:'2.5vh', marginLeft:'37%', marginTop:'3%'}}
       >
-        <ToggleButton value={'온도'}>온도</ToggleButton>
-        <ToggleButton value={'습도'}>습도</ToggleButton>
-        <ToggleButton value={'nh3'}>NH3</ToggleButton>
+        <ToggleButton value={'온도'} sx={{fontSize: '1.2rem'}}>온도</ToggleButton>
+        <ToggleButton value={'습도'} sx={{fontSize: '1.2rem'}}>습도</ToggleButton>
+        <ToggleButton value={'nh3'} sx={{fontSize: '1.2rem'}}>NH3</ToggleButton>
       </ToggleButtonGroup>
       {
         selectedInfos.length === 0 ? (<p>확인하고 싶은 정보를 선택해주세요.</p>) : (

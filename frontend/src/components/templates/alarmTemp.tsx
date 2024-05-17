@@ -12,7 +12,7 @@ import AlarmModalForm from '../organisms/alarmModalForm';
 
 const AlarmMain = styled.div`
   position: relative;
-  height: 90vh;
+  height: 92vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -20,7 +20,7 @@ const AlarmMain = styled.div`
 `
 const AlarmTitle = styled.div`
   text-align: center;
-  margin: 5vh 0 3vh 0;
+  margin: 5vh 0 2vh 0;
   font-size: 4rem;
   font-weight: 900;
 `
