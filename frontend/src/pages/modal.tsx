@@ -12,8 +12,6 @@ import { modalFoodDetail, updateFoodDetail } from "../api/food/foodModalApi";
 import { formatDate } from "../utils/dateUtils";
 import sampleimg from "../assets/sampleimg.png";
 import dayjs, { Dayjs } from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -63,7 +61,7 @@ const BasicModal: React.FC<ModalProps> = ({
     useState<Dayjs | null>(
       foodDetail?.expirationDate ? dayjs(foodDetail.expirationDate) : null
     );
-  const [openDatePicker, setOpenDatePicker] = useState<boolean>(false);
+  // const [openDatePicker, setOpenDatePicker] = useState<boolean>(false);
   const navigate = useNavigate();
   const newimage =
     foodDetail?.image != null
@@ -225,6 +223,7 @@ const BasicModal: React.FC<ModalProps> = ({
               <p>:</p>
               <DetailInfo>{foodDetail?.elapsedTime} 일</DetailInfo>
             </FoodModalDetail>
+            {foodData.ftype !== "용기" && (
             <FoodModalDetail>
               <DetailList>유통기한</DetailList>
               <p>:</p>
@@ -247,6 +246,7 @@ const BasicModal: React.FC<ModalProps> = ({
                 <EditIcon onClick={() => setOpenDatePicker(!openDatePicker)}>✏️</EditIcon>
               </p> */}
             </FoodModalDetail>
+            )}
             <FoodModalDetail>
               <DetailList>상태</DetailList>
               <p>:</p>

@@ -78,10 +78,6 @@ export default function SensorData({
           <StyledDataValue>{latestInformation.elapsedTime}</StyledDataValue>
         </StyledDataItem>
         <StyledDataItem>
-          <StyledDataTitle>유통기한 :</StyledDataTitle>
-          <StyledDataValue>{latestInformation.expirationDate}</StyledDataValue>
-        </StyledDataItem>
-        <StyledDataItem>
           <StyledDataTitle>상태 :</StyledDataTitle>
           <StyledDataValue>{latestInformation.refresh}</StyledDataValue>
         </StyledDataItem>

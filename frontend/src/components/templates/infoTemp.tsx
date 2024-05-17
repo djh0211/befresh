@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import NavBlock from "../molecules/navBlock";
 import styled from "styled-components";
 import InfoForm from "../organisms/InfoForm";
@@ -43,10 +44,17 @@ const MessageDiv = styled.div`
 `
 
 export default function InfoTemp({ containerInfo, showBackBtn }: Readonly<{ containerInfo: informationType[], showBackBtn: boolean }>) {
+  const [activeContainerCount, setActiveContainerCount] = useState(0);
+
+  useEffect(() => {
+    const activeContainers = containerInfo.filter(info => info.refresh !== "데이터없음");
+    setActiveContainerCount(activeContainers.length);
+  }, [containerInfo]);
+
   return (
     <>
       <InfoTitle>용기 정보</InfoTitle>
-      <Activelen>현재 사용중인 용기 {}/{containerInfo.length}</Activelen>
+      <Activelen>현재 사용중인 용기: {activeContainerCount}/{containerInfo.length}</Activelen>
       {
         showBackBtn === true && 
         <Button 
@@ -65,7 +73,7 @@ export default function InfoTemp({ containerInfo, showBackBtn }: Readonly<{ cont
       }
       <InfoMain>
         {
-          containerInfo.length == 0 ? (
+          containerInfo.length === 0 ? (
             <MessageDiv>
               <p style={{ marginTop: '10%', fontSize: '1.5rem', color: 'grey' }}>등록된 용기가 없습니다.</p>
             </MessageDiv>
@@ -86,6 +94,5 @@ export default function InfoTemp({ containerInfo, showBackBtn }: Readonly<{ cont
         <NavBlock />
       </NavBlockWrapper>
     </>
-
   );
 }
