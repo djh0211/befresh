@@ -12,6 +12,6 @@ export default function HomeIcon() {
   const location :string = window.location.href
 
   return (
-    <NavHomeIcon color={location.includes('main') ? "success" : "action"} sx={{fontSize:'6rem'}}/>
+    <NavHomeIcon color={location.includes('main') ? "success" : "action"} sx={{fontSize:'5rem'}}/>
   );
 }

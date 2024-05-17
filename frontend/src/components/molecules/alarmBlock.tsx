@@ -58,13 +58,13 @@ export default function AlarmBlock({id, type, title, content, deleteOne}:Readonl
         onTouchStart={handleDown}
         onMouseUp={handleEnd}
         onTouchEnd={handleEnd}
-        sx={{display:'flex', width:'94%', ml:'3%', mb: 4, p: 4}} 
+        sx={{display:'flex', width:'94%', ml:'3%', mb: 4, p: 3}} 
       >
         <AlarmContentIcon type={type}/>
         <div style={{width: '80%', marginLeft:'13px', marginRight:'5px', userSelect:'none'}}>
-          <Typography noWrap sx={{fontSize:'2rem', fontWeight:900}}>{title}</Typography>
+          <Typography noWrap sx={{fontSize:'1.7rem', fontWeight:900}}>{title}</Typography>
           <div>
-            <Typography sx={{fontSize:'1.5rem'}}>{content}</Typography>
+            <Typography sx={{fontSize:'1.3rem'}}>{content}</Typography>
           </div>
         </div>
       </Item>
