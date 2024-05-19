@@ -6,12 +6,19 @@ import com.a307.befresh.global.config.batch.FoodExpireBatchConfig;
 import com.a307.befresh.global.config.batch.FoodSensorBatchConfig;
 import com.a307.befresh.global.exception.code.SuccessCode;
 import com.a307.befresh.global.security.domain.UserDetailsImpl;
+import com.a307.befresh.module.domain.food.Food;
+import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReq;
 import com.a307.befresh.module.domain.food.dto.request.FoodRegisterReqList;
 import com.a307.befresh.module.domain.food.dto.request.FoodUpdateReq;
 import com.a307.befresh.module.domain.food.dto.response.FoodDetailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodFailRes;
 import com.a307.befresh.module.domain.food.dto.response.FoodListDetailRes;
+import com.a307.befresh.module.domain.food.repository.FoodRepository;
 import com.a307.befresh.module.domain.food.service.FoodService;
+import com.a307.befresh.module.domain.notification.service.NotificationService;
+import com.a307.befresh.module.domain.refresh.repository.RefreshRepository;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -33,6 +40,9 @@ public class FoodController {
     private final JobLauncher jobLauncher;
     private final FoodSensorBatchConfig foodSensorBatchConfig;
     private final FoodExpireBatchConfig foodExpireBatchConfig;
+    private final FoodRepository foodRepository;
+    private final RefreshRepository refreshRepository;
+    private final NotificationService notificationService;
 
     @GetMapping("/test/thread")
     public ResponseEntity<ThreadInfo> getThreadInfo() throws InterruptedException {
@@ -108,6 +118,91 @@ public class FoodController {
     @GetMapping("/batch/container")
     public ResponseEntity<BaseResponse<Long>> processBatchContainer() {
         batchScheduleConfig.runSensorJob();
+
+        return BaseResponse.success(SuccessCode.SELECT_SUCCESS, null);
+    }
+
+    @GetMapping("/tmp/register")
+    public ResponseEntity<BaseResponse<Long>> tmp1() {
+        FoodRegisterReq food1 = FoodRegisterReq.builder()
+            .name("상추")
+            .expirationDate(LocalDate.now().minusDays(1L))
+            .ftypeId(2L)
+            .build();
+
+        FoodRegisterReq food2 = FoodRegisterReq.builder()
+            .name("소고기")
+            .expirationDate(LocalDate.now().plusDays(3L))
+            .ftypeId(1L)
+            .qrId("2219")
+            .build();
+
+        List<FoodRegisterReq> list = new ArrayList<>();
+        list.add(food1);
+        list.add(food2);
+
+        FoodRegisterReqList foodRegisterReqList = FoodRegisterReqList.builder()
+            .refrigeratorId(100)
+            .foodList(list)
+            .build();
+
+        foodService.registerFood(foodRegisterReqList);
+
+        return BaseResponse.success(SuccessCode.SELECT_SUCCESS, null);
+    }
+
+    @GetMapping("/tmp/1hour")
+    public ResponseEntity<BaseResponse<Long>> tmp2() {
+        Food food = foodRepository.findFoodByName_AndRefrigerator_Id("소고기", 100L);
+        food.setRefresh(refreshRepository.findById(2L).get());
+        Food save = foodRepository.save(food);
+
+        List<Food> list = new ArrayList<>();
+        list.add(save);
+
+        notificationService.sendContainerNotification(list, "warn");
+
+        return BaseResponse.success(SuccessCode.SELECT_SUCCESS, null);
+    }
+
+    @GetMapping("/tmp/2hour")
+    public ResponseEntity<BaseResponse<Long>> tmp3() {
+        Food food = foodRepository.findFoodByName_AndRefrigerator_Id("소고기", 100L);
+        food.setRefresh(refreshRepository.findById(3L).get());
+        Food save = foodRepository.save(food);
+
+        List<Food> list = new ArrayList<>();
+        list.add(save);
+
+        notificationService.sendContainerNotification(list, "danger");
+
+        return BaseResponse.success(SuccessCode.SELECT_SUCCESS, null);
+    }
+
+    @GetMapping("/tmp/12hour")
+    public ResponseEntity<BaseResponse<Long>> tmp4() {
+        Food food = foodRepository.findFoodByName_AndRefrigerator_Id("소고기", 100L);
+        food.setRefresh(refreshRepository.findById(5L).get());
+        Food save = foodRepository.save(food);
+
+        List<Food> list = new ArrayList<>();
+        list.add(save);
+
+        notificationService.sendContainerNotification(list, "noUpdate");
+
+        return BaseResponse.success(SuccessCode.SELECT_SUCCESS, null);
+    }
+
+    @GetMapping("/tmp/1day")
+    public ResponseEntity<BaseResponse<Long>> tmp5() {
+        Food food = foodRepository.findFoodByName_AndRefrigerator_Id("상추", 100L);
+        food.setRefresh(refreshRepository.findById(3L).get());
+        Food save = foodRepository.save(food);
+
+        List<Food> list = new ArrayList<>();
+        list.add(save);
+
+        notificationService.sendExpireNotification(list, "danger");
 
         return BaseResponse.success(SuccessCode.SELECT_SUCCESS, null);
     }

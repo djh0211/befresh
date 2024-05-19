@@ -98,8 +98,10 @@ public class NotificationServiceImpl implements NotificationService {
 
         for (Food food : foodList) {
             title = "[" + food.getName() + "] " + food.getRefresh().getName() + " 상태가 되었어요!";
-            body = "[" + food.getName() + "] 유통 기한 D" + ChronoUnit.DAYS.between(LocalDate.now(), food.getExpirationDate()) +
-                    "\n유통 기한을 확인해주세요!";
+            body = "[유통 기한 D+" + ChronoUnit.DAYS.between(food.getExpirationDate(), LocalDate.now()) + "]";
+            if (category.equals("danger")) {
+                body += " 주의해서 먹으세요!";
+            }
 
             long notificationId = saveMessage(food.getRefrigerator(), category, title, body);
 
@@ -117,8 +119,18 @@ public class NotificationServiceImpl implements NotificationService {
         String body = "";
 
         for (Food food : foodList) {
-            title = "[" + food.getName() + "] " + food.getRefresh().getName() + " 상태가 되었어요!";
-            body = "[" + food.getName() + "] " + "신선도를 확인해주세요";
+            title = "[" + food.getName() + "] " + food.getRefresh().getName() + " 상태";
+
+            if (category.equals("warn")) {
+                body = "신선도를 확인해주세요!";
+            }
+            else if (category.equals("danger")) {
+                body = "주의해서 먹어야해요!";
+            }
+            else if (category.equals("noUpdate")) {
+                title = "[" + food.getName() + "] " + "측정 중단 상태";
+                body = "신선도 정보가 확인되지 않고 있어요!";
+            }
 
             long notificationId = saveMessage(food.getRefrigerator(), category, title, body);
 
