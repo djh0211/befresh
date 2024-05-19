@@ -62,7 +62,7 @@ export default function AlarmForm({message, changeMessage, alarms, deleteAlarms,
           variant='outlined' 
           color='error'
           onClick={deleteAlarms}
-          sx={{height:'70px', marginRight:'5%', fontSize:'1.7rem'}}
+          sx={{height:'70px', marginRight:'5%', fontSize:'1.6rem'}}
         >
           일괄 삭제
         </Button>

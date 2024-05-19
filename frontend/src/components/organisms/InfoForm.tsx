@@ -71,7 +71,7 @@ export default function InfoForm({ information }: Readonly<{ information: inform
   const lastTime: string | null = information.sensorDataList.temperature.length != 0 ? information.sensorDataList.temperature[information.sensorDataList.temperature.length - 1].time : null
 
   return (
-    <Paper elevation={4} sx={InfoBoxStyle} style={{backgroundColor: information.refresh == '데이터없음' ?  'grey' : 'rgba(161, 193, 167, 0.2)'}}>
+    <Paper elevation={4} sx={InfoBoxStyle} style={{backgroundColor: information.refresh == '데이터없음' ?  '#9a9a9a' : '#dceecd'}}>
       <InfoTitle>{information.name}</InfoTitle>
       <InfoContent>
         <InfoContentBox>
