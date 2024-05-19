@@ -123,21 +123,18 @@ const BasicModal: React.FC<ModalProps> = ({
     }
   };
 
-  const default_img = sampleimg;
-
-
   // 추가정보를 달라했을 때, 넘기는 함수
-  const dispatch = useDispatch()
-  const handleAdditionalInfo = (foodId:number) => {
-    dispatch(addFoodId(foodId))
-    navigate('/info')
-  }
+  const dispatch = useDispatch();
+  const handleAdditionalInfo = (foodId: number) => {
+    dispatch(addFoodId(foodId));
+    navigate("/info");
+  };
 
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
     console.log("에러이미지");
-    e.currentTarget.src = default_img;
+    e.currentTarget.src = sampleimg;
   };
 
   return (
@@ -168,10 +165,16 @@ const BasicModal: React.FC<ModalProps> = ({
           }}
         >
           <ModalClose variant="plain" sx={{ m: 1 }} />
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             {foodDetail?.image && (
               <img
-                src={newimage}
+                src={newimage ?? sampleimg}
                 alt="음식 이미지"
                 onError={handleImageError} // 이미지 로딩에 실패한 경우 호출
                 style={{
@@ -190,8 +193,11 @@ const BasicModal: React.FC<ModalProps> = ({
               textColor="inherit"
               fontWeight="lg"
               mb={2}
-              sx={{ fontSize: "1.5rem", display:"flex", justifyContent:"center" }}
-
+              sx={{
+                fontSize: "1.5rem",
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
               <input
                 type="text"
@@ -224,28 +230,29 @@ const BasicModal: React.FC<ModalProps> = ({
               <DetailInfo>{foodDetail?.elapsedTime} 일</DetailInfo>
             </FoodModalDetail>
             {foodData.ftype !== "용기" && (
-            <FoodModalDetail>
-              <DetailList>유통기한</DetailList>
-              <p>:</p>
-              <DetailInfoDatePicker>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DatePicker"]}>
-                    <DatePicker
-                      value={dayjs(
-                        foodDetail?.expirationDate && foodDetail.expirationDate
-                      )}
-                      onChange={(newValue: any) =>
-                        setEditedExpirationDate(dayjs(newValue))
-                      } // Date 객체를 Dayjs 객체로 변환
-                      format="YYYY-MM-DD" // 날짜 표시 형식 설정
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-              </DetailInfoDatePicker>
-              {/* <p>
+              <FoodModalDetail>
+                <DetailList>유통기한</DetailList>
+                <p>:</p>
+                <DetailInfoDatePicker>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={["DatePicker"]}>
+                      <DatePicker
+                        value={dayjs(
+                          foodDetail?.expirationDate &&
+                            foodDetail.expirationDate
+                        )}
+                        onChange={(newValue: any) =>
+                          setEditedExpirationDate(dayjs(newValue))
+                        } // Date 객체를 Dayjs 객체로 변환
+                        format="YYYY-MM-DD" // 날짜 표시 형식 설정
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                </DetailInfoDatePicker>
+                {/* <p>
                 <EditIcon onClick={() => setOpenDatePicker(!openDatePicker)}>✏️</EditIcon>
               </p> */}
-            </FoodModalDetail>
+              </FoodModalDetail>
             )}
             <FoodModalDetail>
               <DetailList>상태</DetailList>
@@ -257,12 +264,20 @@ const BasicModal: React.FC<ModalProps> = ({
                 <FoodModalDetail>
                   <DetailList>온도</DetailList>
                   <p>:</p>
-                  <DetailInfo>{foodDetail?.temperature} °C</DetailInfo>
+                  <DetailInfo>
+                    {foodDetail?.temperature !== null
+                      ? `${foodDetail?.temperature} °C`
+                      : "-"}
+                  </DetailInfo>
                 </FoodModalDetail>
                 <FoodModalDetail>
                   <DetailList>습도</DetailList>
                   <p>:</p>
-                  <DetailInfo>{foodDetail?.humidity} %</DetailInfo>
+                  <DetailInfo>
+                    {foodDetail?.humidity !== null
+                      ? `${foodDetail?.humidity} %`
+                      : "-"}
+                  </DetailInfo>
                 </FoodModalDetail>
                 <div
                   style={{
