@@ -34,7 +34,6 @@ public class FoodSensorBatchConfig {
     private final FoodRepository foodRepository;
     private final NotificationService notificationService;
     private final RefreshRepository refreshRepository;
-    private final FoodService foodService;
 
     @Bean
     public Job processSensorJob() {
