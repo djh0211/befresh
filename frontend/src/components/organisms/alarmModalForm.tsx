@@ -8,7 +8,7 @@ export default function AlarmModalForm() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const modalBox = {
-    'width': '50vw',
+    'width': '70vw',
     'backgroundColor': '#ffffff',
     'borderRadius' : '5px',
     'position': 'absolute',
