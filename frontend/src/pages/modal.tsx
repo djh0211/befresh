@@ -289,7 +289,7 @@ const BasicModal: React.FC<ModalProps> = ({
                 >
                   <Button
                     onClick={() => handleAdditionalInfo(foodData.id)}
-                    sx={{ width: "12vw", height: "3vh", fontSize: "1rem" }}
+                    sx={{ width: "14vw", height: "3vh", fontSize: "1rem" }}
                   >
                     세부 기록
                   </Button>
@@ -306,7 +306,7 @@ const BasicModal: React.FC<ModalProps> = ({
             >
               <Button
                 onClick={handleUpdateFoodDetail}
-                sx={{ width: "12vw", height: "3vh", fontSize: "1rem" }}
+                sx={{ width: "14vw", height: "3vh", fontSize: "1rem" }}
               >
                 저장
               </Button>
