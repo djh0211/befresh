@@ -288,8 +288,8 @@ public class FoodServiceImpl implements FoodService {
             return 100;
         }
 
-        int totalDays = Period.between(registrationDateTime.toLocalDate(), exprationDate).getDays();
-        int remindDays = Period.between(LocalDate.now(), exprationDate).getDays();
+        long totalDays = ChronoUnit.DAYS.between(registrationDateTime.toLocalDate(), exprationDate);
+        long remindDays = ChronoUnit.DAYS.between(LocalDate.now(), exprationDate);
 
         double freshState = 0.0;
 
