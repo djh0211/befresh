@@ -79,7 +79,7 @@ export default function AlarmForm({message, changeMessage, alarms, deleteAlarms,
                 size="large"
                 variant="contained"
                 color="success"
-                sx={{width: '35%', marginX:'auto', fontSize:'1.6rem'}}
+                sx={{width: '45%', marginX:'auto', fontSize:'1.6rem'}}
               >
                 알림 권한 확인하기
               </Button>
