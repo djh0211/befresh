@@ -125,7 +125,7 @@ public class FoodController {
     @GetMapping("/tmp/register")
     public ResponseEntity<BaseResponse<Long>> tmp1() {
         FoodRegisterReq food1 = FoodRegisterReq.builder()
-            .name("상추")
+            .name("마늘")
             .expirationDate(LocalDate.now().minusDays(1L))
             .ftypeId(2L)
             .build();
@@ -195,7 +195,7 @@ public class FoodController {
 
     @GetMapping("/tmp/1day")
     public ResponseEntity<BaseResponse<Long>> tmp5() {
-        Food food = foodRepository.findFoodByName_AndRefrigerator_Id("상추", 100L);
+        Food food = foodRepository.findFoodByName_AndRefrigerator_Id("마늘", 100L);
         food.setRefresh(refreshRepository.findById(3L).get());
         Food save = foodRepository.save(food);
 
